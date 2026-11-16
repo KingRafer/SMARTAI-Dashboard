@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache"/>
 <title>Referral Network — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=20261116b">
+<link rel="stylesheet" href="css/app.css?v=20261116d">
 <style>
 .pyramid-wrap{
   background: linear-gradient(180deg, rgba(45,212,191,.04), transparent 35%), var(--input-bg);
@@ -16,8 +16,10 @@
   overflow-x:auto;
 }
 .pyramid-svg{display:block;width:100%;min-width:820px;height:auto;margin:0 auto}
-.pyramid-svg .edge{stroke:#475569;stroke-width:2.5;stroke-linecap:round;fill:none;opacity:.6}
-[data-theme=light] .pyramid-svg .edge{stroke:#94a3b8;opacity:.65}
+.pyramid-svg .edge{
+  stroke:#64748b;stroke-width:2.5;stroke-linecap:square;stroke-linejoin:miter;fill:none;opacity:.75
+}
+[data-theme=light] .pyramid-svg .edge{stroke:#64748b;opacity:.55}
 .pyramid-svg .node-ring{fill:none;stroke:rgba(255,255,255,.1);stroke-width:1.5}
 .pyramid-svg .node-group{cursor:default}
 .pyramid-svg .node-group:hover .node-fill{filter:brightness(1.12)}
@@ -50,8 +52,8 @@
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
-<script src="js/auth.js?v=20261116b"></script>
-<script src="js/app.js?v=20261116b"></script>
+<script src="js/auth.js?v=20261116d"></script>
+<script src="js/app.js?v=20261116d"></script>
 <script>
 const user = renderShell('referral');
 if (user) {
@@ -107,11 +109,11 @@ if (user) {
 
   const MAX_LEVEL = 5;
   const W = 920;
-  const rowH = 90;
-  const topPad = 40;
-  const H = topPad + (MAX_LEVEL + 1) * rowH + 24;
+  const rowH = 96;
+  const topPad = 42;
+  const H = topPad + (MAX_LEVEL + 1) * rowH + 28;
   const radii = [26, 22, 20, 16, 14, 12];
-  const leftPad = 48;
+  const leftPad = 52;
 
   const nodes = [];
   for (let level = 0; level <= MAX_LEVEL; level++) {
@@ -120,35 +122,72 @@ if (user) {
     const y = topPad + level * rowH;
     const r = radii[level] || 12;
     for (let i = 0; i < count; i++) {
-      const x = leftPad + ((i + 0.5) / count) * (W - leftPad - 20);
+      const x = leftPad + ((i + 0.5) / count) * (W - leftPad - 24);
       const d = list[i];
       nodes.push({
         id: 'L' + level + '_' + i,
-        level, i, x, y, r,
+        level: level, i: i, x: x, y: y, r: r,
         av: d.av, label: d.label, full: d.full, empty: d.empty,
         parent: level === 0 ? null : 'L' + (level - 1) + '_' + Math.floor(i * (roster[level - 1].length) / count)
       });
     }
   }
 
-  const byId = Object.fromEntries(nodes.map(n => [n.id, n]));
-  const edges = nodes.filter(n => n.parent && byId[n.parent]).map(n => [n.parent, n.id]);
+  const byId = Object.fromEntries(nodes.map(function (n) { return [n.id, n]; }));
   const fills = ['url(#g0)','url(#g1)','url(#g2)','url(#g3)','url(#g4)','url(#g5)'];
+
+  /* Orthogonal (kota) connectors: vertical → horizontal bus → vertical */
+  const childrenOf = {};
+  nodes.forEach(function (n) {
+    if (!n.parent) return;
+    if (!childrenOf[n.parent]) childrenOf[n.parent] = [];
+    childrenOf[n.parent].push(n);
+  });
+
+  var edgeSvg = '';
+  Object.keys(childrenOf).forEach(function (pid) {
+    var parent = byId[pid];
+    var kids = childrenOf[pid];
+    if (!parent || !kids.length) return;
+
+    var py1 = parent.y + parent.r;           // bottom of parent
+    var midY = (parent.y + kids[0].y) / 2;  // horizontal bus y
+
+    // vertical stem from parent down to bus
+    edgeSvg += '<path class="edge" d="M' + parent.x.toFixed(1) + ' ' + py1.toFixed(1) +
+      ' V' + midY.toFixed(1) + '"/>';
+
+    if (kids.length === 1) {
+      var k = kids[0];
+      var ky0 = k.y - k.r;
+      if (Math.abs(k.x - parent.x) < 0.5) {
+        edgeSvg += '<path class="edge" d="M' + parent.x.toFixed(1) + ' ' + midY.toFixed(1) +
+          ' V' + ky0.toFixed(1) + '"/>';
+      } else {
+        edgeSvg += '<path class="edge" d="M' + parent.x.toFixed(1) + ' ' + midY.toFixed(1) +
+          ' H' + k.x.toFixed(1) + ' V' + ky0.toFixed(1) + '"/>';
+      }
+    } else {
+      var minX = kids[0].x, maxX = kids[0].x;
+      kids.forEach(function (k) {
+        if (k.x < minX) minX = k.x;
+        if (k.x > maxX) maxX = k.x;
+      });
+      // horizontal bus
+      edgeSvg += '<path class="edge" d="M' + minX.toFixed(1) + ' ' + midY.toFixed(1) +
+        ' H' + maxX.toFixed(1) + '"/>';
+      // drop to each child
+      kids.forEach(function (k) {
+        var ky0 = k.y - k.r;
+        edgeSvg += '<path class="edge" d="M' + k.x.toFixed(1) + ' ' + midY.toFixed(1) +
+          ' V' + ky0.toFixed(1) + '"/>';
+      });
+    }
+  });
 
   const levelTags = [0,1,2,3,4,5].map(function (lv) {
     const y = topPad + lv * rowH + 4;
     return '<text class="lvl-tag" x="8" y="' + y + '">L' + lv + '</text>';
-  }).join('');
-
-  const edgeSvg = edges.map(function (pair) {
-    const a = byId[pair[0]], b = byId[pair[1]];
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-    const x1 = a.x + (dx / dist) * a.r;
-    const y1 = a.y + (dy / dist) * a.r;
-    const x2 = b.x - (dx / dist) * b.r;
-    const y2 = b.y - (dy / dist) * b.r;
-    return '<line class="edge" x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '"/>';
   }).join('');
 
   const nodeSvg = nodes.map(function (n) {
@@ -200,7 +239,7 @@ if (user) {
           '<span class="rf-value" id="ref-link">' + escapeHtml(refLink) + '</span>' +
           '<button type="button" class="btn-copy" id="copy-link">Salin link</button></div></div>' +
       '</div></div>' +
-    '<div class="panel"><div class="panel-head"><h2>Pohon Jaringan</h2><span class="sub">L0 → L5 (scroll horizontal jika perlu)</span></div>' +
+    '<div class="panel"><div class="panel-head"><h2>Pohon Jaringan</h2><span class="sub">Tree topology · garis siku</span></div>' +
       '<div class="pyramid-wrap">' +
         '<svg class="pyramid-svg" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' +
           '<defs>' +
@@ -213,7 +252,7 @@ if (user) {
           '</defs>' +
           levelTags + edgeSvg + nodeSvg +
         '</svg>' +
-        '<p class="tree-note">6 baris: <strong>L0 (Anda)</strong> sampai <strong>L5</strong>. Warna biru = L4, merah muda = L5.</p>' +
+        '<p class="tree-note">Garis penghubung <strong>orthogonal</strong> (vertikal + horizontal), seperti tree topology.</p>' +
         '<div class="tree-legend">' +
           '<span><i class="l0"></i> L0 Root</span><span><i class="l1"></i> L1</span><span><i class="l2"></i> L2</span>' +
           '<span><i class="l3"></i> L3</span><span><i class="l4"></i> L4</span><span><i class="l5"></i> L5</span><span><i class="empty"></i> Kosong</span>' +
