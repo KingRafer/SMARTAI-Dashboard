@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#060b14"/>
 <title>Commission — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
 <script src="js/auth.js"></script>
@@ -13,6 +15,12 @@
 <script>
 if (renderShell('commission')) {
   document.getElementById('page-content').innerHTML = `
+    <div class="page-header">
+      <div>
+        <h1>Commission</h1>
+        <p>Ringkasan dan riwayat komisi member.</p>
+      </div>
+    </div>
     <div class="stats-grid">
       <div class="stat-card"><div class="label">Bulan ini</div><div class="value up">$1,240</div></div>
       <div class="stat-card"><div class="label">Total dibayar</div><div class="value">$8,920</div></div>
