@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache"/>
 <title>Referral Network — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/app.css?v=20261116b">
 <style>
 .pyramid-wrap{
   background: linear-gradient(180deg, rgba(45,212,191,.04), transparent 35%), var(--input-bg);
@@ -14,7 +15,7 @@
   padding:1.25rem .75rem .85rem;
   overflow-x:auto;
 }
-.pyramid-svg{display:block;width:100%;min-width:780px;height:auto;margin:0 auto}
+.pyramid-svg{display:block;width:100%;min-width:820px;height:auto;margin:0 auto}
 .pyramid-svg .edge{stroke:#475569;stroke-width:2.5;stroke-linecap:round;fill:none;opacity:.6}
 [data-theme=light] .pyramid-svg .edge{stroke:#94a3b8;opacity:.65}
 .pyramid-svg .node-ring{fill:none;stroke:rgba(255,255,255,.1);stroke-width:1.5}
@@ -25,7 +26,7 @@
 [data-theme=light] .pyramid-svg .lbl{fill:#475569}
 .pyramid-svg .lbl-root{fill:#2dd4bf;font-size:11px;font-weight:700;dominant-baseline:hanging}
 [data-theme=light] .pyramid-svg .lbl-root{fill:#0d9488}
-.pyramid-svg .lbl-empty{fill:#64748b;font-size:8px;font-weight:500;dominant-baseline:hanging}
+.pyramid-svg .lvl-tag{fill:#64748b;font-size:10px;font-weight:700;text-anchor:start}
 .pyramid-svg .av-text{fill:#042f2e;font-size:11px;font-weight:700;dominant-baseline:central}
 .pyramid-svg .av-text.light{fill:#fff}
 .pyramid-svg .av-text.sm{font-size:9px}
@@ -49,8 +50,8 @@
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
-<script src="js/auth.js"></script>
-<script src="js/app.js"></script>
+<script src="js/auth.js?v=20261116b"></script>
+<script src="js/app.js?v=20261116b"></script>
 <script>
 const user = renderShell('referral');
 if (user) {
@@ -60,7 +61,6 @@ if (user) {
   const refCode = (user.referral && user.referral.trim()) ? user.referral.trim().toUpperCase() : 'SMARTAI-REF';
   const refLink = location.origin + location.pathname.replace(/[^/]+$/, '') + 'register.html?ref=' + encodeURIComponent(refCode);
 
-  /* Demo roster by level (unlimited positions in real system; max depth = 5) */
   const roster = {
     0: [{ av: ini, label: shortMe, full: me + ' (Kamu)', empty: false }],
     1: [
@@ -106,11 +106,12 @@ if (user) {
   };
 
   const MAX_LEVEL = 5;
-  const W = 900;
-  const rowH = 88;
-  const topPad = 36;
-  const H = topPad + (MAX_LEVEL + 1) * rowH + 20;
+  const W = 920;
+  const rowH = 90;
+  const topPad = 40;
+  const H = topPad + (MAX_LEVEL + 1) * rowH + 24;
   const radii = [26, 22, 20, 16, 14, 12];
+  const leftPad = 48;
 
   const nodes = [];
   for (let level = 0; level <= MAX_LEVEL; level++) {
@@ -119,7 +120,7 @@ if (user) {
     const y = topPad + level * rowH;
     const r = radii[level] || 12;
     for (let i = 0; i < count; i++) {
-      const x = ((i + 0.5) / count) * W;
+      const x = leftPad + ((i + 0.5) / count) * (W - leftPad - 20);
       const d = list[i];
       nodes.push({
         id: 'L' + level + '_' + i,
@@ -132,41 +133,41 @@ if (user) {
 
   const byId = Object.fromEntries(nodes.map(n => [n.id, n]));
   const edges = nodes.filter(n => n.parent && byId[n.parent]).map(n => [n.parent, n.id]);
+  const fills = ['url(#g0)','url(#g1)','url(#g2)','url(#g3)','url(#g4)','url(#g5)'];
 
-  const fills = [
-    'url(#g0)', 'url(#g1)', 'url(#g2)', 'url(#g3)', 'url(#g4)', 'url(#g5)'
-  ];
+  const levelTags = [0,1,2,3,4,5].map(function (lv) {
+    const y = topPad + lv * rowH + 4;
+    return '<text class="lvl-tag" x="8" y="' + y + '">L' + lv + '</text>';
+  }).join('');
 
-  const edgeSvg = edges.map(([f, t]) => {
-    const a = byId[f], b = byId[t];
+  const edgeSvg = edges.map(function (pair) {
+    const a = byId[pair[0]], b = byId[pair[1]];
     const dx = b.x - a.x, dy = b.y - a.y;
     const dist = Math.sqrt(dx * dx + dy * dy) || 1;
     const x1 = a.x + (dx / dist) * a.r;
     const y1 = a.y + (dy / dist) * a.r;
     const x2 = b.x - (dx / dist) * b.r;
     const y2 = b.y - (dy / dist) * b.r;
-    return `<line class="edge" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/>`;
+    return '<line class="edge" x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '"/>';
   }).join('');
 
-  const nodeSvg = nodes.map(n => {
+  const nodeSvg = nodes.map(function (n) {
     if (n.empty) {
-      return `<g class="node-group" transform="translate(${n.x},${n.y})">
-        <title>${escapeHtml(n.full)}</title>
-        <circle class="node-fill" r="${n.r}" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="3 2"/>
-        <text class="av-text empty" y="1">+</text>
-      </g>`;
+      return '<g class="node-group" transform="translate(' + n.x + ',' + n.y + ')">' +
+        '<title>' + escapeHtml(n.full) + ' · Level ' + n.level + '</title>' +
+        '<circle class="node-fill" r="' + n.r + '" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="3 2"/>' +
+        '<text class="av-text empty" y="1">+</text></g>';
     }
     const fill = fills[n.level] || fills[5];
-    const avCls = n.level === 2 || n.level === 4 || n.level === 5 ? 'av-text light sm' : (n.level >= 3 ? 'av-text sm' : 'av-text');
+    const avCls = (n.level === 2 || n.level >= 4) ? 'av-text light sm' : (n.level >= 3 ? 'av-text sm' : 'av-text');
     const lblCls = n.level === 0 ? 'lbl-root' : 'lbl';
-    const showLabel = n.level <= 3 || n.label;
-    return `<g class="node-group" transform="translate(${n.x},${n.y})">
-      <title>${escapeHtml(n.full)} · Level ${n.level}</title>
-      <circle class="node-fill" r="${n.r}" fill="${fill}"/>
-      <circle class="node-ring" r="${n.r}"/>
-      <text class="${avCls}" y="1">${escapeHtml(n.av)}</text>
-      ${showLabel && n.label ? `<text class="${lblCls}" y="${n.r + 8}">${escapeHtml(n.label)}</text>` : ''}
-    </g>`;
+    return '<g class="node-group" transform="translate(' + n.x + ',' + n.y + ')">' +
+      '<title>' + escapeHtml(n.full) + ' · Level ' + n.level + '</title>' +
+      '<circle class="node-fill" r="' + n.r + '" fill="' + fill + '"/>' +
+      '<circle class="node-ring" r="' + n.r + '"/>' +
+      '<text class="' + avCls + '" y="1">' + escapeHtml(n.av) + '</text>' +
+      (n.label ? '<text class="' + lblCls + '" y="' + (n.r + 8) + '">' + escapeHtml(n.label) + '</text>' : '') +
+      '</g>';
   }).join('');
 
   const matrixNames = [
@@ -176,142 +177,79 @@ if (user) {
     'Joko N.',null,null,null,null,
     null,null,null,null,null
   ];
-  const matrixCells = matrixNames.map((name, i) => {
-    if (!name) return `<div class="matrix-cell empty" style="animation-delay:${i * 0.02}s"></div>`;
-    const av = name.split(/\s+/).map(p => p[0]).slice(0, 2).join('').toUpperCase();
-    return `<div class="matrix-cell filled" style="animation-delay:${i * 0.02}s" title="${escapeHtml(name)}">
-      <div class="mc-av">${av}</div>
-      <div class="mc-name">${escapeHtml(name.split(' ')[0])}</div>
-    </div>`;
+  const matrixCells = matrixNames.map(function (name, i) {
+    if (!name) return '<div class="matrix-cell empty" style="animation-delay:' + (i * 0.02) + 's"></div>';
+    const av = name.split(/\s+/).map(function (p) { return p[0]; }).slice(0, 2).join('').toUpperCase();
+    return '<div class="matrix-cell filled" style="animation-delay:' + (i * 0.02) + 's" title="' + escapeHtml(name) + '">' +
+      '<div class="mc-av">' + av + '</div><div class="mc-name">' + escapeHtml(name.split(' ')[0]) + '</div></div>';
   }).join('');
 
-  document.getElementById('page-content').innerHTML = `
-    <div class="stats-grid">
-      <div class="stat-card"><div class="label">Total Network</div><div class="value">34</div><div class="hint">Semua level</div></div>
-      <div class="stat-card"><div class="label">Max depth</div><div class="value">5</div><div class="hint">Level mentok di 5</div></div>
-      <div class="stat-card"><div class="label">Level 1</div><div class="value">2</div><div class="hint">Direct</div></div>
-      <div class="stat-card"><div class="label">Open slots</div><div class="value">∞</div><div class="hint">Posisi tak terbatas</div></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head">
-        <h2>Bagikan referral</h2>
-        <span class="sub">Salin kode atau link</span>
-      </div>
-      <div class="ref-share">
-        <div class="ref-field">
-          <div class="rf-label">Kode referral</div>
-          <div class="rf-row">
-            <span class="rf-value code" id="ref-code">${escapeHtml(refCode)}</span>
-            <button type="button" class="btn-copy" id="copy-code">Salin kode</button>
-          </div>
-        </div>
-        <div class="ref-field">
-          <div class="rf-label">Link referral</div>
-          <div class="rf-row">
-            <span class="rf-value" id="ref-link">${escapeHtml(refLink)}</span>
-            <button type="button" class="btn-copy" id="copy-link">Salin link</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head">
-        <h2>Pohon Jaringan</h2>
-        <span class="sub">Level 0 – 5 · posisi tak terbatas</span>
-      </div>
-      <div class="pyramid-wrap">
-        <svg class="pyramid-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pohon referral level 5">
-          <defs>
-            <linearGradient id="g0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2dd4bf"/><stop offset="100%" stop-color="#0d9488"/></linearGradient>
-            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient>
-            <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c4b5fd"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
-            <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fcd34d"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
-            <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#93c5fd"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
-            <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fda4af"/><stop offset="100%" stop-color="#e11d48"/></linearGradient>
-          </defs>
-          ${edgeSvg}
-          ${nodeSvg}
-        </svg>
-        <p class="tree-note">Kedalaman maksimal <strong>level 5</strong>. Jumlah posisi per level tidak dibatasi.</p>
-        <div class="tree-legend">
-          <span><i class="l0"></i> Root</span>
-          <span><i class="l1"></i> L1</span>
-          <span><i class="l2"></i> L2</span>
-          <span><i class="l3"></i> L3</span>
-          <span><i class="l4"></i> L4</span>
-          <span><i class="l5"></i> L5</span>
-          <span><i class="empty"></i> Kosong</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head">
-        <h2>Matrix Level 5 × 5</h2>
-        <span class="sub">25 posisi · contoh seat plan</span>
-      </div>
-      <div class="matrix-wrap">
-        <div class="matrix-5x5">${matrixCells}</div>
-      </div>
-      <div class="matrix-legend">
-        <span><i class="f"></i> Terisi</span>
-        <span><i class="e"></i> Slot kosong</span>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><h2>Daftar jaringan</h2><span class="sub">Data demo</span></div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Nama</th><th>Level</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td>Fajar S.</td><td>L1</td><td><span class="badge ok">Active</span></td></tr>
-            <tr><td>Maya L.</td><td>L1</td><td><span class="badge ok">Active</span></td></tr>
-            <tr><td>Tono H.</td><td>L2</td><td><span class="badge ok">Active</span></td></tr>
-            <tr><td>Yoga P.</td><td>L3</td><td><span class="badge ok">Active</span></td></tr>
-            <tr><td>Andi R.</td><td>L4</td><td><span class="badge ok">Active</span></td></tr>
-            <tr><td>Gilang H.</td><td>L5</td><td><span class="badge info">New</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="copy-toast" id="copy-toast">Disalin!</div>
-  `;
+  document.getElementById('page-content').innerHTML =
+    '<div class="stats-grid">' +
+      '<div class="stat-card"><div class="label">Total Network</div><div class="value">34</div><div class="hint">Semua level</div></div>' +
+      '<div class="stat-card"><div class="label">Max depth</div><div class="value">5</div><div class="hint">Mentok level 5</div></div>' +
+      '<div class="stat-card"><div class="label">Level 1</div><div class="value">2</div><div class="hint">Direct</div></div>' +
+      '<div class="stat-card"><div class="label">Open slots</div><div class="value">∞</div><div class="hint">Tak terbatas</div></div>' +
+    '</div>' +
+    '<div class="panel"><div class="panel-head"><h2>Bagikan referral</h2><span class="sub">Salin kode / link</span></div>' +
+      '<div class="ref-share">' +
+        '<div class="ref-field"><div class="rf-label">Kode referral</div><div class="rf-row">' +
+          '<span class="rf-value code" id="ref-code">' + escapeHtml(refCode) + '</span>' +
+          '<button type="button" class="btn-copy" id="copy-code">Salin kode</button></div></div>' +
+        '<div class="ref-field"><div class="rf-label">Link referral</div><div class="rf-row">' +
+          '<span class="rf-value" id="ref-link">' + escapeHtml(refLink) + '</span>' +
+          '<button type="button" class="btn-copy" id="copy-link">Salin link</button></div></div>' +
+      '</div></div>' +
+    '<div class="panel"><div class="panel-head"><h2>Pohon Jaringan</h2><span class="sub">L0 → L5 (scroll horizontal jika perlu)</span></div>' +
+      '<div class="pyramid-wrap">' +
+        '<svg class="pyramid-svg" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' +
+          '<defs>' +
+            '<linearGradient id="g0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2dd4bf"/><stop offset="100%" stop-color="#0d9488"/></linearGradient>' +
+            '<linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient>' +
+            '<linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c4b5fd"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>' +
+            '<linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fcd34d"/><stop offset="100%" stop-color="#d97706"/></linearGradient>' +
+            '<linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#93c5fd"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>' +
+            '<linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fda4af"/><stop offset="100%" stop-color="#e11d48"/></linearGradient>' +
+          '</defs>' +
+          levelTags + edgeSvg + nodeSvg +
+        '</svg>' +
+        '<p class="tree-note">6 baris: <strong>L0 (Anda)</strong> sampai <strong>L5</strong>. Warna biru = L4, merah muda = L5.</p>' +
+        '<div class="tree-legend">' +
+          '<span><i class="l0"></i> L0 Root</span><span><i class="l1"></i> L1</span><span><i class="l2"></i> L2</span>' +
+          '<span><i class="l3"></i> L3</span><span><i class="l4"></i> L4</span><span><i class="l5"></i> L5</span><span><i class="empty"></i> Kosong</span>' +
+        '</div></div></div>' +
+    '<div class="panel"><div class="panel-head"><h2>Matrix 5×5</h2><span class="sub">Seat plan demo</span></div>' +
+      '<div class="matrix-wrap"><div class="matrix-5x5">' + matrixCells + '</div></div>' +
+      '<div class="matrix-legend"><span><i class="f"></i> Terisi</span><span><i class="e"></i> Kosong</span></div></div>' +
+    '<div class="panel"><div class="panel-head"><h2>Daftar jaringan</h2></div>' +
+      '<div class="table-wrap"><table><thead><tr><th>Nama</th><th>Level</th><th>Status</th></tr></thead><tbody>' +
+        '<tr><td>Fajar S.</td><td>L1</td><td><span class="badge ok">Active</span></td></tr>' +
+        '<tr><td>Andi R.</td><td>L4</td><td><span class="badge ok">Active</span></td></tr>' +
+        '<tr><td>Gilang H.</td><td>L5</td><td><span class="badge info">New</span></td></tr>' +
+      '</tbody></table></div></div>' +
+    '<div class="copy-toast" id="copy-toast">Disalin!</div>';
 
   function showToast(msg) {
-    const t = document.getElementById('copy-toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 1800);
+    var t = document.getElementById('copy-toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(function () { t.classList.remove('show'); }, 1800);
   }
-
   function copyText(text, btn) {
     function ok() {
       btn.classList.add('copied');
-      const old = btn.textContent;
-      btn.textContent = 'Tersalin ✓';
-      showToast('Berhasil disalin ke clipboard');
-      setTimeout(() => { btn.classList.remove('copied'); btn.textContent = old; }, 1600);
+      var old = btn.textContent; btn.textContent = 'Tersalin ✓';
+      showToast('Berhasil disalin');
+      setTimeout(function () { btn.classList.remove('copied'); btn.textContent = old; }, 1600);
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(ok).catch(fallback);
-    } else fallback();
-    function fallback() {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      ok();
+      navigator.clipboard.writeText(text).then(ok).catch(function () {
+        var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta); ok();
+      });
     }
   }
-
-  document.getElementById('copy-code').addEventListener('click', function () { copyText(refCode, this); });
-  document.getElementById('copy-link').addEventListener('click', function () { copyText(refLink, this); });
+  document.getElementById('copy-code').onclick = function () { copyText(refCode, this); };
+  document.getElementById('copy-link').onclick = function () { copyText(refLink, this); };
 }
 </script>
 </body>
