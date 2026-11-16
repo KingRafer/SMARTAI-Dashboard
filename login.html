@@ -6,6 +6,7 @@
 <title>Login — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <style>
 .demo-box{
   background:rgba(45,212,191,.08);
@@ -109,12 +110,7 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
     return;
   }
 
-  setUser({
-    nama: found.nama,
-    email: found.email,
-    hp: found.hp || '',
-    referral: found.referral || ''
-  });
+  setUser(sessionFromAccount(found));
   location.href = 'dashboard.html';
 });
 </script>
