@@ -8,85 +8,42 @@
 <link rel="stylesheet" href="css/app.css">
 <style>
 .pyramid-wrap{
-  background: linear-gradient(180deg, rgba(45,212,191,.04), transparent 40%), var(--input-bg);
+  background: linear-gradient(180deg, rgba(45,212,191,.04), transparent 35%), var(--input-bg);
   border:1px solid var(--border);
   border-radius:18px;
-  padding:1.5rem 1rem 1rem;
+  padding:1.25rem .75rem .85rem;
   overflow-x:auto;
 }
-.pyramid-svg{
-  display:block;
-  width:100%;
-  max-width:680px;
-  height:auto;
-  margin:0 auto;
-}
-.pyramid-svg .edge{
-  stroke:#475569;
-  stroke-width:3;
-  stroke-linecap:round;
-  fill:none;
-  opacity:.65;
-}
-[data-theme=light] .pyramid-svg .edge{
-  stroke:#94a3b8;
-  opacity:.7;
-}
-.pyramid-svg .node-ring{
-  fill:none;
-  stroke:rgba(255,255,255,.12);
-  stroke-width:2;
-}
-.pyramid-svg .node-fill{transition:filter .2s}
+.pyramid-svg{display:block;width:100%;min-width:780px;height:auto;margin:0 auto}
+.pyramid-svg .edge{stroke:#475569;stroke-width:2.5;stroke-linecap:round;fill:none;opacity:.6}
+[data-theme=light] .pyramid-svg .edge{stroke:#94a3b8;opacity:.65}
+.pyramid-svg .node-ring{fill:none;stroke:rgba(255,255,255,.1);stroke-width:1.5}
 .pyramid-svg .node-group{cursor:default}
 .pyramid-svg .node-group:hover .node-fill{filter:brightness(1.12)}
-.pyramid-svg .node-group:hover .node-ring{stroke:rgba(45,212,191,.5)}
-.pyramid-svg text{
-  font-family:Inter,system-ui,sans-serif;
-  text-anchor:middle;
-  dominant-baseline:hanging;
-}
-.pyramid-svg .lbl{
-  fill:#94a3b8;
-  font-size:11px;
-  font-weight:600;
-}
+.pyramid-svg text{font-family:Inter,system-ui,sans-serif;text-anchor:middle}
+.pyramid-svg .lbl{fill:#94a3b8;font-size:9px;font-weight:600;dominant-baseline:hanging}
 [data-theme=light] .pyramid-svg .lbl{fill:#475569}
-.pyramid-svg .lbl-root{
-  fill:#2dd4bf;
-  font-size:12px;
-  font-weight:700;
-}
+.pyramid-svg .lbl-root{fill:#2dd4bf;font-size:11px;font-weight:700;dominant-baseline:hanging}
 [data-theme=light] .pyramid-svg .lbl-root{fill:#0d9488}
-.pyramid-svg .lbl-empty{
-  fill:#64748b;
-  font-size:10px;
-  font-weight:500;
-}
-.pyramid-svg .av-text{
-  fill:#042f2e;
-  font-size:13px;
-  font-weight:700;
-  text-anchor:middle;
-  dominant-baseline:central;
-}
+.pyramid-svg .lbl-empty{fill:#64748b;font-size:8px;font-weight:500;dominant-baseline:hanging}
+.pyramid-svg .av-text{fill:#042f2e;font-size:11px;font-weight:700;dominant-baseline:central}
 .pyramid-svg .av-text.light{fill:#fff}
-.pyramid-svg .av-text.sm{font-size:11px}
-.pyramid-svg .av-text.empty{fill:#64748b;font-size:16px;font-weight:500}
-
+.pyramid-svg .av-text.sm{font-size:9px}
+.pyramid-svg .av-text.empty{fill:#64748b;font-size:12px;font-weight:500}
+.tree-note{text-align:center;font-size:.78rem;color:var(--text-dim);margin-top:.65rem}
 .tree-legend{
-  display:flex;flex-wrap:wrap;gap:.75rem 1.25rem;justify-content:center;
-  margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--border);
-  font-size:.75rem;color:var(--text-muted);
+  display:flex;flex-wrap:wrap;gap:.6rem 1.1rem;justify-content:center;
+  margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);
+  font-size:.72rem;color:var(--text-muted)
 }
-.tree-legend span{display:flex;align-items:center;gap:.4rem}
-.tree-legend i{
-  width:12px;height:12px;border-radius:50%;display:inline-block;
-}
-.tree-legend i.root{background:linear-gradient(135deg,#2dd4bf,#14b8a6)}
-.tree-legend i.l1{background:linear-gradient(135deg,#2dd4bf,#5eead4)}
-.tree-legend i.l2{background:linear-gradient(135deg,#a78bfa,#7c3aed)}
-.tree-legend i.l3{background:linear-gradient(135deg,#fbbf24,#d97706)}
+.tree-legend span{display:flex;align-items:center;gap:.35rem}
+.tree-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.tree-legend i.l0{background:linear-gradient(135deg,#2dd4bf,#0d9488)}
+.tree-legend i.l1{background:linear-gradient(135deg,#5eead4,#14b8a6)}
+.tree-legend i.l2{background:linear-gradient(135deg,#c4b5fd,#7c3aed)}
+.tree-legend i.l3{background:linear-gradient(135deg,#fcd34d,#d97706)}
+.tree-legend i.l4{background:linear-gradient(135deg,#60a5fa,#2563eb)}
+.tree-legend i.l5{background:linear-gradient(135deg,#fb7185,#e11d48)}
 .tree-legend i.empty{border:1.5px dashed #64748b;background:transparent;box-sizing:border-box}
 </style>
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
@@ -98,55 +55,92 @@
 const user = renderShell('referral');
 if (user) {
   const me = escapeHtml(user.nama || 'You');
-  const shortMe = me.length > 12 ? me.slice(0, 11) + '…' : me;
+  const shortMe = me.length > 10 ? me.slice(0, 9) + '…' : me;
   const ini = initials(user.nama || 'You');
   const refCode = (user.referral && user.referral.trim()) ? user.referral.trim().toUpperCase() : 'SMARTAI-REF';
   const refLink = location.origin + location.pathname.replace(/[^/]+$/, '') + 'register.html?ref=' + encodeURIComponent(refCode);
 
-  /* Coordinate system: viewBox 0 0 680 420 — pure SVG for perfect alignment */
-  const W = 680, H = 420;
-  const nodes = [
-    { id:'r',  x:340, y:48,  r:28, label: shortMe, full: me + ' (Kamu)', av: ini, level:0, empty:false },
-    { id:'a',  x:190, y:130, r:24, label:'Fajar', full:'Fajar S.', av:'FS', level:1, empty:false },
-    { id:'b',  x:490, y:130, r:24, label:'Maya', full:'Maya L.', av:'ML', level:1, empty:false },
-    { id:'a1', x:110, y:220, r:22, label:'Tono', full:'Tono H.', av:'TH', level:2, empty:false },
-    { id:'a2', x:270, y:220, r:22, label:'Nina', full:'Nina A.', av:'NA', level:2, empty:false },
-    { id:'b1', x:410, y:220, r:22, label:'Dina', full:'Dina W.', av:'DW', level:2, empty:false },
-    { id:'b2', x:570, y:220, r:22, label:'Rizky', full:'Rizky K.', av:'RK', level:2, empty:false },
-    { id:'c1', x:70,  y:320, r:18, label:'Yoga', full:'Yoga P.', av:'YP', level:3, empty:false },
-    { id:'c2', x:150, y:320, r:18, label:'Sinta', full:'Sinta A.', av:'SA', level:3, empty:false },
-    { id:'c3', x:230, y:320, r:18, label:'Eko', full:'Eko H.', av:'EH', level:3, empty:false },
-    { id:'c4', x:310, y:320, r:18, label:'Kosong', full:'Slot kosong', av:'+', level:3, empty:true },
-    { id:'c5', x:390, y:320, r:18, label:'Bima', full:'Bima P.', av:'BP', level:3, empty:false },
-    { id:'c6', x:470, y:320, r:18, label:'Kosong', full:'Slot kosong', av:'+', level:3, empty:true },
-    { id:'c7', x:550, y:320, r:18, label:'Rina', full:'Rina M.', av:'RM', level:3, empty:false },
-    { id:'c8', x:630, y:320, r:18, label:'Kosong', full:'Slot kosong', av:'+', level:3, empty:true }
-  ];
+  /* Demo roster by level (unlimited positions in real system; max depth = 5) */
+  const roster = {
+    0: [{ av: ini, label: shortMe, full: me + ' (Kamu)', empty: false }],
+    1: [
+      { av: 'FS', label: 'Fajar', full: 'Fajar S.', empty: false },
+      { av: 'ML', label: 'Maya', full: 'Maya L.', empty: false }
+    ],
+    2: [
+      { av: 'TH', label: 'Tono', full: 'Tono H.', empty: false },
+      { av: 'NA', label: 'Nina', full: 'Nina A.', empty: false },
+      { av: 'DW', label: 'Dina', full: 'Dina W.', empty: false },
+      { av: 'RK', label: 'Rizky', full: 'Rizky K.', empty: false }
+    ],
+    3: [
+      { av: 'YP', label: 'Yoga', full: 'Yoga P.', empty: false },
+      { av: 'SA', label: 'Sinta', full: 'Sinta A.', empty: false },
+      { av: 'EH', label: 'Eko', full: 'Eko H.', empty: false },
+      { av: '+', label: '', full: 'Slot kosong', empty: true },
+      { av: 'BP', label: 'Bima', full: 'Bima P.', empty: false },
+      { av: '+', label: '', full: 'Slot kosong', empty: true },
+      { av: 'RM', label: 'Rina', full: 'Rina M.', empty: false },
+      { av: '+', label: '', full: 'Slot kosong', empty: true }
+    ],
+    4: [
+      { av: 'AR', label: 'Andi', full: 'Andi R.', empty: false },
+      { av: 'SW', label: 'Sari', full: 'Sari W.', empty: false },
+      { av: '+', label: '', full: 'Slot kosong', empty: true },
+      { av: 'DK', label: 'Dedi', full: 'Dedi K.', empty: false },
+      { av: '+', label: '', full: 'Slot kosong', empty: true },
+      { av: 'FL', label: 'Fira', full: 'Fira L.', empty: false },
+      { av: '+', label: '', full: 'Slot kosong', empty: true },
+      { av: '+', label: '', full: 'Slot kosong', empty: true }
+    ],
+    5: [
+      { av: 'GH', label: 'Gilang', full: 'Gilang H.', empty: false },
+      { av: '+', label: '', full: 'Slot kosong', empty: true },
+      { av: 'IR', label: 'Indra', full: 'Indra R.', empty: false },
+      { av: '+', label: '', full: 'Slot kosong', empty: true },
+      { av: '+', label: '', full: 'Slot kosong', empty: true },
+      { av: 'JN', label: 'Joko', full: 'Joko N.', empty: false },
+      { av: '+', label: '', full: 'Slot kosong', empty: true },
+      { av: '+', label: '', full: 'Slot kosong', empty: true }
+    ]
+  };
 
-  const edges = [
-    ['r','a'],['r','b'],
-    ['a','a1'],['a','a2'],
-    ['b','b1'],['b','b2'],
-    ['a1','c1'],['a1','c2'],
-    ['a2','c3'],['a2','c4'],
-    ['b1','c5'],['b1','c6'],
-    ['b2','c7'],['b2','c8']
-  ];
+  const MAX_LEVEL = 5;
+  const W = 900;
+  const rowH = 88;
+  const topPad = 36;
+  const H = topPad + (MAX_LEVEL + 1) * rowH + 20;
+  const radii = [26, 22, 20, 16, 14, 12];
+
+  const nodes = [];
+  for (let level = 0; level <= MAX_LEVEL; level++) {
+    const list = roster[level] || [];
+    const count = list.length;
+    const y = topPad + level * rowH;
+    const r = radii[level] || 12;
+    for (let i = 0; i < count; i++) {
+      const x = ((i + 0.5) / count) * W;
+      const d = list[i];
+      nodes.push({
+        id: 'L' + level + '_' + i,
+        level, i, x, y, r,
+        av: d.av, label: d.label, full: d.full, empty: d.empty,
+        parent: level === 0 ? null : 'L' + (level - 1) + '_' + Math.floor(i * (roster[level - 1].length) / count)
+      });
+    }
+  }
 
   const byId = Object.fromEntries(nodes.map(n => [n.id, n]));
+  const edges = nodes.filter(n => n.parent && byId[n.parent]).map(n => [n.parent, n.id]);
 
-  const fills = {
-    0: 'url(#gRoot)',
-    1: 'url(#gL1)',
-    2: 'url(#gL2)',
-    3: 'url(#gL3)'
-  };
+  const fills = [
+    'url(#g0)', 'url(#g1)', 'url(#g2)', 'url(#g3)', 'url(#g4)', 'url(#g5)'
+  ];
 
   const edgeSvg = edges.map(([f, t]) => {
     const a = byId[f], b = byId[t];
-    // stop at circle edge, not center — cleaner look
     const dx = b.x - a.x, dy = b.y - a.y;
-    const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
     const x1 = a.x + (dx / dist) * a.r;
     const y1 = a.y + (dy / dist) * a.r;
     const x2 = b.x - (dx / dist) * b.r;
@@ -158,28 +152,28 @@ if (user) {
     if (n.empty) {
       return `<g class="node-group" transform="translate(${n.x},${n.y})">
         <title>${escapeHtml(n.full)}</title>
-        <circle class="node-fill" r="${n.r}" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="4 3"/>
+        <circle class="node-fill" r="${n.r}" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="3 2"/>
         <text class="av-text empty" y="1">+</text>
-        <text class="lbl-empty" y="${n.r + 10}">${escapeHtml(n.label)}</text>
       </g>`;
     }
-    const fill = fills[n.level] || fills[3];
-    const avClass = n.level === 2 ? 'av-text light' : (n.level === 3 ? 'av-text sm' : 'av-text');
-    const lblClass = n.level === 0 ? 'lbl-root' : 'lbl';
+    const fill = fills[n.level] || fills[5];
+    const avCls = n.level === 2 || n.level === 4 || n.level === 5 ? 'av-text light sm' : (n.level >= 3 ? 'av-text sm' : 'av-text');
+    const lblCls = n.level === 0 ? 'lbl-root' : 'lbl';
+    const showLabel = n.level <= 3 || n.label;
     return `<g class="node-group" transform="translate(${n.x},${n.y})">
-      <title>${escapeHtml(n.full)}</title>
+      <title>${escapeHtml(n.full)} · Level ${n.level}</title>
       <circle class="node-fill" r="${n.r}" fill="${fill}"/>
       <circle class="node-ring" r="${n.r}"/>
-      <text class="${avClass}" y="1">${escapeHtml(n.av)}</text>
-      <text class="${lblClass}" y="${n.r + 10}">${escapeHtml(n.label)}</text>
+      <text class="${avCls}" y="1">${escapeHtml(n.av)}</text>
+      ${showLabel && n.label ? `<text class="${lblCls}" y="${n.r + 8}">${escapeHtml(n.label)}</text>` : ''}
     </g>`;
   }).join('');
 
   const matrixNames = [
     'Fajar S.','Maya L.','Rizky K.','Andi R.','Sari W.',
     'Tono H.','Nina A.','Dina W.','Bima P.','Yoga P.',
-    'Sinta A.','Eko H.','Rina M.',null,null,
-    null,null,null,null,null,
+    'Sinta A.','Eko H.','Rina M.','Gilang H.','Indra R.',
+    'Joko N.',null,null,null,null,
     null,null,null,null,null
   ];
   const matrixCells = matrixNames.map((name, i) => {
@@ -194,9 +188,9 @@ if (user) {
   document.getElementById('page-content').innerHTML = `
     <div class="stats-grid">
       <div class="stat-card"><div class="label">Total Network</div><div class="value">34</div><div class="hint">Semua level</div></div>
-      <div class="stat-card"><div class="label">Matrix filled</div><div class="value">13/25</div><div class="hint">5 × 5 seats</div></div>
-      <div class="stat-card"><div class="label">Level 1</div><div class="value">2</div><div class="hint">Direct binary</div></div>
-      <div class="stat-card"><div class="label">Open slots</div><div class="value">3</div><div class="hint">Di pohon</div></div>
+      <div class="stat-card"><div class="label">Max depth</div><div class="value">5</div><div class="hint">Level mentok di 5</div></div>
+      <div class="stat-card"><div class="label">Level 1</div><div class="value">2</div><div class="hint">Direct</div></div>
+      <div class="stat-card"><div class="label">Open slots</div><div class="value">∞</div><div class="hint">Posisi tak terbatas</div></div>
     </div>
 
     <div class="panel">
@@ -225,37 +219,30 @@ if (user) {
     <div class="panel">
       <div class="panel-head">
         <h2>Pohon Jaringan</h2>
-        <span class="sub">Binary · profesional</span>
+        <span class="sub">Level 0 – 5 · posisi tak terbatas</span>
       </div>
       <div class="pyramid-wrap">
-        <svg class="pyramid-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pohon referral binary">
+        <svg class="pyramid-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pohon referral level 5">
           <defs>
-            <linearGradient id="gRoot" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#2dd4bf"/>
-              <stop offset="100%" stop-color="#0d9488"/>
-            </linearGradient>
-            <linearGradient id="gL1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#5eead4"/>
-              <stop offset="100%" stop-color="#14b8a6"/>
-            </linearGradient>
-            <linearGradient id="gL2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#c4b5fd"/>
-              <stop offset="100%" stop-color="#7c3aed"/>
-            </linearGradient>
-            <linearGradient id="gL3" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#fcd34d"/>
-              <stop offset="100%" stop-color="#d97706"/>
-            </linearGradient>
+            <linearGradient id="g0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2dd4bf"/><stop offset="100%" stop-color="#0d9488"/></linearGradient>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient>
+            <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c4b5fd"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+            <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fcd34d"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+            <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#93c5fd"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+            <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fda4af"/><stop offset="100%" stop-color="#e11d48"/></linearGradient>
           </defs>
           ${edgeSvg}
           ${nodeSvg}
         </svg>
+        <p class="tree-note">Kedalaman maksimal <strong>level 5</strong>. Jumlah posisi per level tidak dibatasi.</p>
         <div class="tree-legend">
-          <span><i class="root"></i> Anda (Root)</span>
-          <span><i class="l1"></i> Level 1</span>
-          <span><i class="l2"></i> Level 2</span>
-          <span><i class="l3"></i> Level 3</span>
-          <span><i class="empty"></i> Slot kosong</span>
+          <span><i class="l0"></i> Root</span>
+          <span><i class="l1"></i> L1</span>
+          <span><i class="l2"></i> L2</span>
+          <span><i class="l3"></i> L3</span>
+          <span><i class="l4"></i> L4</span>
+          <span><i class="l5"></i> L5</span>
+          <span><i class="empty"></i> Kosong</span>
         </div>
       </div>
     </div>
@@ -263,7 +250,7 @@ if (user) {
     <div class="panel">
       <div class="panel-head">
         <h2>Matrix Level 5 × 5</h2>
-        <span class="sub">25 posisi · 13 terisi · 12 kosong</span>
+        <span class="sub">25 posisi · contoh seat plan</span>
       </div>
       <div class="matrix-wrap">
         <div class="matrix-5x5">${matrixCells}</div>
@@ -278,13 +265,14 @@ if (user) {
       <div class="panel-head"><h2>Daftar jaringan</h2><span class="sub">Data demo</span></div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Nama</th><th>Level</th><th>Posisi</th><th>Status</th></tr></thead>
+          <thead><tr><th>Nama</th><th>Level</th><th>Status</th></tr></thead>
           <tbody>
-            <tr><td>Fajar S.</td><td>L1</td><td>Kiri</td><td><span class="badge ok">Active</span></td></tr>
-            <tr><td>Maya L.</td><td>L1</td><td>Kanan</td><td><span class="badge ok">Active</span></td></tr>
-            <tr><td>Tono H.</td><td>L2</td><td>L-L</td><td><span class="badge ok">Active</span></td></tr>
-            <tr><td>Nina A.</td><td>L2</td><td>L-R</td><td><span class="badge warn">Pending</span></td></tr>
-            <tr><td>Yoga P.</td><td>L3</td><td>—</td><td><span class="badge ok">Active</span></td></tr>
+            <tr><td>Fajar S.</td><td>L1</td><td><span class="badge ok">Active</span></td></tr>
+            <tr><td>Maya L.</td><td>L1</td><td><span class="badge ok">Active</span></td></tr>
+            <tr><td>Tono H.</td><td>L2</td><td><span class="badge ok">Active</span></td></tr>
+            <tr><td>Yoga P.</td><td>L3</td><td><span class="badge ok">Active</span></td></tr>
+            <tr><td>Andi R.</td><td>L4</td><td><span class="badge ok">Active</span></td></tr>
+            <tr><td>Gilang H.</td><td>L5</td><td><span class="badge info">New</span></td></tr>
           </tbody>
         </table>
       </div>
