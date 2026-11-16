@@ -113,8 +113,8 @@ if (renderShell('performance')) {
   var cards = accounts.map(function (a) {
     var rg = ring(a.ret);
     return '<div class="acc-card ' + a.cls + '">' +
-      '<div class="acc-top"><span class="acc-pkg ' + a.cls + '">' + a.pkg.toUpperCase() + '</span><span class="mt5-badge">MT5 LIVE</span></div>' +
-      '<div class="acc-id">' + a.id + ' <span class="online">ONLINE</span></div>' +
+      '<div class="acc-top"><span class="acc-pkg ' + a.cls + '">' + a.pkg.toUpperCase() + '</span><span class="mt5-badge">SAMPLE DATA</span></div>' +
+      '<div class="acc-id">' + a.id + ' <span class="online">CONTOH</span></div>' +
       '<div class="acc-metrics">' +
         '<div class="acc-metric"><div class="ml">Deposit Awal</div><div class="mv">' + a.deposit + '</div></div>' +
         '<div class="acc-metric"><div class="ml">Equity Saat Ini</div><div class="mv">' + a.equity + '</div></div>' +
@@ -124,7 +124,7 @@ if (renderShell('performance')) {
       '<div class="daily-box"><div class="db-label">Daily Return</div><div class="db-val">' + a.retLabel + '</div><div class="db-sub">Daily Profit ÷ Equity Saat Ini</div></div>' +
       '<div class="acc-foot"><div class="ring-wrap"><svg viewBox="0 0 72 72"><circle class="track" cx="36" cy="36" r="30"/><circle class="bar" cx="36" cy="36" r="30" stroke-dasharray="' + rg.c + '" stroke-dashoffset="' + rg.offset + '"/></svg><div class="ring-pct">' + a.retLabel + '</div></div>' +
       '<div class="ring-detail">Persentase terhadap Equity Saat Ini<br/>Daily Profit: <strong>' + a.daily + '</strong><br/>Equity Saat Ini: <strong>' + a.equity + '</strong><br/>Daily Drawdown: <strong>0.00%</strong></div></div>' +
-      '<div class="acc-update">Update: ' + stamp + '<div class="progress-line"><i></i></div></div></div>';
+      '<div class="acc-update">Contoh tampilan · ' + stamp + '<div class="progress-line"><i></i></div></div></div>';
   }).join('');
   var calData = { year: 2026, month: 8, label: 'September 2026', monthPct: '+129.0%', tradingDays: 19,
     days: { 1:6.8,2:8.9,3:7.9,7:13.1,8:3.7,9:2.1,10:15.4,11:12.2,14:10.7,16:8.7,17:14.9,18:2.7,21:4.0,22:-8.7,23:5.3,24:7.0,25:4.8,28:6.2,29:3.3 } };
