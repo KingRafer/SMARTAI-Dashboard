@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Register — Smart AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card register">
+    <div class="auth-logo">SMART<span>AI</span></div>
+    <h1>Buat akun baru</h1>
+    <p class="auth-sub">Daftar member Smart AI</p>
+    <form id="register-form">
+      <div class="form-group">
+        <label for="nama">Nama lengkap <span class="req">*</span></label>
+        <input type="text" id="nama" required autocomplete="name" placeholder="Nama lengkap"/>
+      </div>
+      <div class="form-group">
+        <label for="email">Email <span class="req">*</span></label>
+        <input type="email" id="email" required autocomplete="email" placeholder="nama@email.com"/>
+      </div>
+      <div class="form-group">
+        <label for="hp">No. HP / WhatsApp <span class="req">*</span></label>
+        <input type="tel" id="hp" required pattern="[0-9]{10,15}" inputmode="numeric" placeholder="0812xxxxxxxx"/>
+      </div>
+      <div class="form-group">
+        <label for="password">Password <span class="req">*</span></label>
+        <div class="password-wrap">
+          <input type="password" id="password" required minlength="6" autocomplete="new-password" placeholder="Minimal 6 karakter"/>
+          <button type="button" class="toggle-pass" id="toggle-pass" aria-label="Tampilkan password">👁</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password2">Konfirmasi password <span class="req">*</span></label>
+        <div class="password-wrap">
+          <input type="password" id="password2" required minlength="6" autocomplete="new-password" placeholder="Ulangi password"/>
+          <button type="button" class="toggle-pass" id="toggle-pass2" aria-label="Tampilkan password">👁</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="referral">Kode referral <span class="opt">(opsional)</span></label>
+        <input type="text" id="referral" placeholder="Kode referral jika ada"/>
+      </div>
+      <label class="check" style="margin-bottom:1rem">
+        <input type="checkbox" id="agree" required/>
+        Saya setuju dengan ketentuan layanan & memahami risiko trading
+      </label>
+      <div class="msg error" id="error"></div>
+      <div class="msg success" id="success"></div>
+      <button type="submit" class="btn-primary" id="btn">Daftar Sekarang →</button>
+    </form>
+    <div class="auth-divider"><span>atau</span></div>
+    <p class="auth-footer">Sudah punya akun? <a href="login.html">Login</a></p>
+  </div>
+</div>
+<script src="js/auth.js"></script>
+<script>
+redirectIfLoggedIn();
+setupPasswordToggle('toggle-pass', 'password');
+setupPasswordToggle('toggle-pass2', 'password2');
+document.getElementById('register-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var nama = document.getElementById('nama').value.trim();
+  var email = document.getElementById('email').value.trim();
+  var hp = document.getElementById('hp').value.trim().replace(/\s/g, '');
+  var password = document.getElementById('password').value;
+  var password2 = document.getElementById('password2').value;
+  var referral = document.getElementById('referral').value.trim();
+  var err = document.getElementById('error');
+  var ok = document.getElementById('success');
+  err.classList.remove('show');
+  ok.classList.remove('show');
+  if (!nama || !email || !hp) {
+    err.textContent = 'Lengkapi data wajib.';
+    err.classList.add('show');
+    return;
+  }
+  if (!/^[0-9]{10,15}$/.test(hp)) {
+    err.textContent = 'No. HP harus 10–15 digit.';
+    err.classList.add('show');
+    return;
+  }
+  if (password.length < 6) {
+    err.textContent = 'Password minimal 6 karakter.';
+    err.classList.add('show');
+    return;
+  }
+  if (password !== password2) {
+    err.textContent = 'Konfirmasi password tidak cocok.';
+    err.classList.add('show');
+    return;
+  }
+  if (!document.getElementById('agree').checked) {
+    err.textContent = 'Anda harus menyetujui ketentuan.';
+    err.classList.add('show');
+    return;
+  }
+  var accounts = [];
+  try { accounts = JSON.parse(localStorage.getItem('smartai_accounts') || '[]'); } catch (e) {}
+  if (accounts.some(function (a) { return a.email.toLowerCase() === email.toLowerCase(); })) {
+    err.textContent = 'Email sudah terdaftar. Silakan login.';
+    err.classList.add('show');
+    return;
+  }
+  accounts.push({ nama: nama, email: email, hp: hp, password: password, referral: referral });
+  localStorage.setItem('smartai_accounts', JSON.stringify(accounts));
+  setUser({ nama: nama, email: email, hp: hp, referral: referral });
+  ok.textContent = 'Registrasi berhasil. Mengalihkan ke dashboard...';
+  ok.classList.add('show');
+  setTimeout(function () { location.href = 'dashboard.html'; }, 800);
+});
+</script>
+</body>
+</html>
