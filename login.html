@@ -6,6 +6,41 @@
 <title>Login — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<style>
+.demo-box{
+  background:rgba(45,212,191,.08);
+  border:1px solid rgba(45,212,191,.22);
+  border-radius:12px;
+  padding:.9rem 1rem;
+  margin-bottom:1.25rem;
+  font-size:.82rem;
+  color:var(--text-muted);
+}
+.demo-box strong{color:var(--cyan);font-weight:600}
+.demo-box code{
+  display:inline-block;
+  background:rgba(0,0,0,.25);
+  padding:.15rem .45rem;
+  border-radius:6px;
+  color:var(--text);
+  font-size:.8rem;
+}
+.demo-box .row{margin:.25rem 0}
+.btn-demo{
+  margin-top:.65rem;
+  width:100%;
+  padding:.55rem;
+  border-radius:999px;
+  border:1px solid rgba(45,212,191,.35);
+  background:transparent;
+  color:var(--cyan);
+  font-size:.8rem;
+  font-weight:600;
+  font-family:inherit;
+  cursor:pointer;
+}
+.btn-demo:hover{background:rgba(45,212,191,.12)}
+</style>
 </head>
 <body>
 <div class="auth-page">
@@ -13,6 +48,14 @@
     <div class="auth-logo">SMART<span>AI</span></div>
     <h1>Masuk ke akun</h1>
     <p class="auth-sub">Akses dashboard member Smart AI</p>
+
+    <div class="demo-box">
+      <strong>Akun demo</strong>
+      <div class="row">Email: <code>demo@smartai.com</code></div>
+      <div class="row">Password: <code>demo123</code></div>
+      <button type="button" class="btn-demo" id="fill-demo">Isi & pakai akun demo</button>
+    </div>
+
     <form id="login-form">
       <div class="form-group">
         <label for="email">Email <span class="req">*</span></label>
@@ -38,31 +81,40 @@
 <script src="js/auth.js"></script>
 <script>
 redirectIfLoggedIn();
+ensureDemoAccount();
 setupPasswordToggle('toggle-pass', 'password');
+
+document.getElementById('fill-demo').addEventListener('click', function () {
+  document.getElementById('email').value = DEMO_ACCOUNT.email;
+  document.getElementById('password').value = DEMO_ACCOUNT.password;
+});
+
 document.getElementById('login-form').addEventListener('submit', function (e) {
   e.preventDefault();
   var email = document.getElementById('email').value.trim();
   var password = document.getElementById('password').value;
   var err = document.getElementById('error');
   err.classList.remove('show');
+
   if (!email || !password) {
     err.textContent = 'Email dan password wajib diisi.';
     err.classList.add('show');
     return;
   }
-  var stored = localStorage.getItem('smartai_accounts');
-  var accounts = stored ? JSON.parse(stored) : [];
-  var found = accounts.find(function (a) { return a.email.toLowerCase() === email.toLowerCase() && a.password === password; });
-  if (!found && email && password.length >= 6) {
-    // demo: allow login with any valid-looking credentials and create session
-    found = { nama: email.split('@')[0], email: email, hp: '', referral: '' };
-  }
+
+  var found = findAccount(email, password);
   if (!found) {
-    err.textContent = 'Email atau password salah. Silakan register dulu.';
+    err.textContent = 'Email atau password salah. Gunakan akun demo atau register dulu.';
     err.classList.add('show');
     return;
   }
-  setUser({ nama: found.nama, email: found.email, hp: found.hp || '', referral: found.referral || '' });
+
+  setUser({
+    nama: found.nama,
+    email: found.email,
+    hp: found.hp || '',
+    referral: found.referral || ''
+  });
   location.href = 'dashboard.html';
 });
 </script>
