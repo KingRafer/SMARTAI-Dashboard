@@ -6,6 +6,7 @@
 <title>Register — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
 <div class="auth-page">
@@ -59,8 +60,17 @@
 <script src="js/auth.js"></script>
 <script>
 redirectIfLoggedIn();
+ensureDemoAccount();
 setupPasswordToggle('toggle-pass', 'password');
 setupPasswordToggle('toggle-pass2', 'password2');
+
+// Prefill referral from ?ref=
+try {
+  var params = new URLSearchParams(location.search);
+  var refQ = params.get('ref');
+  if (refQ) document.getElementById('referral').value = refQ;
+} catch (e) {}
+
 document.getElementById('register-form').addEventListener('submit', function (e) {
   e.preventDefault();
   var nama = document.getElementById('nama').value.trim();
@@ -98,16 +108,16 @@ document.getElementById('register-form').addEventListener('submit', function (e)
     err.classList.add('show');
     return;
   }
-  var accounts = [];
-  try { accounts = JSON.parse(localStorage.getItem('smartai_accounts') || '[]'); } catch (e) {}
-  if (accounts.some(function (a) { return a.email.toLowerCase() === email.toLowerCase(); })) {
+  var accounts = getAccounts();
+  if (accounts.some(function (a) { return a.email && a.email.toLowerCase() === email.toLowerCase(); })) {
     err.textContent = 'Email sudah terdaftar. Silakan login.';
     err.classList.add('show');
     return;
   }
-  accounts.push({ nama: nama, email: email, hp: hp, password: password, referral: referral });
+  var record = { nama: nama, email: email, hp: hp, password: password, referral: referral, avatar: null };
+  accounts.push(record);
   localStorage.setItem('smartai_accounts', JSON.stringify(accounts));
-  setUser({ nama: nama, email: email, hp: hp, referral: referral });
+  setUser(sessionFromAccount(record));
   ok.textContent = 'Registrasi berhasil. Mengalihkan ke dashboard...';
   ok.classList.add('show');
   setTimeout(function () { location.href = 'dashboard.html'; }, 800);
