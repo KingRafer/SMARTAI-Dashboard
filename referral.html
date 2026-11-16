@@ -16,32 +16,68 @@ const user = renderShell('referral');
 if (user) {
   const me = escapeHtml(user.nama || 'You');
   const ini = initials(user.nama || 'You');
+  const refCode = (user.referral && user.referral.trim()) ? user.referral.trim().toUpperCase() : 'SMARTAI-REF';
+  const refLink = location.origin + location.pathname.replace(/[^/]+$/, '') + 'register.html?ref=' + encodeURIComponent(refCode);
+
+  // Matrix 5x5 demo seats (25 cells)
+  const matrixNames = [
+    'Fajar S.','Maya L.','Rizky K.','Andi R.','Sari W.',
+    'Tono H.','Nina A.','Dina W.','Bima P.','Yoga P.',
+    'Sinta A.','Eko H.','Rina M.',null,null,
+    null,null,null,null,null,
+    null,null,null,null,null
+  ];
+  const matrixCells = matrixNames.map((name, i) => {
+    if (!name) {
+      return `<div class="matrix-cell empty" style="animation-delay:${i * 0.02}s" title="Slot kosong"></div>`;
+    }
+    const av = name.split(/\s+/).map(p => p[0]).slice(0, 2).join('').toUpperCase();
+    return `<div class="matrix-cell filled" style="animation-delay:${i * 0.02}s" title="${escapeHtml(name)}">
+      <div class="mc-av">${av}</div>
+      <div class="mc-name">${escapeHtml(name.split(' ')[0])}</div>
+    </div>`;
+  }).join('');
+
   document.getElementById('page-content').innerHTML = `
     <div class="stats-grid">
       <div class="stat-card"><div class="label">Total Network</div><div class="value">34</div><div class="hint">Semua level</div></div>
-      <div class="stat-card"><div class="label">Level 1</div><div class="value">12</div><div class="hint">Direct referral</div></div>
-      <div class="stat-card"><div class="label">Level 2</div><div class="value">15</div></div>
-      <div class="stat-card"><div class="label">Level 3</div><div class="value">7</div></div>
+      <div class="stat-card"><div class="label">Matrix filled</div><div class="value">13/25</div><div class="hint">5 × 5 seats</div></div>
+      <div class="stat-card"><div class="label">Level 1</div><div class="value">5</div><div class="hint">Direct</div></div>
+      <div class="stat-card"><div class="label">Open slots</div><div class="value">12</div><div class="hint">Siap diisi</div></div>
     </div>
 
     <div class="panel">
       <div class="panel-head">
-        <h2>Kode referral Anda</h2>
-        <span class="sub">Bagikan ke calon member</span>
+        <h2>Bagikan referral</h2>
+        <span class="sub">Salin kode atau link</span>
       </div>
-      <p style="font-size:1.35rem;font-weight:800;color:var(--cyan);letter-spacing:.06em;margin-bottom:.4rem">SMARTAI-REF</p>
-      <p style="color:var(--text-muted);font-size:.85rem">Jaringan di bawah adalah peta koneksi demo 3 level.</p>
+      <div class="ref-share">
+        <div class="ref-field">
+          <div class="rf-label">Kode referral</div>
+          <div class="rf-row">
+            <span class="rf-value code" id="ref-code">${escapeHtml(refCode)}</span>
+            <button type="button" class="btn-copy" id="copy-code">Salin kode</button>
+          </div>
+        </div>
+        <div class="ref-field">
+          <div class="rf-label">Link referral</div>
+          <div class="rf-row">
+            <span class="rf-value" id="ref-link">${escapeHtml(refLink)}</span>
+            <button type="button" class="btn-copy" id="copy-link">Salin link</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="panel">
       <div class="panel-head">
-        <h2>Peta koneksi referral</h2>
-        <span class="sub">Hover node untuk highlight</span>
+        <h2>Pohon jaringan</h2>
+        <span class="sub">Struktur koneksi level</span>
       </div>
       <div class="network-map">
         <div class="network-tree">
           <div>
-            <div class="level-label">You</div>
+            <div class="level-label">You (Root)</div>
             <div class="net-level">
               <div class="net-node root">
                 <div class="av">${ini}</div>
@@ -52,33 +88,53 @@ if (user) {
           </div>
           <div class="net-connector"></div>
           <div>
-            <div class="level-label">Level 1 — Direct</div>
+            <div class="level-label">Level 1</div>
             <div class="net-level">
-              <div class="net-node" style="animation-delay:.08s"><div class="av">FS</div><div class="n-name">Fajar S.</div><div class="n-meta">L1 · Active</div></div>
-              <div class="net-node" style="animation-delay:.14s"><div class="av">ML</div><div class="n-name">Maya L.</div><div class="n-meta">L1 · Active</div></div>
-              <div class="net-node" style="animation-delay:.2s"><div class="av">RK</div><div class="n-name">Rizky K.</div><div class="n-meta">L1 · Active</div></div>
+              <div class="net-node" style="animation-delay:.06s"><div class="av">FS</div><div class="n-name">Fajar S.</div><div class="n-meta">L1</div></div>
+              <div class="net-node" style="animation-delay:.1s"><div class="av">ML</div><div class="n-name">Maya L.</div><div class="n-meta">L1</div></div>
+              <div class="net-node" style="animation-delay:.14s"><div class="av">RK</div><div class="n-name">Rizky K.</div><div class="n-meta">L1</div></div>
             </div>
           </div>
           <div class="net-connector"></div>
           <div>
             <div class="level-label">Level 2</div>
             <div class="net-level">
-              <div class="net-node l2" style="animation-delay:.22s"><div class="av">TH</div><div class="n-name">Tono H.</div><div class="n-meta">via Fajar</div></div>
-              <div class="net-node l2" style="animation-delay:.28s"><div class="av">NA</div><div class="n-name">Nina A.</div><div class="n-meta">via Maya</div></div>
-              <div class="net-node l2" style="animation-delay:.34s"><div class="av">DW</div><div class="n-name">Dina W.</div><div class="n-meta">via Rizky</div></div>
-              <div class="net-node l2" style="animation-delay:.4s"><div class="av">BP</div><div class="n-name">Bima P.</div><div class="n-meta">via Maya</div></div>
+              <div class="net-node l2" style="animation-delay:.18s"><div class="av">TH</div><div class="n-name">Tono H.</div><div class="n-meta">via Fajar</div></div>
+              <div class="net-node l2" style="animation-delay:.22s"><div class="av">NA</div><div class="n-name">Nina A.</div><div class="n-meta">via Maya</div></div>
+              <div class="net-node l2" style="animation-delay:.26s"><div class="av">DW</div><div class="n-name">Dina W.</div><div class="n-meta">via Rizky</div></div>
             </div>
           </div>
           <div class="net-connector"></div>
           <div>
             <div class="level-label">Level 3</div>
             <div class="net-level">
-              <div class="net-node l3" style="animation-delay:.42s"><div class="av">YP</div><div class="n-name">Yoga P.</div><div class="n-meta">via Tono</div></div>
-              <div class="net-node l3" style="animation-delay:.48s"><div class="av">SA</div><div class="n-name">Sinta A.</div><div class="n-meta">via Nina</div></div>
-              <div class="net-node l3" style="animation-delay:.54s"><div class="av">EH</div><div class="n-name">Eko H.</div><div class="n-meta">via Dina</div></div>
+              <div class="net-node l3" style="animation-delay:.3s"><div class="av">YP</div><div class="n-name">Yoga P.</div><div class="n-meta">via Tono</div></div>
+              <div class="net-node l3" style="animation-delay:.34s"><div class="av">SA</div><div class="n-name">Sinta A.</div><div class="n-meta">via Nina</div></div>
+            </div>
+          </div>
+          <div class="net-connector"></div>
+          <div>
+            <div class="level-label">Level 4 – 5</div>
+            <div class="net-level">
+              <div class="net-node l4" style="animation-delay:.38s"><div class="av">EH</div><div class="n-name">Eko H.</div><div class="n-meta">L4</div></div>
+              <div class="net-node l5" style="animation-delay:.42s"><div class="av">RM</div><div class="n-name">Rina M.</div><div class="n-meta">L5</div></div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Matrix Level 5 × 5</h2>
+        <span class="sub">25 posisi · 13 terisi · 12 kosong</span>
+      </div>
+      <div class="matrix-wrap">
+        <div class="matrix-5x5">${matrixCells}</div>
+      </div>
+      <div class="matrix-legend">
+        <span><i class="f"></i> Terisi</span>
+        <span><i class="e"></i> Slot kosong</span>
       </div>
     </div>
 
@@ -93,10 +149,61 @@ if (user) {
             <tr><td>Tono H.</td><td>L2</td><td>18 Oct 2026</td><td><span class="badge ok">Active</span></td></tr>
             <tr><td>Nina A.</td><td>L2</td><td>01 Nov 2026</td><td><span class="badge warn">Pending</span></td></tr>
             <tr><td>Yoga P.</td><td>L3</td><td>05 Nov 2026</td><td><span class="badge ok">Active</span></td></tr>
+            <tr><td>Eko H.</td><td>L4</td><td>08 Nov 2026</td><td><span class="badge ok">Active</span></td></tr>
+            <tr><td>Rina M.</td><td>L5</td><td>12 Nov 2026</td><td><span class="badge info">New</span></td></tr>
           </tbody>
         </table>
       </div>
-    </div>`;
+    </div>
+
+    <div class="copy-toast" id="copy-toast">Disalin!</div>
+  `;
+
+  function showToast(msg) {
+    const t = document.getElementById('copy-toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  function copyText(text, btn) {
+    function ok() {
+      btn.classList.add('copied');
+      const old = btn.textContent;
+      btn.textContent = 'Tersalin ✓';
+      showToast('Berhasil disalin ke clipboard');
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.textContent = old;
+      }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(ok).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        ok();
+      });
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      ok();
+    }
+  }
+
+  document.getElementById('copy-code').addEventListener('click', function () {
+    copyText(refCode, this);
+  });
+  document.getElementById('copy-link').addEventListener('click', function () {
+    copyText(refLink, this);
+  });
 }
 </script>
 </body>
