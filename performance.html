@@ -6,208 +6,173 @@
 <meta http-equiv="Cache-Control" content="no-cache"/>
 <title>Acc Performance — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=20261116c">
+<link rel="stylesheet" href="css/app.css?v=20261116d">
 <style>
 .live-head{margin-bottom:1.25rem}
-.live-head h2{
-  font-size:1.35rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
-  background:linear-gradient(90deg,var(--cyan),#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent
-}
+.live-head h2{font-size:1.35rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(90deg,var(--cyan),#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
 .live-head p{color:var(--text-muted);font-size:.85rem;margin-top:.35rem}
-
-.acc-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:1.15rem
-}
+.acc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.15rem}
 @media(max-width:1100px){.acc-grid{grid-template-columns:1fr}}
-
-.acc-card{
-  background:var(--bg-card-solid);
-  border-radius:18px;
-  padding:1.25rem 1.2rem 1.15rem;
-  border:1px solid var(--border);
-  position:relative;
-  overflow:hidden;
-  animation:fadeUp .55s cubic-bezier(.22,1,.36,1) both
-}
+.acc-card{background:var(--bg-card-solid);border-radius:18px;padding:1.25rem 1.2rem 1.15rem;border:1px solid var(--border);position:relative;overflow:hidden;animation:fadeUp .55s cubic-bezier(.22,1,.36,1) both}
 .acc-card.basic{border-color:rgba(45,212,191,.35);box-shadow:0 0 0 1px rgba(45,212,191,.08),0 16px 40px rgba(0,0,0,.25)}
 .acc-card.gold{border-color:rgba(251,191,36,.4);box-shadow:0 0 0 1px rgba(251,191,36,.08),0 16px 40px rgba(0,0,0,.25)}
 .acc-card.pro{border-color:rgba(167,139,250,.4);box-shadow:0 0 0 1px rgba(167,139,250,.08),0 16px 40px rgba(0,0,0,.25)}
-.acc-card:nth-child(2){animation-delay:.08s}
-.acc-card:nth-child(3){animation-delay:.16s}
-
+.acc-card:nth-child(2){animation-delay:.08s}.acc-card:nth-child(3){animation-delay:.16s}
 .acc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem}
-.acc-pkg{
-  font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase
-}
-.acc-pkg.basic{color:var(--cyan)}
-.acc-pkg.gold{color:var(--gold)}
-.acc-pkg.pro{color:var(--purple)}
-.mt5-badge{
-  font-size:.62rem;font-weight:700;letter-spacing:.04em;
-  padding:.28rem .55rem;border-radius:999px;
-  background:rgba(45,212,191,.12);color:var(--cyan);border:1px solid rgba(45,212,191,.25)
-}
+.acc-pkg{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.acc-pkg.basic{color:var(--cyan)}.acc-pkg.gold{color:var(--gold)}.acc-pkg.pro{color:var(--purple)}
+.mt5-badge{font-size:.62rem;font-weight:700;letter-spacing:.04em;padding:.28rem .55rem;border-radius:999px;background:rgba(45,212,191,.12);color:var(--cyan);border:1px solid rgba(45,212,191,.25)}
 .acc-card.gold .mt5-badge{background:rgba(251,191,36,.12);color:var(--gold);border-color:rgba(251,191,36,.3)}
 .acc-card.pro .mt5-badge{background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.3)}
-
-.acc-id{
-  font-size:1.15rem;font-weight:800;letter-spacing:.02em;margin-bottom:1rem;
-  display:flex;align-items:center;gap:.55rem;flex-wrap:wrap
-}
-.acc-id .online{
-  font-size:.72rem;font-weight:700;color:var(--green);
-  display:inline-flex;align-items:center;gap:.3rem
-}
-.acc-id .online::before{
-  content:'';width:7px;height:7px;border-radius:50%;background:var(--green);
-  box-shadow:0 0 8px var(--green);animation:pulse 2s ease-in-out infinite
-}
-
-.acc-metrics{
-  display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.85rem
-}
-.acc-metric{
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:.7rem .8rem
-}
+.acc-id{font-size:1.15rem;font-weight:800;letter-spacing:.02em;margin-bottom:1rem;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
+.acc-id .online{font-size:.72rem;font-weight:700;color:var(--green);display:inline-flex;align-items:center;gap:.3rem}
+.acc-id .online::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s ease-in-out infinite}
+.acc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.85rem}
+.acc-metric{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem}
 [data-theme=light] .acc-metric{background:rgba(15,23,42,.03)}
 .acc-metric .ml{font-size:.65rem;color:var(--text-dim);font-weight:500;margin-bottom:.25rem}
 .acc-metric .mv{font-size:.95rem;font-weight:700;color:var(--text)}
-.acc-metric .mv.up{color:var(--green)}
-.acc-metric .mv.muted{color:var(--text-muted)}
-
-.daily-box{
-  background:rgba(45,212,191,.08);
-  border:1px solid rgba(45,212,191,.2);
-  border-radius:12px;
-  padding:.75rem 1rem;
-  margin-bottom:1rem
-}
+.acc-metric .mv.up{color:var(--green)}.acc-metric .mv.muted{color:var(--text-muted)}
+.daily-box{background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.2);border-radius:12px;padding:.75rem 1rem;margin-bottom:1rem}
 .acc-card.gold .daily-box{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.22)}
 .acc-card.pro .daily-box{background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.22)}
 .daily-box .db-label{font-size:.68rem;color:var(--text-dim);font-weight:600;margin-bottom:.2rem}
 .daily-box .db-val{font-size:1.25rem;font-weight:800;color:var(--green)}
 .daily-box .db-sub{font-size:.68rem;color:var(--text-muted);margin-top:.15rem}
-
-.acc-foot{
-  display:flex;align-items:center;gap:1rem;margin-bottom:.75rem
-}
+.acc-foot{display:flex;align-items:center;gap:1rem;margin-bottom:.75rem}
 .ring-wrap{position:relative;width:72px;height:72px;flex-shrink:0}
 .ring-wrap svg{width:72px;height:72px;transform:rotate(-90deg)}
 .ring-wrap .track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:6}
 .ring-wrap .bar{fill:none;stroke-width:6;stroke-linecap:round}
-.acc-card.basic .ring-wrap .bar{stroke:var(--cyan)}
-.acc-card.gold .ring-wrap .bar{stroke:var(--gold)}
-.acc-card.pro .ring-wrap .bar{stroke:var(--purple)}
-.ring-pct{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:.78rem;font-weight:800;color:var(--green)
-}
+.acc-card.basic .ring-wrap .bar{stroke:var(--cyan)}.acc-card.gold .ring-wrap .bar{stroke:var(--gold)}.acc-card.pro .ring-wrap .bar{stroke:var(--purple)}
+.ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;color:var(--green)}
 .ring-detail{flex:1;font-size:.72rem;color:var(--text-muted);line-height:1.55}
 .ring-detail strong{color:var(--text);font-weight:600}
-
-.acc-update{
-  font-size:.68rem;color:var(--text-dim);padding-top:.55rem;
-  border-top:1px solid var(--border)
-}
-.progress-line{
-  height:3px;border-radius:99px;background:rgba(255,255,255,.06);margin-top:.45rem;position:relative;overflow:hidden
-}
-.progress-line i{
-  position:absolute;left:0;top:0;bottom:0;border-radius:99px;width:42%
-}
+.acc-update{font-size:.68rem;color:var(--text-dim);padding-top:.55rem;border-top:1px solid var(--border)}
+.progress-line{height:3px;border-radius:99px;background:rgba(255,255,255,.06);margin-top:.45rem;position:relative;overflow:hidden}
+.progress-line i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;width:42%}
 .acc-card.basic .progress-line i{background:linear-gradient(90deg,transparent,var(--cyan))}
 .acc-card.gold .progress-line i{background:linear-gradient(90deg,transparent,var(--gold))}
 .acc-card.pro .progress-line i{background:linear-gradient(90deg,transparent,var(--purple))}
+.master-perf{margin-top:1.75rem;background:var(--bg-card-solid);border:1px solid var(--border);border-radius:18px;padding:1.35rem 1.4rem 1.2rem;animation:fadeUp .55s .2s both}
+.master-perf-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.master-perf-head h3{font-size:1.15rem;font-weight:800}
+.master-perf-head .base{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.view-tabs{display:flex;background:rgba(255,255,255,.04);border-radius:999px;padding:3px;border:1px solid var(--border)}
+.view-tabs button{border:none;background:transparent;color:var(--text-muted);font-size:.78rem;font-weight:600;padding:.45rem .9rem;border-radius:999px;cursor:pointer;font-family:inherit}
+.view-tabs button.active{background:var(--bg-card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.2)}
+[data-theme=light] .view-tabs{background:#f1f5f9}
+.mp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.35rem}
+@media(max-width:700px){.mp-stats{grid-template-columns:1fr}}
+.mp-stat .ml{font-size:.68rem;color:var(--text-dim);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.35rem}
+.mp-stat .mv{font-size:1.35rem;font-weight:800}.mp-stat .mv.up{color:var(--green)}
+.mp-stat .ms{font-size:.78rem;color:var(--text-muted);margin-top:.15rem}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem}
+.cal-head h4{font-size:1rem;font-weight:700}.cal-head .sub{font-size:.8rem;color:var(--text-muted);margin-top:.2rem}
+.cal-nav{display:flex;gap:.4rem}
+.cal-nav button{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:1rem}
+.cal-nav button:hover{border-color:var(--cyan);color:var(--cyan)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-dow{text-align:center;font-size:.7rem;font-weight:600;color:var(--text-dim);padding:.35rem 0}
+.cal-day{aspect-ratio:1;min-height:52px;border-radius:12px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;font-size:.72rem;color:var(--text-muted);background:rgba(255,255,255,.02)}
+.cal-day .d{font-weight:600;font-size:.78rem;color:var(--text)}.cal-day .p{font-weight:700;font-size:.72rem}
+.cal-day.empty{background:transparent;border-color:transparent}.cal-day.none{opacity:.45}
+.cal-day.u3{background:rgba(45,212,191,.08);border-color:rgba(45,212,191,.2)}.cal-day.u3 .p{color:#5eead4}
+.cal-day.m38{background:rgba(45,212,191,.14);border-color:rgba(45,212,191,.28)}.cal-day.m38 .p{color:var(--cyan)}
+.cal-day.m815{background:rgba(45,212,191,.22);border-color:rgba(45,212,191,.35)}.cal-day.m815 .p{color:#2dd4bf}
+.cal-day.above{background:rgba(16,185,129,.28);border-color:rgba(16,185,129,.45)}.cal-day.above .p{color:#34d399}
+.cal-day.loss{background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.3)}.cal-day.loss .p{color:var(--red)}
+.cal-legend{display:flex;flex-wrap:wrap;gap:.65rem 1.1rem;margin-top:1rem;font-size:.72rem;color:var(--text-muted)}
+.cal-legend span{display:inline-flex;align-items:center;gap:.35rem}
+.cal-legend i{width:12px;height:12px;border-radius:4px;display:inline-block;border:1px solid var(--border)}
+.cal-legend .u3{background:rgba(45,212,191,.08)}.cal-legend .m38{background:rgba(45,212,191,.14)}
+.cal-legend .m815{background:rgba(45,212,191,.22)}.cal-legend .above{background:rgba(16,185,129,.28)}
+.cal-legend .loss{background:rgba(248,113,113,.12)}.cal-legend .none{background:transparent}
+.cal-foot{margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text-dim);line-height:1.5}
 </style>
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
-<script src="js/auth.js?v=20261116c"></script>
-<script src="js/app.js?v=20261116c"></script>
+<script src="js/auth.js?v=20261116d"></script>
+<script src="js/app.js?v=20261116d"></script>
 <script>
 if (renderShell('performance')) {
   var now = new Date();
   var stamp = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })
     + ', ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
-
   function ring(pct) {
     var r = 30, c = 2 * Math.PI * r;
     var offset = c * (1 - Math.min(Math.abs(pct), 5) / 5);
     return { c: c.toFixed(1), offset: offset.toFixed(1) };
   }
-
   var accounts = [
-    {
-      cls: 'basic', pkg: 'Smart Basic', id: 'ACC01',
-      deposit: '$10,000.00', equity: '$90,786.35',
-      daily: '+$991.14', withdraw: '$73,862.00',
-      ret: 1.09, retLabel: '+1.09%'
-    },
-    {
-      cls: 'gold', pkg: 'Smart Gold', id: 'ACC02',
-      deposit: '$10,000.00', equity: '$106,793.83',
-      daily: '+$338.03', withdraw: '$28,000.00',
-      ret: 0.32, retLabel: '+0.32%'
-    },
-    {
-      cls: 'pro', pkg: 'Smart Pro', id: 'ACC03',
-      deposit: '$60,000.00', equity: '$656,274.00',
-      daily: '+$10,323.30', withdraw: '$5,540,000.00',
-      ret: 1.57, retLabel: '+1.57%'
-    }
+    { cls: 'basic', pkg: 'Smart Basic', id: 'ACC01', deposit: '$10,000.00', equity: '$90,786.35', daily: '+$991.14', withdraw: '$73,862.00', ret: 1.09, retLabel: '+1.09%' },
+    { cls: 'gold', pkg: 'Smart Gold', id: 'ACC02', deposit: '$10,000.00', equity: '$106,793.83', daily: '+$338.03', withdraw: '$28,000.00', ret: 0.32, retLabel: '+0.32%' },
+    { cls: 'pro', pkg: 'Smart Pro', id: 'ACC03', deposit: '$60,000.00', equity: '$656,274.00', daily: '+$10,323.30', withdraw: '$5,540,000.00', ret: 1.57, retLabel: '+1.57%' }
   ];
-
-  var cards = accounts.map(function (a, idx) {
+  var cards = accounts.map(function (a) {
     var rg = ring(a.ret);
-    return (
-      '<div class="acc-card ' + a.cls + '">' +
-        '<div class="acc-top">' +
-          '<span class="acc-pkg ' + a.cls + '">' + a.pkg.toUpperCase() + '</span>' +
-          '<span class="mt5-badge">MT5 LIVE</span>' +
-        '</div>' +
-        '<div class="acc-id">' + a.id + ' <span class="online">ONLINE</span></div>' +
-        '<div class="acc-metrics">' +
-          '<div class="acc-metric"><div class="ml">Deposit Awal</div><div class="mv">' + a.deposit + '</div></div>' +
-          '<div class="acc-metric"><div class="ml">Equity Saat Ini</div><div class="mv">' + a.equity + '</div></div>' +
-          '<div class="acc-metric"><div class="ml">Daily Profit</div><div class="mv up">' + a.daily + '</div></div>' +
-          '<div class="acc-metric"><div class="ml">Total Penarikan</div><div class="mv muted">' + a.withdraw + '</div></div>' +
-        '</div>' +
-        '<div class="daily-box">' +
-          '<div class="db-label">Daily Return</div>' +
-          '<div class="db-val">' + a.retLabel + '</div>' +
-          '<div class="db-sub">Daily Profit ÷ Equity Saat Ini</div>' +
-        '</div>' +
-        '<div class="acc-foot">' +
-          '<div class="ring-wrap">' +
-            '<svg viewBox="0 0 72 72">' +
-              '<circle class="track" cx="36" cy="36" r="30"/>' +
-              '<circle class="bar" cx="36" cy="36" r="30" stroke-dasharray="' + rg.c + '" stroke-dashoffset="' + rg.offset + '"/>' +
-            '</svg>' +
-            '<div class="ring-pct">' + a.retLabel + '</div>' +
-          '</div>' +
-          '<div class="ring-detail">' +
-            'Persentase terhadap Equity Saat Ini<br/>' +
-            'Daily Profit: <strong>' + a.daily + '</strong><br/>' +
-            'Equity Saat Ini: <strong>' + a.equity + '</strong><br/>' +
-            'Daily Drawdown: <strong>0.00%</strong>' +
-          '</div>' +
-        '</div>' +
-        '<div class="acc-update">Update: ' + stamp +
-          '<div class="progress-line"><i></i></div>' +
-        '</div>' +
-      '</div>'
-    );
+    return '<div class="acc-card ' + a.cls + '">' +
+      '<div class="acc-top"><span class="acc-pkg ' + a.cls + '">' + a.pkg.toUpperCase() + '</span><span class="mt5-badge">MT5 LIVE</span></div>' +
+      '<div class="acc-id">' + a.id + ' <span class="online">ONLINE</span></div>' +
+      '<div class="acc-metrics">' +
+        '<div class="acc-metric"><div class="ml">Deposit Awal</div><div class="mv">' + a.deposit + '</div></div>' +
+        '<div class="acc-metric"><div class="ml">Equity Saat Ini</div><div class="mv">' + a.equity + '</div></div>' +
+        '<div class="acc-metric"><div class="ml">Daily Profit</div><div class="mv up">' + a.daily + '</div></div>' +
+        '<div class="acc-metric"><div class="ml">Total Penarikan</div><div class="mv muted">' + a.withdraw + '</div></div>' +
+      '</div>' +
+      '<div class="daily-box"><div class="db-label">Daily Return</div><div class="db-val">' + a.retLabel + '</div><div class="db-sub">Daily Profit ÷ Equity Saat Ini</div></div>' +
+      '<div class="acc-foot"><div class="ring-wrap"><svg viewBox="0 0 72 72"><circle class="track" cx="36" cy="36" r="30"/><circle class="bar" cx="36" cy="36" r="30" stroke-dasharray="' + rg.c + '" stroke-dashoffset="' + rg.offset + '"/></svg><div class="ring-pct">' + a.retLabel + '</div></div>' +
+      '<div class="ring-detail">Persentase terhadap Equity Saat Ini<br/>Daily Profit: <strong>' + a.daily + '</strong><br/>Equity Saat Ini: <strong>' + a.equity + '</strong><br/>Daily Drawdown: <strong>0.00%</strong></div></div>' +
+      '<div class="acc-update">Update: ' + stamp + '<div class="progress-line"><i></i></div></div></div>';
   }).join('');
-
+  var calData = { year: 2026, month: 8, label: 'September 2026', monthPct: '+129.0%', tradingDays: 19,
+    days: { 1:6.8,2:8.9,3:7.9,7:13.1,8:3.7,9:2.1,10:15.4,11:12.2,14:10.7,16:8.7,17:14.9,18:2.7,21:4.0,22:-8.7,23:5.3,24:7.0,25:4.8,28:6.2,29:3.3 } };
+  function dayClass(v) {
+    if (v == null) return 'none';
+    if (v < 0) return 'loss';
+    if (v < 3) return 'u3';
+    if (v < 8) return 'm38';
+    if (v <= 15) return 'm815';
+    return 'above';
+  }
+  function buildCalendar(data) {
+    var first = new Date(data.year, data.month, 1);
+    var startDow = (first.getDay() + 6) % 7;
+    var daysInMonth = new Date(data.year, data.month + 1, 0).getDate();
+    var cells = '', dows = ['M','T','W','T','F','S','S'];
+    cells += dows.map(function(d){ return '<div class="cal-dow">'+d+'</div>'; }).join('');
+    for (var i = 0; i < startDow; i++) cells += '<div class="cal-day empty"></div>';
+    for (var d = 1; d <= daysInMonth; d++) {
+      var v = data.days[d];
+      var cls = dayClass(v);
+      var pct = v == null ? '' : ((v > 0 ? '+' : '') + v.toFixed(1) + '%');
+      cells += '<div class="cal-day '+cls+'"><span class="d">'+d+'</span>'+(pct?'<span class="p">'+pct+'</span>':'')+'</div>';
+    }
+    return cells;
+  }
+  var calHtml =
+    '<div class="master-perf">' +
+      '<div class="master-perf-head"><div><h3>Master performance</h3><div class="base">Base 20,000 USC = 100%</div></div>' +
+      '<div class="view-tabs"><button type="button" class="active">Calendar</button><button type="button">Weekly</button></div></div>' +
+      '<div class="mp-stats">' +
+        '<div class="mp-stat"><div class="ml">Realized Profit</div><div class="mv up">+256.1%</div><div class="ms">51,215 USC</div></div>' +
+        '<div class="mp-stat"><div class="ml">This Week So Far</div><div class="mv up">+9.5%</div><div class="ms">1,903 USC</div></div>' +
+        '<div class="mp-stat"><div class="ml">Win Rate</div><div class="mv">64.8%</div><div class="ms">645 closed trades</div></div>' +
+      '</div>' +
+      '<div class="cal-head"><div><h4>'+calData.label+'</h4><div class="sub">'+calData.monthPct+' this month · '+calData.tradingDays+' trading days</div></div>' +
+      '<div class="cal-nav"><button type="button" aria-label="Prev">‹</button><button type="button" aria-label="Next">›</button></div></div>' +
+      '<div class="cal-grid">'+buildCalendar(calData)+'</div>' +
+      '<div class="cal-legend">' +
+        '<span><i class="u3"></i> under +3%</span><span><i class="m38"></i> +3 to +8%</span>' +
+        '<span><i class="m815"></i> +8 to +15%</span><span><i class="above"></i> above +15%</span>' +
+        '<span><i class="loss"></i> loss day</span><span><i class="none"></i> no trading</span>' +
+      '</div>' +
+      '<div class="cal-foot">as of 29 Sep 2026, 09:30 WIB · live feed<br/>Worst day −8.7% (22 Sep) · deposits not shown</div>' +
+    '</div>';
   document.getElementById('page-content').innerHTML =
-    '<div class="live-head">' +
-      '<h2>Live Performance</h2>' +
-      '<p>Data aktual akun Smart Basic, Smart Gold, dan Smart Pro.</p>' +
-    '</div>' +
-    '<div class="acc-grid">' + cards + '</div>';
+    '<div class="live-head"><h2>Live Performance</h2><p>Data aktual akun Smart Basic, Smart Gold, dan Smart Pro.</p></div>' +
+    '<div class="acc-grid">' + cards + '</div>' + calHtml;
 }
 </script>
 </body>
