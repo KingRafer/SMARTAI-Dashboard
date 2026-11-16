@@ -6,6 +6,106 @@
 <title>Referral Network — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<style>
+/* Hierarchical tree (Glowness-style) */
+.tree-panel{
+  background:var(--input-bg);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:1.5rem 1.25rem 1.75rem;
+  overflow-x:auto;
+}
+.tree{
+  list-style:none;
+  margin:0;
+  padding:0;
+  min-width:280px;
+}
+.tree ul{
+  list-style:none;
+  margin:0;
+  padding:0 0 0 1.35rem;
+  position:relative;
+}
+/* vertical line of parent branch */
+.tree ul::before{
+  content:'';
+  position:absolute;
+  left:0.55rem;
+  top:0;
+  bottom:1.1rem;
+  width:2px;
+  background:linear-gradient(180deg,rgba(45,212,191,.45),rgba(45,212,191,.12));
+  border-radius:2px;
+}
+.tree li{
+  position:relative;
+  margin:0;
+  padding:.45rem 0 .45rem 0;
+}
+/* horizontal connector to node */
+.tree li::before{
+  content:'';
+  position:absolute;
+  left:-0.8rem;
+  top:1.55rem;
+  width:1.1rem;
+  height:2px;
+  background:rgba(45,212,191,.35);
+}
+.tree > li::before{display:none}
+.tree > li > ul::before{left:0.55rem}
+
+.t-node{
+  display:inline-flex;
+  align-items:center;
+  gap:.75rem;
+  background:var(--bg-card-solid);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:.55rem .9rem .55rem .55rem;
+  min-width:200px;
+  max-width:320px;
+  box-shadow:0 6px 20px rgba(0,0,0,.12);
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  animation:fadeUp .45s cubic-bezier(.22,1,.36,1) both;
+}
+.t-node:hover{
+  transform:translateX(4px);
+  border-color:rgba(45,212,191,.4);
+  box-shadow:0 8px 24px var(--glow);
+}
+.t-node.root{
+  background:linear-gradient(135deg,rgba(45,212,191,.18),var(--bg-card-solid));
+  border-color:rgba(45,212,191,.4);
+}
+.t-node.empty{
+  border-style:dashed;
+  opacity:.85;
+  background:transparent;
+}
+.t-node.empty:hover{opacity:1;border-color:var(--cyan)}
+.t-av{
+  width:40px;height:40px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:.85rem;color:#fff;
+  background:linear-gradient(135deg,#2dd4bf,#14b8a6);
+}
+.t-node.root .t-av{background:linear-gradient(135deg,#2dd4bf,#0d9488)}
+.t-node.l1 .t-av{background:linear-gradient(135deg,#a78bfa,#818cf8)}
+.t-node.l2 .t-av{background:linear-gradient(135deg,#f472b6,#c084fc)}
+.t-node.l3 .t-av{background:linear-gradient(135deg,#fbbf24,#f59e0b)}
+.t-node.l4 .t-av{background:linear-gradient(135deg,#60a5fa,#38bdf8)}
+.t-node.l5 .t-av{background:linear-gradient(135deg,#fb7185,#f43f5e)}
+.t-node.empty .t-av{
+  background:transparent;border:1px dashed var(--border);color:var(--text-dim);font-size:1.1rem
+}
+.t-meta{min-width:0}
+.t-name{font-size:.9rem;font-weight:600;color:var(--text);line-height:1.25}
+.t-name span{color:var(--text-muted);font-weight:500;font-size:.8rem}
+.t-sub{font-size:.72rem;color:var(--text-dim);margin-top:.15rem;line-height:1.3}
+.t-code{font-family:ui-monospace,monospace;letter-spacing:.03em;opacity:.9}
+</style>
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
@@ -19,7 +119,6 @@ if (user) {
   const refCode = (user.referral && user.referral.trim()) ? user.referral.trim().toUpperCase() : 'SMARTAI-REF';
   const refLink = location.origin + location.pathname.replace(/[^/]+$/, '') + 'register.html?ref=' + encodeURIComponent(refCode);
 
-  // Matrix 5x5 demo seats (25 cells)
   const matrixNames = [
     'Fajar S.','Maya L.','Rizky K.','Andi R.','Sari W.',
     'Tono H.','Nina A.','Dina W.','Bima P.','Yoga P.',
@@ -71,56 +170,128 @@ if (user) {
 
     <div class="panel">
       <div class="panel-head">
-        <h2>Pohon jaringan</h2>
-        <span class="sub">Struktur koneksi level</span>
+        <h2>Pohon Jaringan</h2>
+        <span class="sub">Cabang tersusun ke bawah</span>
       </div>
-      <div class="network-map">
-        <div class="network-tree">
-          <div>
-            <div class="level-label">You (Root)</div>
-            <div class="net-level">
-              <div class="net-node root">
-                <div class="av">${ini}</div>
-                <div class="n-name">${me}</div>
-                <div class="n-meta">Root · Active</div>
+      <div class="tree-panel">
+        <ul class="tree">
+          <li>
+            <div class="t-node root">
+              <div class="t-av">${ini}</div>
+              <div class="t-meta">
+                <div class="t-name">${me} <span>(Kamu)</span></div>
+                <div class="t-sub t-code">${escapeHtml(refCode)}</div>
               </div>
             </div>
-          </div>
-          <div class="net-connector"></div>
-          <div>
-            <div class="level-label">Level 1</div>
-            <div class="net-level">
-              <div class="net-node" style="animation-delay:.06s"><div class="av">FS</div><div class="n-name">Fajar S.</div><div class="n-meta">L1</div></div>
-              <div class="net-node" style="animation-delay:.1s"><div class="av">ML</div><div class="n-name">Maya L.</div><div class="n-meta">L1</div></div>
-              <div class="net-node" style="animation-delay:.14s"><div class="av">RK</div><div class="n-name">Rizky K.</div><div class="n-meta">L1</div></div>
-            </div>
-          </div>
-          <div class="net-connector"></div>
-          <div>
-            <div class="level-label">Level 2</div>
-            <div class="net-level">
-              <div class="net-node l2" style="animation-delay:.18s"><div class="av">TH</div><div class="n-name">Tono H.</div><div class="n-meta">via Fajar</div></div>
-              <div class="net-node l2" style="animation-delay:.22s"><div class="av">NA</div><div class="n-name">Nina A.</div><div class="n-meta">via Maya</div></div>
-              <div class="net-node l2" style="animation-delay:.26s"><div class="av">DW</div><div class="n-name">Dina W.</div><div class="n-meta">via Rizky</div></div>
-            </div>
-          </div>
-          <div class="net-connector"></div>
-          <div>
-            <div class="level-label">Level 3</div>
-            <div class="net-level">
-              <div class="net-node l3" style="animation-delay:.3s"><div class="av">YP</div><div class="n-name">Yoga P.</div><div class="n-meta">via Tono</div></div>
-              <div class="net-node l3" style="animation-delay:.34s"><div class="av">SA</div><div class="n-name">Sinta A.</div><div class="n-meta">via Nina</div></div>
-            </div>
-          </div>
-          <div class="net-connector"></div>
-          <div>
-            <div class="level-label">Level 4 – 5</div>
-            <div class="net-level">
-              <div class="net-node l4" style="animation-delay:.38s"><div class="av">EH</div><div class="n-name">Eko H.</div><div class="n-meta">L4</div></div>
-              <div class="net-node l5" style="animation-delay:.42s"><div class="av">RM</div><div class="n-name">Rina M.</div><div class="n-meta">L5</div></div>
-            </div>
-          </div>
-        </div>
+            <ul>
+              <li>
+                <div class="t-node l1" style="animation-delay:.05s">
+                  <div class="t-av">FS</div>
+                  <div class="t-meta">
+                    <div class="t-name">Fajar S.</div>
+                    <div class="t-sub">Level 1 · FAJAR01 · 2 di bawahnya</div>
+                  </div>
+                </div>
+                <ul>
+                  <li>
+                    <div class="t-node l2" style="animation-delay:.1s">
+                      <div class="t-av">TH</div>
+                      <div class="t-meta">
+                        <div class="t-name">Tono H.</div>
+                        <div class="t-sub">Level 2 · TONO88 · 1 di bawahnya</div>
+                      </div>
+                    </div>
+                    <ul>
+                      <li>
+                        <div class="t-node l3" style="animation-delay:.15s">
+                          <div class="t-av">YP</div>
+                          <div class="t-meta">
+                            <div class="t-name">Yoga P.</div>
+                            <div class="t-sub">Level 3 · YOGA12 · 0 di bawahnya</div>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="t-node empty" style="animation-delay:.18s">
+                          <div class="t-av">+</div>
+                          <div class="t-meta">
+                            <div class="t-name">Slot kosong</div>
+                            <div class="t-sub">Ajak mitra baru dengan kodemu</div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <div class="t-node l2" style="animation-delay:.12s">
+                      <div class="t-av">NA</div>
+                      <div class="t-meta">
+                        <div class="t-name">Nina A.</div>
+                        <div class="t-sub">Level 2 · NINA07 · 0 di bawahnya</div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <div class="t-node l1" style="animation-delay:.08s">
+                  <div class="t-av">ML</div>
+                  <div class="t-meta">
+                    <div class="t-name">Maya L.</div>
+                    <div class="t-sub">Level 1 · MAYA22 · 1 di bawahnya</div>
+                  </div>
+                </div>
+                <ul>
+                  <li>
+                    <div class="t-node l2" style="animation-delay:.14s">
+                      <div class="t-av">SA</div>
+                      <div class="t-meta">
+                        <div class="t-name">Sinta A.</div>
+                        <div class="t-sub">Level 2 · SINTA5 · 0 di bawahnya</div>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="t-node empty" style="animation-delay:.16s">
+                      <div class="t-av">+</div>
+                      <div class="t-meta">
+                        <div class="t-name">Slot kosong</div>
+                        <div class="t-sub">Ajak mitra baru dengan kodemu</div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <div class="t-node l1" style="animation-delay:.1s">
+                  <div class="t-av">RK</div>
+                  <div class="t-meta">
+                    <div class="t-name">Rizky K.</div>
+                    <div class="t-sub">Level 1 · RIZKY9 · 0 di bawahnya</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="t-node empty" style="animation-delay:.12s">
+                  <div class="t-av">+</div>
+                  <div class="t-meta">
+                    <div class="t-name">Slot kosong</div>
+                    <div class="t-sub">Ajak mitra baru dengan kodemu</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="t-node empty" style="animation-delay:.14s">
+                  <div class="t-av">+</div>
+                  <div class="t-meta">
+                    <div class="t-name">Slot kosong</div>
+                    <div class="t-sub">Ajak mitra baru dengan kodemu</div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -149,8 +320,6 @@ if (user) {
             <tr><td>Tono H.</td><td>L2</td><td>18 Oct 2026</td><td><span class="badge ok">Active</span></td></tr>
             <tr><td>Nina A.</td><td>L2</td><td>01 Nov 2026</td><td><span class="badge warn">Pending</span></td></tr>
             <tr><td>Yoga P.</td><td>L3</td><td>05 Nov 2026</td><td><span class="badge ok">Active</span></td></tr>
-            <tr><td>Eko H.</td><td>L4</td><td>08 Nov 2026</td><td><span class="badge ok">Active</span></td></tr>
-            <tr><td>Rina M.</td><td>L5</td><td>12 Nov 2026</td><td><span class="badge info">New</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -178,16 +347,9 @@ if (user) {
       }, 1600);
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(ok).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        ok();
-      });
-    } else {
+      navigator.clipboard.writeText(text).then(ok).catch(fallback);
+    } else fallback();
+    function fallback() {
       const ta = document.createElement('textarea');
       ta.value = text;
       document.body.appendChild(ta);
