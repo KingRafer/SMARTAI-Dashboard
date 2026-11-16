@@ -6,26 +6,84 @@
 <title>Referral Network — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
 <script src="js/auth.js"></script>
 <script src="js/app.js"></script>
 <script>
-if (renderShell('referral')) {
+const user = renderShell('referral');
+if (user) {
+  const me = escapeHtml(user.nama || 'You');
+  const ini = initials(user.nama || 'You');
   document.getElementById('page-content').innerHTML = `
     <div class="stats-grid">
-      <div class="stat-card"><div class="label">Total Network</div><div class="value">34</div></div>
-      <div class="stat-card"><div class="label">Level 1</div><div class="value">12</div></div>
+      <div class="stat-card"><div class="label">Total Network</div><div class="value">34</div><div class="hint">Semua level</div></div>
+      <div class="stat-card"><div class="label">Level 1</div><div class="value">12</div><div class="hint">Direct referral</div></div>
       <div class="stat-card"><div class="label">Level 2</div><div class="value">15</div></div>
       <div class="stat-card"><div class="label">Level 3</div><div class="value">7</div></div>
     </div>
+
     <div class="panel">
-      <div class="panel-head"><h2>Kode referral Anda</h2></div>
-      <p style="font-size:1.25rem;font-weight:700;color:var(--cyan);letter-spacing:.05em;margin-bottom:.5rem">SMARTAI-REF</p>
-      <p style="color:var(--text-muted);font-size:.85rem">Bagikan kode ini ke calon member. Jaringan akan muncul di sini setelah mereka register.</p>
+      <div class="panel-head">
+        <h2>Kode referral Anda</h2>
+        <span class="sub">Bagikan ke calon member</span>
+      </div>
+      <p style="font-size:1.35rem;font-weight:800;color:var(--cyan);letter-spacing:.06em;margin-bottom:.4rem">SMARTAI-REF</p>
+      <p style="color:var(--text-muted);font-size:.85rem">Jaringan di bawah adalah peta koneksi demo 3 level.</p>
     </div>
+
     <div class="panel">
-      <div class="panel-head"><h2>Jaringan referral</h2><span class="sub">Data demo</span></div>
+      <div class="panel-head">
+        <h2>Peta koneksi referral</h2>
+        <span class="sub">Hover node untuk highlight</span>
+      </div>
+      <div class="network-map">
+        <div class="network-tree">
+          <div>
+            <div class="level-label">You</div>
+            <div class="net-level">
+              <div class="net-node root">
+                <div class="av">${ini}</div>
+                <div class="n-name">${me}</div>
+                <div class="n-meta">Root · Active</div>
+              </div>
+            </div>
+          </div>
+          <div class="net-connector"></div>
+          <div>
+            <div class="level-label">Level 1 — Direct</div>
+            <div class="net-level">
+              <div class="net-node" style="animation-delay:.08s"><div class="av">FS</div><div class="n-name">Fajar S.</div><div class="n-meta">L1 · Active</div></div>
+              <div class="net-node" style="animation-delay:.14s"><div class="av">ML</div><div class="n-name">Maya L.</div><div class="n-meta">L1 · Active</div></div>
+              <div class="net-node" style="animation-delay:.2s"><div class="av">RK</div><div class="n-name">Rizky K.</div><div class="n-meta">L1 · Active</div></div>
+            </div>
+          </div>
+          <div class="net-connector"></div>
+          <div>
+            <div class="level-label">Level 2</div>
+            <div class="net-level">
+              <div class="net-node l2" style="animation-delay:.22s"><div class="av">TH</div><div class="n-name">Tono H.</div><div class="n-meta">via Fajar</div></div>
+              <div class="net-node l2" style="animation-delay:.28s"><div class="av">NA</div><div class="n-name">Nina A.</div><div class="n-meta">via Maya</div></div>
+              <div class="net-node l2" style="animation-delay:.34s"><div class="av">DW</div><div class="n-name">Dina W.</div><div class="n-meta">via Rizky</div></div>
+              <div class="net-node l2" style="animation-delay:.4s"><div class="av">BP</div><div class="n-name">Bima P.</div><div class="n-meta">via Maya</div></div>
+            </div>
+          </div>
+          <div class="net-connector"></div>
+          <div>
+            <div class="level-label">Level 3</div>
+            <div class="net-level">
+              <div class="net-node l3" style="animation-delay:.42s"><div class="av">YP</div><div class="n-name">Yoga P.</div><div class="n-meta">via Tono</div></div>
+              <div class="net-node l3" style="animation-delay:.48s"><div class="av">SA</div><div class="n-name">Sinta A.</div><div class="n-meta">via Nina</div></div>
+              <div class="net-node l3" style="animation-delay:.54s"><div class="av">EH</div><div class="n-name">Eko H.</div><div class="n-meta">via Dina</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Daftar jaringan</h2><span class="sub">Data demo</span></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Nama</th><th>Level</th><th>Join</th><th>Status</th></tr></thead>
