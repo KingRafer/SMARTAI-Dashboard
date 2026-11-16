@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Commission — Smart AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+if (renderShell('commission')) {
+  document.getElementById('page-content').innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card"><div class="label">Bulan ini</div><div class="value up">$1,240</div></div>
+      <div class="stat-card"><div class="label">Total dibayar</div><div class="value">$8,920</div></div>
+      <div class="stat-card"><div class="label">Pending</div><div class="value">$180</div></div>
+      <div class="stat-card"><div class="label">Dari referral</div><div class="value">$640</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Riwayat komisi</h2><span class="sub">Data demo</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tanggal</th><th>Sumber</th><th>Jumlah</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>15 Nov 2026</td><td>Referral L1</td><td style="color:var(--green)">+$120</td><td><span class="badge ok">Paid</span></td></tr>
+            <tr><td>10 Nov 2026</td><td>Client fee</td><td style="color:var(--green)">+$350</td><td><span class="badge ok">Paid</span></td></tr>
+            <tr><td>05 Nov 2026</td><td>Referral L2</td><td style="color:var(--green)">+$45</td><td><span class="badge warn">Pending</span></td></tr>
+            <tr><td>01 Nov 2026</td><td>Client fee</td><td style="color:var(--green)">+$280</td><td><span class="badge ok">Paid</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>
