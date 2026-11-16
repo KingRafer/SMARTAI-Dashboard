@@ -1,41 +1,48 @@
-# SMARTAI-Dashboard
+# SMARTAI Dashboard
 
 Portal member **Smart AI** — login, register, dan dashboard setelah login.
 
-## Akun demo
+**Live:** [luqmanhakimh23-create.github.io/SMARTAI-Dashboard](https://luqmanhakimh23-create.github.io/SMARTAI-Dashboard/)
+
+## Demo account
 
 | Field | Value |
 |-------|--------|
 | **Email** | `demo@smartai.com` |
 | **Password** | `demo123` |
 
-Buka `login.html` → klik **Isi & pakai akun demo** → **Masuk**.
-
-## URL
-
-Repo: https://github.com/luqmanhakimh23-create/SMARTAI-Dashboard  
-Pages: https://luqmanhakimh23-create.github.io/SMARTAI-Dashboard/
+Buka halaman login → klik **Isi & pakai akun demo** → **Masuk**.
 
 ## Fitur
 
 ### Auth
-- `login.html` — masuk (+ akun demo)
-- `register.html` — daftar (nama, email, HP, password, kode referral)
+- Login dengan akun demo atau akun yang didaftarkan
+- Register (nama, email, HP, password, kode referral opsional)
+- Session via `localStorage` (demo / frontend only)
 
-### Setelah login (sidebar)
-| Menu | File |
-|------|------|
-| Dashboard | `dashboard.html` |
-| My Clients | `clients.html` |
-| Referral Network | `referral.html` |
-| Trading Report | `trading-report.html` |
-| Commission | `commission.html` |
-| Transactions | `transactions.html` |
-| Support | `support.html` |
-| My Profile | `profile.html` |
+### Setelah login
+| Menu | Halaman |
+|------|---------|
+| Dashboard | Ringkasan klien, komisi, equity |
+| Acc Performance | Performa akun trading |
+| My Clients | Daftar klien |
+| Referral Network | Kode referral & network map |
+| Trading Report | Laporan trading |
+| Commission | Riwayat komisi |
+| Transactions | Deposit / withdraw |
+| Support | Kontak & tiket |
+| My Profile | Profil member |
+
+### UI
+- Dark / light theme
+- Responsive (sidebar mobile)
+- Design system konsisten (Inter, cyan accent)
 
 ## Catatan
 
-- Auth demo memakai **localStorage** (bukan server).
-- Data tabel masih **placeholder/demo**.
-- Aktifkan GitHub Pages: Settings → Pages → Branch `main` / root.
+- Auth dan data tabel masih **demo / placeholder** (bukan backend production).
+- GitHub Pages: Settings → Pages → Branch `main` / root.
+
+## Repo
+
+https://github.com/luqmanhakimh23-create/SMARTAI-Dashboard

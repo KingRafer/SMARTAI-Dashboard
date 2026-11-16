@@ -3,50 +3,57 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Login ke portal member Smart AI — dashboard, referral, komisi, dan laporan trading."/>
+<meta name="theme-color" content="#060b14"/>
 <title>Login — Smart AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <style>
 .demo-box{
-  background:rgba(45,212,191,.08);
-  border:1px solid rgba(45,212,191,.22);
+  background:rgba(45,212,191,.06);
+  border:1px solid rgba(45,212,191,.18);
   border-radius:12px;
-  padding:.9rem 1rem;
-  margin-bottom:1.25rem;
+  padding:.95rem 1rem;
+  margin-bottom:1.35rem;
   font-size:.82rem;
   color:var(--text-muted);
 }
-.demo-box strong{color:var(--cyan);font-weight:600}
+.demo-box strong{color:var(--cyan);font-weight:650;display:block;margin-bottom:.35rem}
 .demo-box code{
   display:inline-block;
-  background:rgba(0,0,0,.25);
+  background:rgba(0,0,0,.22);
   padding:.15rem .45rem;
   border-radius:6px;
   color:var(--text);
-  font-size:.8rem;
+  font-size:.78rem;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
 }
-.demo-box .row{margin:.25rem 0}
+[data-theme=light] .demo-box code{background:rgba(15,23,42,.06)}
+.demo-box .row{margin:.2rem 0}
 .btn-demo{
-  margin-top:.65rem;
+  margin-top:.7rem;
   width:100%;
   padding:.55rem;
   border-radius:999px;
-  border:1px solid rgba(45,212,191,.35);
+  border:1px solid rgba(45,212,191,.3);
   background:transparent;
   color:var(--cyan);
   font-size:.8rem;
   font-weight:600;
   font-family:inherit;
   cursor:pointer;
+  transition:background .2s,transform .2s;
 }
-.btn-demo:hover{background:rgba(45,212,191,.12)}
+.btn-demo:hover{background:rgba(45,212,191,.1);transform:translateY(-1px)}
 </style>
 </head>
 <body>
 <div class="auth-page">
   <div class="auth-card">
-    <div class="auth-logo">SMART<span>AI</span></div>
+    <div class="auth-logo">SMART<span>AI</span><span class="auth-logo-badge">Member</span></div>
     <h1>Masuk ke akun</h1>
     <p class="auth-sub">Akses dashboard member Smart AI</p>
 
@@ -54,10 +61,10 @@
       <strong>Akun demo</strong>
       <div class="row">Email: <code>demo@smartai.com</code></div>
       <div class="row">Password: <code>demo123</code></div>
-      <button type="button" class="btn-demo" id="fill-demo">Isi & pakai akun demo</button>
+      <button type="button" class="btn-demo" id="fill-demo">Isi &amp; pakai akun demo</button>
     </div>
 
-    <form id="login-form">
+    <form id="login-form" novalidate>
       <div class="form-group">
         <label for="email">Email <span class="req">*</span></label>
         <input type="email" id="email" required autocomplete="username" placeholder="nama@email.com"/>
@@ -66,17 +73,19 @@
         <label for="password">Password <span class="req">*</span></label>
         <div class="password-wrap">
           <input type="password" id="password" required autocomplete="current-password" placeholder="Password"/>
-          <button type="button" class="toggle-pass" id="toggle-pass" aria-label="Tampilkan password">👁</button>
+          <button type="button" class="toggle-pass" id="toggle-pass" aria-label="Tampilkan password">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </button>
         </div>
       </div>
       <div class="form-row">
         <label class="check"><input type="checkbox" id="remember"/> Ingat saya</label>
       </div>
-      <div class="msg error" id="error"></div>
-      <button type="submit" class="btn-primary" id="btn">Masuk →</button>
+      <div class="msg error" id="error" role="alert"></div>
+      <button type="submit" class="btn-primary" id="btn">Masuk</button>
     </form>
     <div class="auth-divider"><span>atau</span></div>
-    <p class="auth-footer">Belum punya akun? <a href="register.html">Register</a></p>
+    <p class="auth-footer">Belum punya akun? <a href="register.html">Daftar sekarang</a></p>
   </div>
 </div>
 <script src="js/auth.js"></script>
@@ -88,6 +97,7 @@ setupPasswordToggle('toggle-pass', 'password');
 document.getElementById('fill-demo').addEventListener('click', function () {
   document.getElementById('email').value = DEMO_ACCOUNT.email;
   document.getElementById('password').value = DEMO_ACCOUNT.password;
+  document.getElementById('email').focus();
 });
 
 document.getElementById('login-form').addEventListener('submit', function (e) {
@@ -105,7 +115,7 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
 
   var found = findAccount(email, password);
   if (!found) {
-    err.textContent = 'Email atau password salah. Gunakan akun demo atau register dulu.';
+    err.textContent = 'Email atau password salah. Gunakan akun demo atau daftar dulu.';
     err.classList.add('show');
     return;
   }
