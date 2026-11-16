@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — Smart AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">SMART<span>AI</span></div>
+    <h1>Masuk ke akun</h1>
+    <p class="auth-sub">Akses dashboard member Smart AI</p>
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email">Email <span class="req">*</span></label>
+        <input type="email" id="email" required autocomplete="username" placeholder="nama@email.com"/>
+      </div>
+      <div class="form-group">
+        <label for="password">Password <span class="req">*</span></label>
+        <div class="password-wrap">
+          <input type="password" id="password" required autocomplete="current-password" placeholder="Password"/>
+          <button type="button" class="toggle-pass" id="toggle-pass" aria-label="Tampilkan password">👁</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="check"><input type="checkbox" id="remember"/> Ingat saya</label>
+      </div>
+      <div class="msg error" id="error"></div>
+      <button type="submit" class="btn-primary" id="btn">Masuk →</button>
+    </form>
+    <div class="auth-divider"><span>atau</span></div>
+    <p class="auth-footer">Belum punya akun? <a href="register.html">Register</a></p>
+  </div>
+</div>
+<script src="js/auth.js"></script>
+<script>
+redirectIfLoggedIn();
+setupPasswordToggle('toggle-pass', 'password');
+document.getElementById('login-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var email = document.getElementById('email').value.trim();
+  var password = document.getElementById('password').value;
+  var err = document.getElementById('error');
+  err.classList.remove('show');
+  if (!email || !password) {
+    err.textContent = 'Email dan password wajib diisi.';
+    err.classList.add('show');
+    return;
+  }
+  var stored = localStorage.getItem('smartai_accounts');
+  var accounts = stored ? JSON.parse(stored) : [];
+  var found = accounts.find(function (a) { return a.email.toLowerCase() === email.toLowerCase() && a.password === password; });
+  if (!found && email && password.length >= 6) {
+    // demo: allow login with any valid-looking credentials and create session
+    found = { nama: email.split('@')[0], email: email, hp: '', referral: '' };
+  }
+  if (!found) {
+    err.textContent = 'Email atau password salah. Silakan register dulu.';
+    err.classList.add('show');
+    return;
+  }
+  setUser({ nama: found.nama, email: found.email, hp: found.hp || '', referral: found.referral || '' });
+  location.href = 'dashboard.html';
+});
+</script>
+</body>
+</html>
