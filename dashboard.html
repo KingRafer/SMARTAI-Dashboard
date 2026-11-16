@@ -3,68 +3,68 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="theme-color" content="#060b14"/>
+<meta name="theme-color" content="#050a12"/>
 <title>Dashboard — Smart AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/app.css?v=pro2">
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
-<script src="js/auth.js"></script>
-<script src="js/app.js"></script>
+<script src="js/auth.js?v=pro2"></script>
+<script src="js/app.js?v=pro2"></script>
 <script>
 const user = renderShell('dashboard');
 if (user) {
   document.getElementById('page-content').innerHTML = `
     <div class="page-header">
       <div>
-        <h1>Selamat datang, ${escapeHtml(user.nama || 'Member')}</h1>
-        <p>Ringkasan aktivitas &amp; performa akun Smart AI Anda.</p>
+        <h1>Welcome back, ${escapeHtml(user.nama || 'Member')}</h1>
+        <p>Overview of your network, commissions, and account equity.</p>
       </div>
       <div class="date-chip">${escapeHtml(formatToday())}</div>
     </div>
 
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="label">Total Clients</div>
-        <div class="value">12</div>
-        <div class="hint">+2 bulan ini</div>
+        <div class="label">Total clients</div>
+        <div class="value">12 <span class="stat-trend up">+2</span></div>
+        <div class="hint">This month</div>
       </div>
       <div class="stat-card">
-        <div class="label">Referral Network</div>
+        <div class="label">Referral network</div>
         <div class="value">34</div>
-        <div class="hint">3 level aktif</div>
+        <div class="hint">3 active levels</div>
       </div>
       <div class="stat-card">
         <div class="label">Commission</div>
         <div class="value up">$1,240</div>
-        <div class="hint">Bulan berjalan</div>
+        <div class="hint">Current period</div>
       </div>
       <div class="stat-card">
-        <div class="label">Acc Equity</div>
+        <div class="label">Account equity</div>
         <div class="value">$804K</div>
-        <div class="hint">3 akun MT5</div>
+        <div class="hint">3 MT5 accounts</div>
       </div>
     </div>
 
     <div class="grid-2">
       <div class="panel">
         <div class="panel-head">
-          <h2>Aktivitas terbaru</h2>
-          <span class="sub">7 hari terakhir</span>
+          <h2>Recent activity</h2>
+          <span class="sub">Last 7 days</span>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>Tanggal</th><th>Aktivitas</th><th>Status</th></tr>
+              <tr><th>Date</th><th>Activity</th><th>Status</th></tr>
             </thead>
             <tbody>
-              <tr><td>16 Nov 2026</td><td>Client baru: Andi R.</td><td><span class="badge ok">Selesai</span></td></tr>
-              <tr><td>15 Nov 2026</td><td>Komisi referral L1</td><td><span class="badge ok">Paid</span></td></tr>
+              <tr><td>16 Nov 2026</td><td>New client: Andi R.</td><td><span class="badge ok">Done</span></td></tr>
+              <tr><td>15 Nov 2026</td><td>Referral commission L1</td><td><span class="badge ok">Paid</span></td></tr>
               <tr><td>14 Nov 2026</td><td>Withdraw $200</td><td><span class="badge warn">Pending</span></td></tr>
-              <tr><td>12 Nov 2026</td><td>Trading report sync</td><td><span class="badge info">Sync</span></td></tr>
+              <tr><td>12 Nov 2026</td><td>Trading report sync</td><td><span class="badge info">Synced</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -72,34 +72,34 @@ if (user) {
 
       <div class="panel">
         <div class="panel-head">
-          <h2>Ringkasan akun</h2>
-          <span class="sub">Member aktif</span>
+          <h2>Account summary</h2>
+          <span class="sub">Active member</span>
         </div>
         <div class="table-wrap">
           <table>
             <tbody>
-              <tr><td style="width:38%">Email</td><td>${escapeHtml(user.email)}</td></tr>
+              <tr><td style="width:36%">Email</td><td>${escapeHtml(user.email)}</td></tr>
               <tr><td>WhatsApp</td><td>${escapeHtml(user.hp || '—')}</td></tr>
-              <tr><td>Referral code</td><td><strong style="color:var(--cyan)">${escapeHtml(user.referral || 'SMARTAI-REF')}</strong></td></tr>
+              <tr><td>Referral code</td><td><strong style="color:var(--cyan);font-family:ui-monospace,monospace">${escapeHtml(user.referral || 'SMARTAI-REF')}</strong></td></tr>
               <tr><td>Status</td><td><span class="badge ok">Active</span></td></tr>
             </tbody>
           </table>
         </div>
-        <div class="mini-chart" style="margin-top:1.2rem" aria-hidden="true">
-          <span style="height:35%"></span>
-          <span style="height:50%;animation-delay:.05s"></span>
-          <span style="height:42%;animation-delay:.1s"></span>
-          <span style="height:68%;animation-delay:.15s"></span>
-          <span style="height:55%;animation-delay:.2s"></span>
-          <span style="height:80%;animation-delay:.25s"></span>
-          <span style="height:62%;animation-delay:.3s"></span>
-          <span style="height:90%;animation-delay:.35s"></span>
+        <div class="mini-chart" style="margin-top:1.1rem" aria-hidden="true">
+          <span style="height:32%"></span>
+          <span style="height:48%;animation-delay:.04s"></span>
+          <span style="height:40%;animation-delay:.08s"></span>
+          <span style="height:65%;animation-delay:.12s"></span>
+          <span style="height:52%;animation-delay:.16s"></span>
+          <span style="height:78%;animation-delay:.2s"></span>
+          <span style="height:60%;animation-delay:.24s"></span>
+          <span style="height:88%;animation-delay:.28s"></span>
         </div>
       </div>
     </div>
 
     <div class="panel">
-      <div class="panel-head"><h2>Akses cepat</h2></div>
+      <div class="panel-head"><h2>Quick access</h2></div>
       <div class="quick-actions">
         <a href="performance.html">Acc Performance</a>
         <a href="referral.html">Referral Map</a>

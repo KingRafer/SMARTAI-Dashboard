@@ -16,9 +16,9 @@ function toggleTheme() {
 
 function themeIcon(theme) {
   if (theme === 'light') {
-    return '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+    return '<svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
   }
-  return '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  return '<svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
 }
 
 initTheme();
@@ -49,6 +49,10 @@ function formatToday() {
   } catch (e) {
     return new Date().toDateString();
   }
+}
+
+function brandMark() {
+  return '<span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></span>';
 }
 
 function renderShell(active) {
@@ -92,7 +96,7 @@ function renderShell(active) {
       if (n.id === active) title = n.label;
       navHtml +=
         '<a class="nav-item' + (n.id === active ? ' active' : '') + '" href="' + n.href + '">' +
-          '<svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="' + n.icon + '"/></svg>' +
+          '<svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="' + n.icon + '"/></svg>' +
           n.label +
         '</a>';
     });
@@ -101,7 +105,7 @@ function renderShell(active) {
   document.body.innerHTML =
     '<div class="overlay" id="overlay"></div>' +
     '<aside class="sidebar" id="sidebar">' +
-      '<div class="sidebar-brand">SMART<span>AI</span><span class="brand-dot" title="Online"></span></div>' +
+      '<div class="sidebar-brand">' + brandMark() + 'SMART<span>AI</span></div>' +
       '<nav class="sidebar-nav">' + navHtml + '</nav>' +
       '<div class="sidebar-foot">' +
         '<div class="user-mini">' +
@@ -112,8 +116,8 @@ function renderShell(active) {
           '</div>' +
         '</div>' +
         '<button type="button" class="btn-logout-side" onclick="logout()">' +
-          '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>' +
-          'Logout' +
+          '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>' +
+          'Sign out' +
         '</button>' +
       '</div>' +
     '</aside>' +
@@ -121,11 +125,12 @@ function renderShell(active) {
       '<header class="topbar">' +
         '<div class="topbar-left">' +
           '<button class="menu-toggle" id="menu-toggle" aria-label="Menu">' +
-            '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>' +
+            '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>' +
           '</button>' +
           '<div class="page-title">' + escapeHtml(title) + '</div>' +
         '</div>' +
         '<div class="topbar-right">' +
+          '<span class="topbar-chip">Systems online</span>' +
           '<button type="button" class="theme-btn" id="theme-btn" aria-label="Toggle theme" title="Dark / Light">' + themeIcon(theme) + '</button>' +
         '</div>' +
       '</header>' +
