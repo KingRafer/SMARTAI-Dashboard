@@ -6,6 +6,35 @@
 <title>My Profile — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<style>
+.avatar-edit{display:flex;align-items:center;gap:1.25rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.avatar-preview{
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cyan),var(--teal));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:1.5rem;color:#042f2e;
+  background-size:cover;background-position:center;
+  border:3px solid rgba(45,212,191,.35);
+  box-shadow:0 8px 24px var(--glow);flex-shrink:0;
+}
+.avatar-actions{display:flex;flex-direction:column;gap:.5rem}
+.avatar-actions .hint{font-size:.75rem;color:var(--text-dim);max-width:240px}
+.btn-file{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:var(--bg-card-solid);border:1px solid var(--border);color:var(--cyan);
+  padding:.5rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;
+  cursor:pointer;font-family:inherit;width:fit-content;
+  transition:border-color .2s,background .2s
+}
+.btn-file:hover{border-color:var(--cyan);background:rgba(45,212,191,.08)}
+.btn-file input{display:none}
+.btn-remove{
+  background:none;border:none;color:var(--text-dim);font-size:.78rem;
+  cursor:pointer;font-family:inherit;text-align:left;padding:0
+}
+.btn-remove:hover{color:var(--red)}
+</style>
+<script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
 <script src="js/auth.js"></script>
@@ -13,16 +42,32 @@
 <script>
 const user = renderShell('profile');
 if (user) {
+  let pendingAvatar = user.avatar || null;
+
+  function previewStyle() {
+    if (pendingAvatar) {
+      return `background-image:url('${pendingAvatar}');color:transparent;`;
+    }
+    return '';
+  }
+
   document.getElementById('page-content').innerHTML = `
     <div class="panel" style="max-width:560px">
       <div class="panel-head"><h2>Profil member</h2></div>
-      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
-        <div class="user-avatar" style="width:56px;height:56px;font-size:1.1rem">${initials(user.nama)}</div>
-        <div>
-          <div style="font-weight:700;font-size:1.1rem">${escapeHtml(user.nama)}</div>
-          <div style="color:var(--text-muted);font-size:.85rem">${escapeHtml(user.email)}</div>
+
+      <div class="avatar-edit">
+        <div class="avatar-preview" id="avatar-preview" style="${previewStyle()}">${pendingAvatar ? '' : initials(user.nama)}</div>
+        <div class="avatar-actions">
+          <label class="btn-file">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Ganti foto
+            <input type="file" id="avatar-input" accept="image/jpeg,image/png,image/webp,image/gif"/>
+          </label>
+          <button type="button" class="btn-remove" id="avatar-remove" ${pendingAvatar ? '' : 'style="display:none"'}>Hapus foto</button>
+          <p class="hint">JPG/PNG/WebP, maks. ±500 KB (otomatis dikompres).</p>
         </div>
       </div>
+
       <div class="form-group">
         <label>Nama lengkap</label>
         <input type="text" id="p-nama" value="${escapeHtml(user.nama)}"/>
@@ -39,21 +84,97 @@ if (user) {
         <label>Kode referral (saat daftar)</label>
         <input type="text" id="p-ref" value="${escapeHtml(user.referral || '')}" readonly style="opacity:.7"/>
       </div>
+      <div class="msg error" id="err"></div>
       <div class="msg success" id="saved"></div>
       <button type="button" class="btn-primary" id="save-btn" style="max-width:220px">Simpan perubahan</button>
     </div>`;
+
+  const preview = document.getElementById('avatar-preview');
+  const removeBtn = document.getElementById('avatar-remove');
+  const err = document.getElementById('err');
+
+  function setPreview(dataUrl) {
+    pendingAvatar = dataUrl;
+    if (dataUrl) {
+      preview.style.backgroundImage = `url('${dataUrl}')`;
+      preview.style.color = 'transparent';
+      preview.textContent = '';
+      removeBtn.style.display = '';
+    } else {
+      preview.style.backgroundImage = '';
+      preview.style.color = '';
+      preview.textContent = initials(document.getElementById('p-nama').value || user.nama);
+      removeBtn.style.display = 'none';
+    }
+  }
+
+  document.getElementById('avatar-input').addEventListener('change', function (e) {
+    err.classList.remove('show');
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.type)) {
+      err.textContent = 'Format harus JPG, PNG, WebP, atau GIF.';
+      err.classList.add('show');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function () {
+      const img = new Image();
+      img.onload = function () {
+        const max = 320;
+        let w = img.width, h = img.height;
+        if (w > max || h > max) {
+          const ratio = Math.min(max / w, max / h);
+          w = Math.round(w * ratio);
+          h = Math.round(h * ratio);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        if (dataUrl.length > 600000) {
+          err.textContent = 'File terlalu besar setelah kompresi. Coba foto lain.';
+          err.classList.add('show');
+          return;
+        }
+        setPreview(dataUrl);
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  removeBtn.addEventListener('click', function () {
+    setPreview(null);
+    document.getElementById('avatar-input').value = '';
+  });
+
   document.getElementById('save-btn').addEventListener('click', function () {
     const next = {
       nama: document.getElementById('p-nama').value.trim() || user.nama,
       email: user.email,
       hp: document.getElementById('p-hp').value.trim(),
-      referral: user.referral || ''
+      referral: user.referral || '',
+      avatar: pendingAvatar || null
     };
     setUser(next);
+    // also update accounts list if present
+    try {
+      const accounts = JSON.parse(localStorage.getItem('smartai_accounts') || '[]');
+      const i = accounts.findIndex(a => a.email && a.email.toLowerCase() === user.email.toLowerCase());
+      if (i >= 0) {
+        accounts[i].nama = next.nama;
+        accounts[i].hp = next.hp;
+        accounts[i].avatar = next.avatar;
+        localStorage.setItem('smartai_accounts', JSON.stringify(accounts));
+      }
+    } catch (e) {}
     const msg = document.getElementById('saved');
     msg.textContent = 'Profil disimpan.';
     msg.classList.add('show');
-    setTimeout(function () { location.reload(); }, 600);
+    setTimeout(function () { location.reload(); }, 700);
   });
 }
 </script>
