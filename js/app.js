@@ -23,12 +23,19 @@ function themeIcon(theme) {
 
 initTheme();
 
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": '&#39;' })[c];
+  });
+}
+
 function avatarHtml(user, sizeClass) {
   const cls = sizeClass || '';
-  if (user.avatar) {
-    return `<div class="user-avatar ${cls}" style="background-image:url('${user.avatar}');background-size:cover;background-position:center;color:transparent">&nbsp;</div>`;
+  if (user && user.avatar) {
+    const src = String(user.avatar).replace(/'/g, '%27');
+    return '<div class="user-avatar ' + cls + '" style="background-image:url(\'' + src + '\');background-size:cover;background-position:center;color:transparent">&nbsp;</div>';
   }
-  return `<div class="user-avatar ${cls}">${initials(user.nama)}</div>`;
+  return '<div class="user-avatar ' + cls + '">' + escapeHtml(initials(user && user.nama)) + '</div>';
 }
 
 function renderShell(active) {
@@ -49,63 +56,55 @@ function renderShell(active) {
     { id: 'profile', href: 'profile.html', label: 'My Profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' }
   ];
 
-  const items = nav.map(n => `
-    <a class="nav-item${n.id === active ? ' active' : ''}" href="${n.href}">
-      <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="${n.icon}"/></svg>
-      ${n.label}
-    </a>`).join('');
+  const items = nav.map(function (n) {
+    return '\n    <a class="nav-item' + (n.id === active ? ' active' : '') + '" href="' + n.href + '">\n      <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="' + n.icon + '"/></svg>\n      ' + n.label + '\n    </a>';
+  }).join('');
 
-  const title = nav.find(n => n.id === active)?.label || 'Dashboard';
+  const title = (nav.find(function (n) { return n.id === active; }) || {}).label || 'Dashboard';
 
-  document.body.innerHTML = `
-    <div class="overlay" id="overlay"></div>
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-brand">SMART<span>AI</span></div>
-      <nav class="sidebar-nav">${items}</nav>
-      <div class="sidebar-foot">
-        <div class="user-mini">
-          ${avatarHtml(user)}
-          <div>
-            <div class="name">${escapeHtml(user.nama || 'Member')}</div>
-            <div class="role">${escapeHtml(user.email || '')}</div>
-          </div>
-        </div>
-      </div>
-    </aside>
-    <div class="main">
-      <header class="topbar">
-        <div class="topbar-left">
-          <button class="menu-toggle" id="menu-toggle" aria-label="Menu">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-          </button>
-          <div class="page-title">${title}</div>
-        </div>
-        <div class="topbar-right">
-          <button type="button" class="theme-btn" id="theme-btn" aria-label="Toggle theme" title="Dark / Light">${themeIcon(theme)}</button>
-          <button class="btn-ghost" type="button" onclick="logout()">Logout</button>
-        </div>
-      </header>
-      <main class="content" id="page-content"></main>
-    </div>`;
+  document.body.innerHTML =
+    '<div class="overlay" id="overlay"></div>' +
+    '<aside class="sidebar" id="sidebar">' +
+      '<div class="sidebar-brand">SMART<span>AI</span></div>' +
+      '<nav class="sidebar-nav">' + items + '</nav>' +
+      '<div class="sidebar-foot">' +
+        '<div class="user-mini">' +
+          avatarHtml(user) +
+          '<div>' +
+            '<div class="name">' + escapeHtml(user.nama || 'Member') + '</div>' +
+            '<div class="role">' + escapeHtml(user.email || '') + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</aside>' +
+    '<div class="main">' +
+      '<header class="topbar">' +
+        '<div class="topbar-left">' +
+          '<button class="menu-toggle" id="menu-toggle" aria-label="Menu">' +
+            '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>' +
+          '</button>' +
+          '<div class="page-title">' + escapeHtml(title) + '</div>' +
+        '</div>' +
+        '<div class="topbar-right">' +
+          '<button type="button" class="theme-btn" id="theme-btn" aria-label="Toggle theme" title="Dark / Light">' + themeIcon(theme) + '</button>' +
+          '<button class="btn-ghost" type="button" onclick="logout()">Logout</button>' +
+        '</div>' +
+      '</header>' +
+      '<main class="content" id="page-content"></main>' +
+    '</div>';
 
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
   const toggle = document.getElementById('menu-toggle');
-  toggle.addEventListener('click', () => {
+  toggle.addEventListener('click', function () {
     sidebar.classList.toggle('open');
     overlay.classList.toggle('show');
   });
-  overlay.addEventListener('click', () => {
+  overlay.addEventListener('click', function () {
     sidebar.classList.remove('open');
     overlay.classList.remove('show');
   });
   document.getElementById('theme-btn').addEventListener('click', toggleTheme);
 
   return user;
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c =>
-    ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": '&#39;' }[c])
-  );
 }
