@@ -23,6 +23,14 @@ function themeIcon(theme) {
 
 initTheme();
 
+function avatarHtml(user, sizeClass) {
+  const cls = sizeClass || '';
+  if (user.avatar) {
+    return `<div class="user-avatar ${cls}" style="background-image:url('${user.avatar}');background-size:cover;background-position:center;color:transparent">&nbsp;</div>`;
+  }
+  return `<div class="user-avatar ${cls}">${initials(user.nama)}</div>`;
+}
+
 function renderShell(active) {
   const user = requireAuth();
   if (!user) return;
@@ -56,7 +64,7 @@ function renderShell(active) {
       <nav class="sidebar-nav">${items}</nav>
       <div class="sidebar-foot">
         <div class="user-mini">
-          <div class="user-avatar">${initials(user.nama)}</div>
+          ${avatarHtml(user)}
           <div>
             <div class="name">${escapeHtml(user.nama || 'Member')}</div>
             <div class="role">${escapeHtml(user.email || '')}</div>
@@ -97,5 +105,7 @@ function renderShell(active) {
 }
 
 function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&','<':'<','>':'>','"':'"',"'":'&#39;'}[c]));
+  return String(s).replace(/[&<>"']/g, c =>
+    ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": '&#39;' }[c])
+  );
 }
