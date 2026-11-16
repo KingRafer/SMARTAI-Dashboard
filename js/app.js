@@ -83,7 +83,8 @@ function renderShell(active) {
       label: 'Account',
       items: [
         { id: 'support', href: 'support.html', label: 'Support', icon: 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z' },
-        { id: 'profile', href: 'profile.html', label: 'My Profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' }
+        { id: 'profile', href: 'profile.html', label: 'My Profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+        { id: 'risk', href: 'risk-notice.html', label: 'Risk & Privacy', icon: 'M12 9v4m0 4h.01M10.3 3.86l-7.2 12.48A2 2 0 004.83 19h14.34a2 2 0 001.73-2.66L13.7 3.86a2 2 0 00-3.46 0z' }
       ]
     }
   ];
@@ -130,11 +131,11 @@ function renderShell(active) {
           '<div class="page-title">' + escapeHtml(title) + '</div>' +
         '</div>' +
         '<div class="topbar-right">' +
-          '<span class="topbar-chip">Systems online</span>' +
+          '<span class="topbar-chip">Demo preview</span>' +
           '<button type="button" class="theme-btn" id="theme-btn" aria-label="Toggle theme" title="Dark / Light">' + themeIcon(theme) + '</button>' +
         '</div>' +
       '</header>' +
-      '<main class="content" id="page-content"></main>' +
+      '<main class="content" id="page-content"><section class="demo-notice" role="note"><strong>MODE DEMO · DATA SIMULASI</strong><span>Angka, akun, status, dan riwayat pada portal ini adalah contoh tampilan. Belum terhubung ke server, broker, MT4/MT5, atau transaksi nyata.</span></section></main>' +
     '</div>';
 
   const sidebar = document.getElementById('sidebar');
