@@ -6,6 +6,7 @@
 <title>Dashboard — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
 <script src="js/auth.js"></script>
@@ -18,7 +19,7 @@ if (user) {
       <div class="stat-card"><div class="label">Total Clients</div><div class="value">12</div><div class="hint">+2 bulan ini</div></div>
       <div class="stat-card"><div class="label">Referral Network</div><div class="value">34</div><div class="hint">3 level aktif</div></div>
       <div class="stat-card"><div class="label">Commission</div><div class="value up">$1,240</div><div class="hint">Bulan berjalan</div></div>
-      <div class="stat-card"><div class="label">Pending TX</div><div class="value">3</div><div class="hint">Menunggu proses</div></div>
+      <div class="stat-card"><div class="label">Acc Equity</div><div class="value">$804K</div><div class="hint">3 akun MT5</div></div>
     </div>
     <div class="grid-2">
       <div class="panel">
@@ -36,18 +37,33 @@ if (user) {
         </div>
       </div>
       <div class="panel">
-        <div class="panel-head"><h2>Ringkasan akun</h2></div>
+        <div class="panel-head"><h2>Ringkasan akun</h2><span class="sub">Member aktif</span></div>
         <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1rem">Halo, <strong style="color:var(--text)">${escapeHtml(user.nama)}</strong>. Selamat datang di portal member Smart AI.</p>
         <div class="table-wrap">
           <table>
             <tbody>
               <tr><td>Email</td><td>${escapeHtml(user.email)}</td></tr>
               <tr><td>WhatsApp</td><td>${escapeHtml(user.hp || '—')}</td></tr>
-              <tr><td>Referral code</td><td>${escapeHtml(user.referral || '—')}</td></tr>
+              <tr><td>Referral code</td><td>${escapeHtml(user.referral || 'SMARTAI-REF')}</td></tr>
               <tr><td>Status</td><td><span class="badge ok">Active</span></td></tr>
             </tbody>
           </table>
         </div>
+        <div class="mini-chart" style="margin-top:1.25rem">
+          <span style="height:35%"></span><span style="height:50%;animation-delay:.05s"></span>
+          <span style="height:42%;animation-delay:.1s"></span><span style="height:68%;animation-delay:.15s"></span>
+          <span style="height:55%;animation-delay:.2s"></span><span style="height:80%;animation-delay:.25s"></span>
+          <span style="height:62%;animation-delay:.3s"></span><span style="height:90%;animation-delay:.35s"></span>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Akses cepat</h2></div>
+      <div style="display:flex;flex-wrap:wrap;gap:.6rem">
+        <a class="btn-ghost" href="performance.html" style="text-decoration:none">Acc Performance</a>
+        <a class="btn-ghost" href="referral.html" style="text-decoration:none">Referral Map</a>
+        <a class="btn-ghost" href="clients.html" style="text-decoration:none">My Clients</a>
+        <a class="btn-ghost" href="commission.html" style="text-decoration:none">Commission</a>
       </div>
     </div>`;
 }
