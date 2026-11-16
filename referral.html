@@ -6,20 +6,39 @@
 <meta http-equiv="Cache-Control" content="no-cache"/>
 <title>Referral Network — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=20261116d">
+<link rel="stylesheet" href="css/app.css?v=20261116e">
 <style>
 .pyramid-wrap{
-  background: linear-gradient(180deg, rgba(45,212,191,.04), transparent 35%), var(--input-bg);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:1.25rem .75rem .85rem;
-  overflow-x:auto;
+  background: linear-gradient(180deg, rgba(45,212,191,.04),transparent 35%),var(--input-bg);
+  border:1px solid var(--border);border-radius:18px;padding:0;position:relative;overflow:hidden
 }
-.pyramid-svg{display:block;width:100%;min-width:820px;height:auto;margin:0 auto}
+.tree-toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;
+  padding:.75rem 1rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15)
+}
+[data-theme=light] .tree-toolbar{background:rgba(15,23,42,.03)}
+.tree-toolbar .hint{font-size:.75rem;color:var(--text-dim)}
+.zoom-btns{display:flex;align-items:center;gap:.4rem}
+.zoom-btns button{
+  width:34px;height:34px;border-radius:10px;border:1px solid var(--border);
+  background:var(--bg-card-solid);color:var(--text);font-size:1.1rem;font-weight:700;
+  cursor:pointer;font-family:inherit;line-height:1
+}
+.zoom-btns button:hover{border-color:var(--cyan);color:var(--cyan)}
+.zoom-btns .z-label{font-size:.78rem;color:var(--text-muted);min-width:48px;text-align:center;font-weight:600}
+.tree-viewport{
+  overflow:auto;max-height:min(70vh,640px);cursor:grab;padding:1rem .75rem 1.25rem;
+  -webkit-overflow-scrolling:touch
+}
+.tree-viewport.dragging{cursor:grabbing}
+.tree-stage{
+  transform-origin:top left;transition:transform .15s ease;width:max-content;min-width:100%
+}
+.pyramid-svg{display:block;height:auto}
 .pyramid-svg .edge{
-  stroke:#64748b;stroke-width:2.5;stroke-linecap:square;stroke-linejoin:miter;fill:none;opacity:.75
+  stroke:#64748b;stroke-width:2.2;stroke-linecap:square;stroke-linejoin:miter;fill:none;opacity:.7
 }
-[data-theme=light] .pyramid-svg .edge{stroke:#64748b;opacity:.55}
+[data-theme=light] .pyramid-svg .edge{stroke:#64748b;opacity:.5}
 .pyramid-svg .node-ring{fill:none;stroke:rgba(255,255,255,.1);stroke-width:1.5}
 .pyramid-svg .node-group{cursor:default}
 .pyramid-svg .node-group:hover .node-fill{filter:brightness(1.12)}
@@ -27,17 +46,15 @@
 .pyramid-svg .lbl{fill:#94a3b8;font-size:9px;font-weight:600;dominant-baseline:hanging}
 [data-theme=light] .pyramid-svg .lbl{fill:#475569}
 .pyramid-svg .lbl-root{fill:#2dd4bf;font-size:11px;font-weight:700;dominant-baseline:hanging}
-[data-theme=light] .pyramid-svg .lbl-root{fill:#0d9488}
 .pyramid-svg .lvl-tag{fill:#64748b;font-size:10px;font-weight:700;text-anchor:start}
 .pyramid-svg .av-text{fill:#042f2e;font-size:11px;font-weight:700;dominant-baseline:central}
 .pyramid-svg .av-text.light{fill:#fff}
 .pyramid-svg .av-text.sm{font-size:9px}
 .pyramid-svg .av-text.empty{fill:#64748b;font-size:12px;font-weight:500}
-.tree-note{text-align:center;font-size:.78rem;color:var(--text-dim);margin-top:.65rem}
+.tree-note{text-align:center;font-size:.78rem;color:var(--text-dim);margin-top:.65rem;padding:0 1rem 1rem}
 .tree-legend{
   display:flex;flex-wrap:wrap;gap:.6rem 1.1rem;justify-content:center;
-  margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);
-  font-size:.72rem;color:var(--text-muted)
+  padding:.75rem 1rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--text-muted)
 }
 .tree-legend span{display:flex;align-items:center;gap:.35rem}
 .tree-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
@@ -52,8 +69,8 @@
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
-<script src="js/auth.js?v=20261116d"></script>
-<script src="js/app.js?v=20261116d"></script>
+<script src="js/auth.js?v=20261116e"></script>
+<script src="js/app.js?v=20261116e"></script>
 <script>
 const user = renderShell('referral');
 if (user) {
@@ -63,66 +80,74 @@ if (user) {
   const refCode = (user.referral && user.referral.trim()) ? user.referral.trim().toUpperCase() : 'SMARTAI-REF';
   const refLink = location.origin + location.pathname.replace(/[^/]+$/, '') + 'register.html?ref=' + encodeURIComponent(refCode);
 
+  /* Lebih banyak member per level (demo). Real: unlimited width, max depth 5 */
+  function slot(av, label, full, empty) {
+    return { av: av, label: label || '', full: full || label, empty: !!empty };
+  }
   const roster = {
-    0: [{ av: ini, label: shortMe, full: me + ' (Kamu)', empty: false }],
+    0: [slot(ini, shortMe, me + ' (Kamu)', false)],
     1: [
-      { av: 'FS', label: 'Fajar', full: 'Fajar S.', empty: false },
-      { av: 'ML', label: 'Maya', full: 'Maya L.', empty: false }
+      slot('FS','Fajar','Fajar S.'), slot('ML','Maya','Maya L.'),
+      slot('RK','Rizky','Rizky K.'), slot('SW','Sari','Sari W.')
     ],
     2: [
-      { av: 'TH', label: 'Tono', full: 'Tono H.', empty: false },
-      { av: 'NA', label: 'Nina', full: 'Nina A.', empty: false },
-      { av: 'DW', label: 'Dina', full: 'Dina W.', empty: false },
-      { av: 'RK', label: 'Rizky', full: 'Rizky K.', empty: false }
+      slot('TH','Tono','Tono H.'), slot('NA','Nina','Nina A.'), slot('DW','Dina','Dina W.'),
+      slot('BP','Bima','Bima P.'), slot('YP','Yoga','Yoga P.'), slot('SA','Sinta','Sinta A.'),
+      slot('EH','Eko','Eko H.'), slot('RM','Rina','Rina M.')
     ],
     3: [
-      { av: 'YP', label: 'Yoga', full: 'Yoga P.', empty: false },
-      { av: 'SA', label: 'Sinta', full: 'Sinta A.', empty: false },
-      { av: 'EH', label: 'Eko', full: 'Eko H.', empty: false },
-      { av: '+', label: '', full: 'Slot kosong', empty: true },
-      { av: 'BP', label: 'Bima', full: 'Bima P.', empty: false },
-      { av: '+', label: '', full: 'Slot kosong', empty: true },
-      { av: 'RM', label: 'Rina', full: 'Rina M.', empty: false },
-      { av: '+', label: '', full: 'Slot kosong', empty: true }
+      slot('AR','Andi','Andi R.'), slot('DK','Dedi','Dedi K.'), slot('FL','Fira','Fira L.'),
+      slot('GH','Gilang','Gilang H.'), slot('IR','Indra','Indra R.'), slot('JN','Joko','Joko N.'),
+      slot('KL','Kiki','Kiki L.'), slot('LN','Lina','Lina N.'),
+      slot('+','','Slot kosong',true), slot('OP','Omar','Omar P.'),
+      slot('+','','Slot kosong',true), slot('QR','Qori','Qori R.'),
+      slot('ST','Susi','Susi T.'), slot('+','','Slot kosong',true),
+      slot('UV','Umi','Umi V.'), slot('+','','Slot kosong',true)
     ],
     4: [
-      { av: 'AR', label: 'Andi', full: 'Andi R.', empty: false },
-      { av: 'SW', label: 'Sari', full: 'Sari W.', empty: false },
-      { av: '+', label: '', full: 'Slot kosong', empty: true },
-      { av: 'DK', label: 'Dedi', full: 'Dedi K.', empty: false },
-      { av: '+', label: '', full: 'Slot kosong', empty: true },
-      { av: 'FL', label: 'Fira', full: 'Fira L.', empty: false },
-      { av: '+', label: '', full: 'Slot kosong', empty: true },
-      { av: '+', label: '', full: 'Slot kosong', empty: true }
+      slot('W1','Wati','Wati A.'), slot('X2','Xena','Xena B.'), slot('+','','Slot kosong',true),
+      slot('Y3','Yudi','Yudi C.'), slot('Z4','Zaki','Zaki D.'), slot('+','','Slot kosong',true),
+      slot('A5','Alya','Alya E.'), slot('B6','Bagus','Bagus F.'), slot('+','','Slot kosong',true),
+      slot('C7','Cici','Cici G.'), slot('D8','Dika','Dika H.'), slot('+','','Slot kosong',true),
+      slot('E9','Ella','Ella I.'), slot('+','','Slot kosong',true), slot('F0','Fani','Fani J.'),
+      slot('+','','Slot kosong',true), slot('G1','Gita','Gita K.'), slot('H2','Hana','Hana L.'),
+      slot('+','','Slot kosong',true), slot('I3','Ivan','Ivan M.'), slot('+','','Slot kosong',true),
+      slot('J4','Jaya','Jaya N.'), slot('+','','Slot kosong',true), slot('K5','Kara','Kara O.')
     ],
     5: [
-      { av: 'GH', label: 'Gilang', full: 'Gilang H.', empty: false },
-      { av: '+', label: '', full: 'Slot kosong', empty: true },
-      { av: 'IR', label: 'Indra', full: 'Indra R.', empty: false },
-      { av: '+', label: '', full: 'Slot kosong', empty: true },
-      { av: '+', label: '', full: 'Slot kosong', empty: true },
-      { av: 'JN', label: 'Joko', full: 'Joko N.', empty: false },
-      { av: '+', label: '', full: 'Slot kosong', empty: true },
-      { av: '+', label: '', full: 'Slot kosong', empty: true }
+      slot('L6','Lulu','Lulu P.'), slot('+','','Slot kosong',true), slot('M7','Mira','Mira Q.'),
+      slot('N8','Nico','Nico R.'), slot('+','','Slot kosong',true), slot('O9','Oki','Oki S.'),
+      slot('+','','Slot kosong',true), slot('P0','Putri','Putri T.'), slot('Q1','Rafi','Rafi U.'),
+      slot('+','','Slot kosong',true), slot('R2','Sasa','Sasa V.'), slot('+','','Slot kosong',true),
+      slot('S3','Tari','Tari W.'), slot('T4','Udin','Udin X.'), slot('+','','Slot kosong',true),
+      slot('U5','Vina','Vina Y.'), slot('+','','Slot kosong',true), slot('V6','Wira','Wira Z.'),
+      slot('W7','Yuni','Yuni A.'), slot('+','','Slot kosong',true), slot('X8','Zara','Zara B.'),
+      slot('+','','Slot kosong',true), slot('Y9','Adi','Adi C.'), slot('+','','Slot kosong',true),
+      slot('Z0','Beni','Beni D.'), slot('+','','Slot kosong',true), slot('AA','Cora','Cora E.'),
+      slot('+','','Slot kosong',true), slot('BB','Dina','Dina F.'), slot('+','','Slot kosong',true),
+      slot('CC','Eros','Eros G.'), slot('+','','Slot kosong',true)
     ]
   };
 
   const MAX_LEVEL = 5;
-  const W = 920;
-  const rowH = 96;
-  const topPad = 42;
-  const H = topPad + (MAX_LEVEL + 1) * rowH + 28;
-  const radii = [26, 22, 20, 16, 14, 12];
+  const maxCount = Math.max.apply(null, [0,1,2,3,4,5].map(function (l) { return (roster[l] || []).length; }));
+  const colW = 56;
   const leftPad = 52;
+  const W = leftPad + maxCount * colW + 40;
+  const rowH = 92;
+  const topPad = 40;
+  const H = topPad + (MAX_LEVEL + 1) * rowH + 30;
+  const radii = [24, 20, 18, 14, 12, 11];
 
   const nodes = [];
   for (let level = 0; level <= MAX_LEVEL; level++) {
     const list = roster[level] || [];
     const count = list.length;
     const y = topPad + level * rowH;
-    const r = radii[level] || 12;
+    const r = radii[level] || 11;
+    const span = W - leftPad - 30;
     for (let i = 0; i < count; i++) {
-      const x = leftPad + ((i + 0.5) / count) * (W - leftPad - 24);
+      const x = leftPad + ((i + 0.5) / count) * span;
       const d = list[i];
       nodes.push({
         id: 'L' + level + '_' + i,
@@ -136,7 +161,6 @@ if (user) {
   const byId = Object.fromEntries(nodes.map(function (n) { return [n.id, n]; }));
   const fills = ['url(#g0)','url(#g1)','url(#g2)','url(#g3)','url(#g4)','url(#g5)'];
 
-  /* Orthogonal (kota) connectors: vertical → horizontal bus → vertical */
   const childrenOf = {};
   nodes.forEach(function (n) {
     if (!n.parent) return;
@@ -149,20 +173,14 @@ if (user) {
     var parent = byId[pid];
     var kids = childrenOf[pid];
     if (!parent || !kids.length) return;
-
-    var py1 = parent.y + parent.r;           // bottom of parent
-    var midY = (parent.y + kids[0].y) / 2;  // horizontal bus y
-
-    // vertical stem from parent down to bus
-    edgeSvg += '<path class="edge" d="M' + parent.x.toFixed(1) + ' ' + py1.toFixed(1) +
-      ' V' + midY.toFixed(1) + '"/>';
-
+    var py1 = parent.y + parent.r;
+    var midY = (parent.y + kids[0].y) / 2;
+    edgeSvg += '<path class="edge" d="M' + parent.x.toFixed(1) + ' ' + py1.toFixed(1) + ' V' + midY.toFixed(1) + '"/>';
     if (kids.length === 1) {
       var k = kids[0];
       var ky0 = k.y - k.r;
       if (Math.abs(k.x - parent.x) < 0.5) {
-        edgeSvg += '<path class="edge" d="M' + parent.x.toFixed(1) + ' ' + midY.toFixed(1) +
-          ' V' + ky0.toFixed(1) + '"/>';
+        edgeSvg += '<path class="edge" d="M' + parent.x.toFixed(1) + ' ' + midY.toFixed(1) + ' V' + ky0.toFixed(1) + '"/>';
       } else {
         edgeSvg += '<path class="edge" d="M' + parent.x.toFixed(1) + ' ' + midY.toFixed(1) +
           ' H' + k.x.toFixed(1) + ' V' + ky0.toFixed(1) + '"/>';
@@ -173,48 +191,44 @@ if (user) {
         if (k.x < minX) minX = k.x;
         if (k.x > maxX) maxX = k.x;
       });
-      // horizontal bus
-      edgeSvg += '<path class="edge" d="M' + minX.toFixed(1) + ' ' + midY.toFixed(1) +
-        ' H' + maxX.toFixed(1) + '"/>';
-      // drop to each child
+      edgeSvg += '<path class="edge" d="M' + minX.toFixed(1) + ' ' + midY.toFixed(1) + ' H' + maxX.toFixed(1) + '"/>';
       kids.forEach(function (k) {
-        var ky0 = k.y - k.r;
-        edgeSvg += '<path class="edge" d="M' + k.x.toFixed(1) + ' ' + midY.toFixed(1) +
-          ' V' + ky0.toFixed(1) + '"/>';
+        edgeSvg += '<path class="edge" d="M' + k.x.toFixed(1) + ' ' + midY.toFixed(1) + ' V' + (k.y - k.r).toFixed(1) + '"/>';
       });
     }
   });
 
   const levelTags = [0,1,2,3,4,5].map(function (lv) {
-    const y = topPad + lv * rowH + 4;
-    return '<text class="lvl-tag" x="8" y="' + y + '">L' + lv + '</text>';
+    return '<text class="lvl-tag" x="8" y="' + (topPad + lv * rowH + 4) + '">L' + lv + '</text>';
   }).join('');
 
   const nodeSvg = nodes.map(function (n) {
     if (n.empty) {
       return '<g class="node-group" transform="translate(' + n.x + ',' + n.y + ')">' +
-        '<title>' + escapeHtml(n.full) + ' · Level ' + n.level + '</title>' +
+        '<title>' + escapeHtml(n.full) + ' · L' + n.level + '</title>' +
         '<circle class="node-fill" r="' + n.r + '" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="3 2"/>' +
         '<text class="av-text empty" y="1">+</text></g>';
     }
     const fill = fills[n.level] || fills[5];
     const avCls = (n.level === 2 || n.level >= 4) ? 'av-text light sm' : (n.level >= 3 ? 'av-text sm' : 'av-text');
     const lblCls = n.level === 0 ? 'lbl-root' : 'lbl';
+    const showLbl = n.level <= 2 || (n.level === 3 && n.label);
     return '<g class="node-group" transform="translate(' + n.x + ',' + n.y + ')">' +
-      '<title>' + escapeHtml(n.full) + ' · Level ' + n.level + '</title>' +
+      '<title>' + escapeHtml(n.full) + ' · L' + n.level + '</title>' +
       '<circle class="node-fill" r="' + n.r + '" fill="' + fill + '"/>' +
       '<circle class="node-ring" r="' + n.r + '"/>' +
       '<text class="' + avCls + '" y="1">' + escapeHtml(n.av) + '</text>' +
-      (n.label ? '<text class="' + lblCls + '" y="' + (n.r + 8) + '">' + escapeHtml(n.label) + '</text>' : '') +
+      (showLbl && n.label ? '<text class="' + lblCls + '" y="' + (n.r + 8) + '">' + escapeHtml(n.label) + '</text>' : '') +
       '</g>';
   }).join('');
+
+  const filledCount = nodes.filter(function (n) { return !n.empty; }).length;
 
   const matrixNames = [
     'Fajar S.','Maya L.','Rizky K.','Andi R.','Sari W.',
     'Tono H.','Nina A.','Dina W.','Bima P.','Yoga P.',
     'Sinta A.','Eko H.','Rina M.','Gilang H.','Indra R.',
-    'Joko N.',null,null,null,null,
-    null,null,null,null,null
+    'Joko N.',null,null,null,null,null,null,null,null,null
   ];
   const matrixCells = matrixNames.map(function (name, i) {
     if (!name) return '<div class="matrix-cell empty" style="animation-delay:' + (i * 0.02) + 's"></div>';
@@ -225,10 +239,10 @@ if (user) {
 
   document.getElementById('page-content').innerHTML =
     '<div class="stats-grid">' +
-      '<div class="stat-card"><div class="label">Total Network</div><div class="value">34</div><div class="hint">Semua level</div></div>' +
+      '<div class="stat-card"><div class="label">Nodes di pohon</div><div class="value">' + filledCount + '</div><div class="hint">Demo terisi</div></div>' +
       '<div class="stat-card"><div class="label">Max depth</div><div class="value">5</div><div class="hint">Mentok level 5</div></div>' +
-      '<div class="stat-card"><div class="label">Level 1</div><div class="value">2</div><div class="hint">Direct</div></div>' +
-      '<div class="stat-card"><div class="label">Open slots</div><div class="value">∞</div><div class="hint">Tak terbatas</div></div>' +
+      '<div class="stat-card"><div class="label">L1 Direct</div><div class="value">4</div><div class="hint">Direct members</div></div>' +
+      '<div class="stat-card"><div class="label">Posisi</div><div class="value">∞</div><div class="hint">Tak terbatas / level</div></div>' +
     '</div>' +
     '<div class="panel"><div class="panel-head"><h2>Bagikan referral</h2><span class="sub">Salin kode / link</span></div>' +
       '<div class="ref-share">' +
@@ -239,34 +253,91 @@ if (user) {
           '<span class="rf-value" id="ref-link">' + escapeHtml(refLink) + '</span>' +
           '<button type="button" class="btn-copy" id="copy-link">Salin link</button></div></div>' +
       '</div></div>' +
-    '<div class="panel"><div class="panel-head"><h2>Pohon Jaringan</h2><span class="sub">Tree topology · garis siku</span></div>' +
+    '<div class="panel"><div class="panel-head"><h2>Pohon Jaringan</h2><span class="sub">Scroll · drag · zoom</span></div>' +
       '<div class="pyramid-wrap">' +
-        '<svg class="pyramid-svg" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' +
-          '<defs>' +
-            '<linearGradient id="g0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2dd4bf"/><stop offset="100%" stop-color="#0d9488"/></linearGradient>' +
-            '<linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient>' +
-            '<linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c4b5fd"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>' +
-            '<linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fcd34d"/><stop offset="100%" stop-color="#d97706"/></linearGradient>' +
-            '<linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#93c5fd"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>' +
-            '<linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fda4af"/><stop offset="100%" stop-color="#e11d48"/></linearGradient>' +
-          '</defs>' +
-          levelTags + edgeSvg + nodeSvg +
-        '</svg>' +
-        '<p class="tree-note">Garis penghubung <strong>orthogonal</strong> (vertikal + horizontal), seperti tree topology.</p>' +
+        '<div class="tree-toolbar">' +
+          '<span class="hint">Scroll / seret untuk geser · Zoom − / +</span>' +
+          '<div class="zoom-btns">' +
+            '<button type="button" id="zoom-out" title="Perkecil">−</button>' +
+            '<span class="z-label" id="zoom-label">100%</span>' +
+            '<button type="button" id="zoom-in" title="Perbesar">+</button>' +
+            '<button type="button" id="zoom-reset" title="Reset" style="width:auto;padding:0 .7rem;font-size:.75rem">Reset</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="tree-viewport" id="tree-viewport">' +
+          '<div class="tree-stage" id="tree-stage">' +
+            '<svg class="pyramid-svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' +
+              '<defs>' +
+                '<linearGradient id="g0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2dd4bf"/><stop offset="100%" stop-color="#0d9488"/></linearGradient>' +
+                '<linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient>' +
+                '<linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c4b5fd"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>' +
+                '<linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fcd34d"/><stop offset="100%" stop-color="#d97706"/></linearGradient>' +
+                '<linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#93c5fd"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>' +
+                '<linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fda4af"/><stop offset="100%" stop-color="#e11d48"/></linearGradient>' +
+              '</defs>' +
+              levelTags + edgeSvg + nodeSvg +
+            '</svg>' +
+          '</div>' +
+        '</div>' +
+        '<p class="tree-note">L0–L5 · banyak member · geser & zoom jika tidak muat.</p>' +
         '<div class="tree-legend">' +
-          '<span><i class="l0"></i> L0 Root</span><span><i class="l1"></i> L1</span><span><i class="l2"></i> L2</span>' +
+          '<span><i class="l0"></i> L0</span><span><i class="l1"></i> L1</span><span><i class="l2"></i> L2</span>' +
           '<span><i class="l3"></i> L3</span><span><i class="l4"></i> L4</span><span><i class="l5"></i> L5</span><span><i class="empty"></i> Kosong</span>' +
-        '</div></div></div>' +
-    '<div class="panel"><div class="panel-head"><h2>Matrix 5×5</h2><span class="sub">Seat plan demo</span></div>' +
-      '<div class="matrix-wrap"><div class="matrix-5x5">' + matrixCells + '</div></div>' +
-      '<div class="matrix-legend"><span><i class="f"></i> Terisi</span><span><i class="e"></i> Kosong</span></div></div>' +
-    '<div class="panel"><div class="panel-head"><h2>Daftar jaringan</h2></div>' +
-      '<div class="table-wrap"><table><thead><tr><th>Nama</th><th>Level</th><th>Status</th></tr></thead><tbody>' +
-        '<tr><td>Fajar S.</td><td>L1</td><td><span class="badge ok">Active</span></td></tr>' +
-        '<tr><td>Andi R.</td><td>L4</td><td><span class="badge ok">Active</span></td></tr>' +
-        '<tr><td>Gilang H.</td><td>L5</td><td><span class="badge info">New</span></td></tr>' +
-      '</tbody></table></div></div>' +
+        '</div>' +
+      '</div></div>' +
+    '<div class="panel"><div class="panel-head"><h2>Matrix 5×5</h2></div>' +
+      '<div class="matrix-wrap"><div class="matrix-5x5">' + matrixCells + '</div></div></div>' +
     '<div class="copy-toast" id="copy-toast">Disalin!</div>';
+
+  /* Zoom + pan */
+  var scale = 1;
+  var stage = document.getElementById('tree-stage');
+  var viewport = document.getElementById('tree-viewport');
+  var label = document.getElementById('zoom-label');
+  function applyZoom() {
+    stage.style.transform = 'scale(' + scale + ')';
+    stage.style.width = (W * scale) + 'px';
+    stage.style.height = (H * scale) + 'px';
+    label.textContent = Math.round(scale * 100) + '%';
+  }
+  document.getElementById('zoom-in').onclick = function () {
+    scale = Math.min(1.8, Math.round((scale + 0.15) * 100) / 100);
+    applyZoom();
+  };
+  document.getElementById('zoom-out').onclick = function () {
+    scale = Math.max(0.35, Math.round((scale - 0.15) * 100) / 100);
+    applyZoom();
+  };
+  document.getElementById('zoom-reset').onclick = function () {
+    scale = 1; applyZoom();
+    viewport.scrollLeft = 0; viewport.scrollTop = 0;
+  };
+  /* Drag to pan */
+  var dragging = false, sx = 0, sy = 0, sl = 0, st = 0;
+  viewport.addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    dragging = true;
+    viewport.classList.add('dragging');
+    sx = e.clientX; sy = e.clientY;
+    sl = viewport.scrollLeft; st = viewport.scrollTop;
+  });
+  window.addEventListener('mousemove', function (e) {
+    if (!dragging) return;
+    viewport.scrollLeft = sl - (e.clientX - sx);
+    viewport.scrollTop = st - (e.clientY - sy);
+  });
+  window.addEventListener('mouseup', function () {
+    dragging = false;
+    viewport.classList.remove('dragging');
+  });
+  /* Ctrl + wheel zoom */
+  viewport.addEventListener('wheel', function (e) {
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    if (e.deltaY < 0) scale = Math.min(1.8, scale + 0.08);
+    else scale = Math.max(0.35, scale - 0.08);
+    applyZoom();
+  }, { passive: false });
 
   function showToast(msg) {
     var t = document.getElementById('copy-toast');
