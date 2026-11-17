@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache"/>
 <title>Referral Network — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=20261116f">
+<link rel="stylesheet" href="css/app.css?v=20261117a">
 <style>
 .ref-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1.25rem}
 @media(max-width:960px){.ref-grid{grid-template-columns:1fr}}
@@ -28,17 +28,6 @@
 .calc-row:last-child{border-bottom:none;font-weight:800;padding-top:.7rem}
 .calc-row .amt{color:var(--cyan);font-weight:700}
 .calc-row.total .amt{color:var(--green);font-size:1.05rem}
-.network-list{margin-top:1.25rem}
-.member-row{display:grid;grid-template-columns:40px 1fr auto auto;gap:.75rem;align-items:center;padding:.75rem .9rem;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.02);margin-bottom:.55rem}
-.member-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;background:rgba(45,212,191,.15);color:var(--cyan)}
-.member-av.l2{background:rgba(251,191,36,.15);color:var(--gold)}
-.member-av.l3{background:rgba(167,139,250,.15);color:var(--purple)}
-.member-av.l4{background:rgba(248,113,113,.12);color:#fb7185}
-.member-av.l5{background:rgba(148,163,184,.15);color:#94a3b8}
-.member-name{font-weight:700;font-size:.88rem}
-.member-meta{font-size:.72rem;color:var(--text-muted)}
-.member-lots{font-size:.8rem;color:var(--text-muted);text-align:right}
-.member-earn{font-weight:800;color:var(--green);font-size:.9rem;text-align:right}
 .ref-code-box{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:.75rem}
 .ref-code-box code{font-family:ui-monospace,monospace;font-weight:700;color:var(--cyan);padding:.4rem .7rem;border-radius:8px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.2);font-size:.85rem}
 .btn-copy{border:1px solid var(--border);background:transparent;color:var(--text);padding:.4rem .75rem;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit}
@@ -46,12 +35,129 @@
 .example-steps{margin:0;padding-left:1.1rem;font-size:.8rem;color:var(--text-muted);line-height:1.55}
 .example-steps li{margin-bottom:.35rem}
 .example-steps strong{color:var(--text)}
+
+/* ===== Pohon Koneksi (Connection Tree) ===== */
+.tree-panel{margin-top:1.25rem}
+.tree-wrap{
+  border:1px solid var(--border);border-radius:16px;padding:1.5rem 1rem 1.35rem;
+  overflow:auto;background:var(--bg-card-solid);position:relative;
+}
+.tree-wrap::before{
+  content:'';position:absolute;inset:0;border-radius:16px;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(45,212,191,.06),transparent 70%);
+}
+.network-tree{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:0;min-width:min(100%,720px);margin:0 auto}
+.tree-level{display:flex;justify-content:center;flex-wrap:wrap;gap:.85rem;width:100%;position:relative}
+.tree-level + .tree-level{margin-top:2.1rem}
+.level-tag{
+  position:absolute;left:0;top:-1.15rem;font-size:.65rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);
+  background:var(--bg-card-solid);padding:0 .4rem;
+}
+.net-node{
+  background:var(--bg-card-solid);border:1px solid var(--border);border-radius:12px;
+  padding:.7rem .95rem;min-width:118px;text-align:center;
+  box-shadow:var(--shadow-sm);position:relative;
+  transition:border-color .2s,box-shadow .2s,transform .15s;
+  animation:scaleIn .4s cubic-bezier(.22,1,.36,1) both;
+}
+.net-node:hover{border-color:var(--cyan);box-shadow:0 8px 22px var(--glow);transform:translateY(-2px)}
+.net-node.root{
+  background:linear-gradient(145deg,rgba(45,212,191,.16),var(--bg-card-solid));
+  border-color:rgba(45,212,191,.35);min-width:132px;
+}
+.net-node .av{
+  width:38px;height:38px;border-radius:50%;margin:0 auto .4rem;
+  background:linear-gradient(135deg,var(--cyan),var(--teal));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:.78rem;color:#042f2e;
+}
+.net-node.l1 .av{background:linear-gradient(135deg,var(--cyan),var(--teal))}
+.net-node.l2 .av{background:linear-gradient(135deg,var(--purple),#818cf8);color:#1e1b4b}
+.net-node.l3 .av{background:linear-gradient(135deg,var(--gold),var(--yellow));color:#422006}
+.net-node.l4 .av{background:linear-gradient(135deg,var(--blue),#38bdf8);color:#0c4a6e}
+.net-node.l5 .av{background:linear-gradient(135deg,#fb7185,#f43f5e);color:#4c0519}
+.net-node .n-name{font-size:.8rem;font-weight:700;line-height:1.25}
+.net-node .n-meta{font-size:.65rem;color:var(--text-dim);margin-top:.15rem}
+.net-node .n-lots{
+  margin-top:.35rem;font-size:.72rem;font-weight:700;color:var(--cyan);
+  background:rgba(45,212,191,.1);border-radius:6px;padding:.18rem .4rem;display:inline-block;
+}
+.net-node .n-earn{font-size:.7rem;font-weight:800;color:var(--green);margin-top:.2rem}
+.net-node.root .n-lots,.net-node.root .n-earn{display:none}
+
+/* Garis penghubung vertikal antar level */
+.tree-connector{
+  width:2px;height:22px;margin:0 auto;
+  background:linear-gradient(180deg,var(--cyan),rgba(45,212,191,.15));
+  border-radius:2px;position:relative;z-index:0;
+}
+.tree-connector::after{
+  content:'';position:absolute;left:50%;top:100%;transform:translateX(-50%);
+  width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;
+  border-top:6px solid rgba(45,212,191,.35);
+}
+
+/* Hierarchy list (expandable tree list) */
+.hier-list{margin-top:1.25rem}
+.hier-item{margin-bottom:.15rem}
+.hier-row{
+  display:grid;grid-template-columns:28px 36px 1fr auto auto;gap:.65rem;align-items:center;
+  padding:.55rem .75rem;border:1px solid var(--border);border-radius:10px;
+  background:rgba(255,255,255,.02);cursor:default;transition:border-color .15s,background .15s;
+}
+.hier-row:hover{border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.04)}
+.hier-toggle{
+  width:22px;height:22px;border-radius:6px;border:1px solid var(--border);
+  background:transparent;color:var(--text-muted);font-size:.7rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;
+}
+.hier-toggle:hover{border-color:var(--cyan);color:var(--cyan)}
+.hier-toggle.leaf{visibility:hidden}
+.hier-av{
+  width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.68rem;font-weight:800;background:rgba(45,212,191,.15);color:var(--cyan);
+}
+.hier-av.l2{background:rgba(167,139,250,.18);color:#a78bfa}
+.hier-av.l3{background:rgba(251,191,36,.15);color:var(--gold)}
+.hier-av.l4{background:rgba(56,189,248,.15);color:#38bdf8}
+.hier-av.l5{background:rgba(251,113,133,.15);color:#fb7185}
+.hier-name{font-weight:700;font-size:.85rem}
+.hier-meta{font-size:.7rem;color:var(--text-muted)}
+.hier-lots{font-size:.78rem;color:var(--text-muted);text-align:right;white-space:nowrap}
+.hier-earn{font-weight:800;color:var(--green);font-size:.85rem;text-align:right;white-space:nowrap}
+.hier-children{margin-left:1.35rem;padding-left:.75rem;border-left:2px solid rgba(45,212,191,.18);margin-top:.2rem;display:none}
+.hier-children.open{display:block}
+.mt5-note{
+  margin-top:1rem;padding:.85rem 1rem;border-radius:12px;
+  background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.2);
+  font-size:.8rem;color:var(--text-muted);line-height:1.5;
+}
+.mt5-note strong{color:var(--text)}
+.tree-legend{
+  display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin-top:1rem;
+  font-size:.72rem;color:var(--text-muted);
+}
+.tree-legend span{display:inline-flex;align-items:center;gap:.3rem}
+.tree-legend i{
+  width:10px;height:10px;border-radius:50%;display:inline-block;
+}
+.tree-legend i.l1{background:linear-gradient(135deg,var(--cyan),var(--teal))}
+.tree-legend i.l2{background:linear-gradient(135deg,var(--purple),#818cf8)}
+.tree-legend i.l3{background:linear-gradient(135deg,var(--gold),var(--yellow))}
+.tree-legend i.l4{background:linear-gradient(135deg,var(--blue),#38bdf8)}
+.tree-legend i.l5{background:linear-gradient(135deg,#fb7185,#f43f5e)}
+@media(max-width:640px){
+  .net-node{min-width:100px;padding:.55rem .7rem}
+  .hier-row{grid-template-columns:24px 30px 1fr auto;gap:.45rem}
+  .hier-earn{grid-column:1 / -1;text-align:left;padding-left:54px}
+}
 </style>
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
-<script src="js/auth.js?v=20261116f"></script>
-<script src="js/app.js?v=20261116f"></script>
+<script src="js/auth.js?v=20261117a"></script>
+<script src="js/app.js?v=20261117a"></script>
 <script>
 const user = renderShell('referral');
 if (user) {
@@ -60,22 +166,22 @@ if (user) {
   var refCode = (user.referral && user.referral.trim()) ? user.referral.trim().toUpperCase() : 'SMARTAI-REF';
   var refLink = location.origin + location.pathname.replace(/[^/]+$/, '') + 'register.html?ref=' + encodeURIComponent(refCode);
 
+  /* Data jaringan: level 1–5, invitedBy = id parent (atau 'YOU') */
   var network = [
-    { id: 'M2A', name: 'Fajar S.', level: 1, lots: 12, invitedBy: 'YOU' },
-    { id: 'M2B', name: 'Maya L.', level: 1, lots: 8, invitedBy: 'YOU' },
-    { id: 'M2C', name: 'Rizky K.', level: 1, lots: 5, invitedBy: 'YOU' },
-    { id: 'M3A', name: 'Tono H.', level: 2, lots: 6, invitedBy: 'M2A' },
-    { id: 'M3B', name: 'Nina A.', level: 2, lots: 4, invitedBy: 'M2A' },
-    { id: 'M3C', name: 'Dina W.', level: 2, lots: 3, invitedBy: 'M2B' },
-    { id: 'M4A', name: 'Andi R.', level: 3, lots: 5, invitedBy: 'M3A' },
-    { id: 'M4B', name: 'Fira L.', level: 3, lots: 2, invitedBy: 'M3B' },
-    { id: 'M5A', name: 'Wati A.', level: 4, lots: 3, invitedBy: 'M4A' },
-    { id: 'M6A', name: 'Lulu P.', level: 5, lots: 2, invitedBy: 'M5A' }
+    { id: 'M2A', name: 'Fajar S.',  level: 1, lots: 12, invitedBy: 'YOU' },
+    { id: 'M2B', name: 'Maya L.',   level: 1, lots: 8,  invitedBy: 'YOU' },
+    { id: 'M2C', name: 'Rizky K.',  level: 1, lots: 5,  invitedBy: 'YOU' },
+    { id: 'M3A', name: 'Tono H.',   level: 2, lots: 6,  invitedBy: 'M2A' },
+    { id: 'M3B', name: 'Nina A.',   level: 2, lots: 4,  invitedBy: 'M2A' },
+    { id: 'M3C', name: 'Dina W.',   level: 2, lots: 3,  invitedBy: 'M2B' },
+    { id: 'M4A', name: 'Andi R.',   level: 3, lots: 5,  invitedBy: 'M3A' },
+    { id: 'M4B', name: 'Fira L.',   level: 3, lots: 2,  invitedBy: 'M3B' },
+    { id: 'M5A', name: 'Wati A.',   level: 4, lots: 3,  invitedBy: 'M4A' },
+    { id: 'M6A', name: 'Lulu P.',   level: 5, lots: 2,  invitedBy: 'M5A' }
   ];
 
   function earnFromMember(level, lots) {
-    var rate = COMMISSION[level] || 0;
-    return rate * (Number(lots) || 0);
+    return (COMMISSION[level] || 0) * (Number(lots) || 0);
   }
   function totalYouEarn() {
     return network.reduce(function(s, m) { return s + earnFromMember(m.level, m.lots); }, 0);
@@ -91,53 +197,189 @@ if (user) {
     });
     return out;
   }
+  function byId(id) {
+    for (var i = 0; i < network.length; i++) if (network[i].id === id) return network[i];
+    return null;
+  }
+  function childrenOf(parentId) {
+    return network.filter(function(m) { return m.invitedBy === parentId; });
+  }
+  function initials(name) {
+    return String(name || '').split(/\s+/).map(function(p){ return p[0]; }).join('').slice(0, 2).toUpperCase();
+  }
+  function fmt(n) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
+  }
 
   var stats = levelStats();
   var totalEarn = totalYouEarn();
   var totalLots = network.reduce(function(s, m) { return s + m.lots; }, 0);
   var totalMembers = network.length;
 
-  function fmt(n) {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
+  /* --- Build hierarchical tree structure --- */
+  function buildTree() {
+    var root = {
+      id: 'YOU',
+      name: (user.nama || 'Kamu'),
+      level: 0,
+      lots: 0,
+      children: childrenOf('YOU').map(attachChildren)
+    };
+    return root;
   }
-  function avClass(level) { return level === 1 ? '' : 'l' + level; }
+  function attachChildren(node) {
+    return {
+      id: node.id,
+      name: node.name,
+      level: node.level,
+      lots: node.lots,
+      earn: earnFromMember(node.level, node.lots),
+      children: childrenOf(node.id).map(attachChildren)
+    };
+  }
+
+  /* Visual tree by levels (horizontal layout per level) */
+  function renderVisualTree(root) {
+    var levels = [[root]];
+    var queue = [{ node: root, depth: 0 }];
+    while (queue.length) {
+      var cur = queue.shift();
+      if (cur.depth >= MAX_LEVEL) continue;
+      if (cur.node.children && cur.node.children.length) {
+        if (!levels[cur.depth + 1]) levels[cur.depth + 1] = [];
+        cur.node.children.forEach(function(ch) {
+          levels[cur.depth + 1].push(ch);
+          queue.push({ node: ch, depth: cur.depth + 1 });
+        });
+      }
+    }
+
+    var html = '<div class="network-tree">';
+    levels.forEach(function(nodes, depth) {
+      if (depth > 0) html += '<div class="tree-connector"></div>';
+      html += '<div class="tree-level">';
+      if (depth === 0) {
+        html += '<span class="level-tag">Kamu (Root)</span>';
+      } else {
+        html += '<span class="level-tag">Level ' + depth + ' · $' + COMMISSION[depth] + '/lot</span>';
+      }
+      nodes.forEach(function(n, idx) {
+        var cls = depth === 0 ? 'root' : ('l' + depth);
+        var delay = (depth * 0.08 + idx * 0.04).toFixed(2);
+        html += '<div class="net-node ' + cls + '" style="animation-delay:' + delay + 's">';
+        html += '<div class="av">' + escapeHtml(initials(n.name)) + '</div>';
+        html += '<div class="n-name">' + escapeHtml(n.name) + '</div>';
+        if (depth === 0) {
+          html += '<div class="n-meta">Sponsor</div>';
+        } else {
+          html += '<div class="n-meta">L' + depth + '</div>';
+          html += '<div class="n-lots">' + n.lots + ' lot</div>';
+          html += '<div class="n-earn">+' + fmt(n.earn) + '</div>';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function parentName(invitedBy) {
+    if (invitedBy === 'YOU') return 'kamu';
+    var p = byId(invitedBy);
+    return p ? p.name : invitedBy;
+  }
+
+  function getInvitedBy(id) {
+    var m = byId(id);
+    return m ? m.invitedBy : 'YOU';
+  }
+
+  function renderHierListFixed(node, depth) {
+    depth = depth || 0;
+    if (depth > MAX_LEVEL) return '';
+    var hasKids = node.children && node.children.length > 0;
+    var earn = node.level > 0 ? node.earn : 0;
+    var avCls = node.level > 0 ? 'l' + node.level : '';
+    var meta = node.level === 0
+      ? 'Root · sponsor jaringan'
+      : 'Level ' + node.level + ' · diajak oleh ' + parentName(getInvitedBy(node.id));
+    var html = '<div class="hier-item" data-id="' + escapeHtml(node.id) + '">';
+    html += '<div class="hier-row">';
+    html += '<button type="button" class="hier-toggle' + (hasKids ? '' : ' leaf') + '" data-toggle="' + escapeHtml(node.id) + '">' + (hasKids ? '▾' : '') + '</button>';
+    html += '<div class="hier-av ' + avCls + '">' + escapeHtml(initials(node.name)) + '</div>';
+    html += '<div><div class="hier-name">' + escapeHtml(node.name) + (node.level === 0 ? ' <span style="color:var(--cyan);font-size:.72rem">(kamu)</span>' : '') + '</div>';
+    html += '<div class="hier-meta">' + meta + '</div></div>';
+    if (node.level > 0) {
+      html += '<div class="hier-lots">' + node.lots + ' lot</div>';
+      html += '<div class="hier-earn">+' + fmt(earn) + '</div>';
+    } else {
+      html += '<div class="hier-lots"></div><div class="hier-earn"></div>';
+    }
+    html += '</div>';
+    if (hasKids) {
+      /* Level 0–2 expanded by default */
+      html += '<div class="hier-children' + (depth < 2 ? ' open' : '') + '" data-children="' + escapeHtml(node.id) + '">';
+      node.children.forEach(function(ch) {
+        html += renderHierListFixed(ch, depth + 1);
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  var tree = buildTree();
 
   var levelRows = '';
   for (var L = 1; L <= MAX_LEVEL; L++) {
     levelRows += '<tr><td><span class="level-pill">L' + L + '</span></td>' +
-      '<td>' + (L === 1 ? 'Direct (yang kamu ajak)' : 'Upline level ' + L) + '</td>' +
+      '<td>' + (L === 1 ? 'Direct (yang kamu ajak)' : 'Downline level ' + L) + '</td>' +
       '<td><strong>$' + COMMISSION[L].toFixed(0) + '</strong> / lot</td>' +
-      '<td>' + (stats[L].count) + ' member</td>' +
+      '<td>' + stats[L].count + ' member</td>' +
       '<td>' + fmt(stats[L].earn) + '</td></tr>';
   }
-
-  var memberRows = network.map(function(m) {
-    var earn = earnFromMember(m.level, m.lots);
-    var ini = m.name.split(' ').map(function(p){ return p[0]; }).join('').slice(0, 2).toUpperCase();
-    return '<div class="member-row">' +
-      '<div class="member-av ' + avClass(m.level) + '">' + ini + '</div>' +
-      '<div><div class="member-name">' + escapeHtml(m.name) + '</div>' +
-      '<div class="member-meta">Level ' + m.level + ' · diajak oleh ' + escapeHtml(m.invitedBy === 'YOU' ? 'kamu' : m.invitedBy) + '</div></div>' +
-      '<div class="member-lots">' + m.lots + ' lot</div>' +
-      '<div class="member-earn">+' + fmt(earn) + '</div>' +
-    '</div>';
-  }).join('');
 
   document.getElementById('page-content').innerHTML =
     '<div class="page-header">' +
       '<div><h1>Referral Network</h1>' +
-      '<p>Skema komisi multilevel sampai 5 level — bonus dihitung per lot transaksi downline.</p></div>' +
+      '<p>Pohon koneksi multilevel sampai <strong>5 level</strong> — komisi dihitung per lot transaksi MT-5 downline.</p></div>' +
     '</div>' +
     '<div class="stats-grid">' +
-      '<div class="stat-card"><div class="label">Estimasi komisi (demo)</div><div class="value up">' + fmt(totalEarn) + '</div><div class="hint">Dari volume jaringan</div></div>' +
+      '<div class="stat-card"><div class="label">Estimasi komisi (demo)</div><div class="value up">' + fmt(totalEarn) + '</div><div class="hint">Dari volume lot jaringan</div></div>' +
       '<div class="stat-card"><div class="label">Member di network</div><div class="value">' + totalMembers + '</div><div class="hint">Level 1–5</div></div>' +
       '<div class="stat-card"><div class="label">Total lot downline</div><div class="value">' + totalLots + '</div><div class="hint">Bulan ini · simulasi</div></div>' +
       '<div class="stat-card"><div class="label">Direct (L1)</div><div class="value">' + stats[1].count + '</div><div class="hint">' + fmt(stats[1].earn) + ' dari L1</div></div>' +
     '</div>' +
-    '<div class="ref-grid">' +
+
+    /* ===== POHON KONEKSI VISUAL ===== */
+    '<div class="panel tree-panel">' +
+      '<div class="panel-head"><h2>Pohon Koneksi</h2><span class="sub">Struktur jaringan sampai 5 level · data demo</span></div>' +
+      '<div class="tree-wrap">' + renderVisualTree(tree) + '</div>' +
+      '<div class="tree-legend">' +
+        '<span><i class="l1"></i> Level 1 ($15/lot)</span>' +
+        '<span><i class="l2"></i> Level 2 ($2/lot)</span>' +
+        '<span><i class="l3"></i> Level 3 ($1/lot)</span>' +
+        '<span><i class="l4"></i> Level 4 ($1/lot)</span>' +
+        '<span><i class="l5"></i> Level 5 ($1/lot)</span>' +
+      '</div>' +
+      '<div class="mt5-note">' +
+        '<strong>Komisi lot (MT-5):</strong> Setiap kali member di jaringanmu menutup transaksi di akun MT-5-nya, ' +
+        'volume lot tersebut menghasilkan komisi ke upline sesuai level (maks. 5 level). ' +
+        'Contoh: member L1 trade 1 lot → kamu dapat <strong>$15</strong>. Member L3 trade 1 lot → kamu dapat <strong>$1</strong>.' +
+      '</div>' +
+    '</div>' +
+
+    /* ===== HIERARCHICAL LIST ===== */
+    '<div class="panel hier-list">' +
+      '<div class="panel-head"><h2>Detail Jaringan (hierarki)</h2><span class="sub">Klik ▾ untuk buka/tutup cabang</span></div>' +
+      renderHierListFixed(tree, 0) +
+    '</div>' +
+
+    '<div class="ref-grid" style="margin-top:1.25rem">' +
       '<div class="rule-card">' +
         '<h3>Aturan komisi per 1 lot</h3>' +
-        '<p class="sub">Setiap kali member di jaringanmu menutup transaksi <strong>1 lot</strong>, komisi mengalir ke upline sampai maksimal 5 level.</p>' +
+        '<p class="sub">Setiap kali member di jaringanmu menutup transaksi <strong>1 lot</strong> di MT-5, komisi mengalir ke upline sampai maksimal 5 level.</p>' +
         '<table class="level-table">' +
           '<thead><tr><th>Level</th><th>Posisi</th><th>Bonus</th><th>Di network</th><th>Estimasi</th></tr></thead>' +
           '<tbody>' + levelRows + '</tbody>' +
@@ -149,44 +391,54 @@ if (user) {
           'Member 3 ajak Member 4 → Member 4 trade 1 lot → Member 3 dapat $15, Member 2 dapat $2, kamu dapat <strong>$1</strong> (L3).<br/>' +
           'Begitu seterusnya sampai level 5 ($1).' +
         '</div>' +
-        '<div style="margin-top:1rem">' +
-          '<div style="font-size:.78rem;font-weight:700;margin-bottom:.4rem;color:var(--text-muted)">Kode referral kamu</div>' +
+      '</div>' +
+      '<div>' +
+        '<div class="calc-box">' +
+          '<h3 style="font-size:1rem;font-weight:800;margin-bottom:.85rem">Kalkulator cepat</h3>' +
+          '<label>Level downline</label>' +
+          '<select id="calc-level">' +
+            '<option value="1">Level 1 — $15/lot</option>' +
+            '<option value="2">Level 2 — $2/lot</option>' +
+            '<option value="3">Level 3 — $1/lot</option>' +
+            '<option value="4">Level 4 — $1/lot</option>' +
+            '<option value="5">Level 5 — $1/lot</option>' +
+          '</select>' +
+          '<label>Volume lot (MT-5)</label>' +
+          '<input id="calc-lots" type="number" min="0" step="0.01" value="10" />' +
+          '<div class="calc-result" id="calc-out"></div>' +
+        '</div>' +
+        '<div class="rule-card" style="margin-top:1rem">' +
+          '<h3>Kode referral kamu</h3>' +
           '<div class="ref-code-box">' +
             '<code id="ref-code">' + escapeHtml(refCode) + '</code>' +
             '<button type="button" class="btn-copy" id="copy-code">Salin kode</button>' +
-            '<button type="button" class="btn-copy" id="copy-link">Salin link daftar</button>' +
           '</div>' +
-          '<div style="font-size:.72rem;color:var(--text-dim);margin-top:.5rem;word-break:break-all" id="ref-link">' + escapeHtml(refLink) + '</div>' +
+          '<div class="ref-code-box" style="margin-top:.5rem">' +
+            '<code id="ref-link" style="font-size:.72rem;word-break:break-all">' + escapeHtml(refLink) + '</code>' +
+            '<button type="button" class="btn-copy" id="copy-link">Salin link</button>' +
+          '</div>' +
+          '<div style="margin-top:1rem">' +
+            '<p class="sub" style="margin-bottom:.5rem">Contoh skenario 10 lot:</p>' +
+            '<ol class="example-steps">' +
+              '<li><strong>Kamu</strong> ajak <strong>Member 2</strong> → Member 2 trade 10 lot → kamu: 10 × $15 = <strong>$150</strong></li>' +
+              '<li><strong>Member 2</strong> ajak <strong>Member 3</strong> → Member 3 trade 10 lot → Member 2: $150 · kamu: 10 × $2 = <strong>$20</strong></li>' +
+              '<li><strong>Member 3</strong> ajak <strong>Member 4</strong> → Member 4 trade 10 lot → kamu (L3): 10 × $1 = <strong>$10</strong></li>' +
+            '</ol>' +
+          '</div>' +
         '</div>' +
       '</div>' +
-      '<div class="calc-box">' +
-        '<h3 style="font-size:1rem;font-weight:800;margin-bottom:.35rem">Kalkulator komisi</h3>' +
-        '<p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Hitung berapa yang kamu terima jika downline di level tertentu trade N lot.</p>' +
-        '<label>Level downline relatif ke kamu</label>' +
-        '<select id="calc-level">' +
-          '<option value="1">Level 1 — direct ($15/lot)</option>' +
-          '<option value="2">Level 2 — ($2/lot)</option>' +
-          '<option value="3">Level 3 — ($1/lot)</option>' +
-          '<option value="4">Level 4 — ($1/lot)</option>' +
-          '<option value="5">Level 5 — ($1/lot)</option>' +
-        '</select>' +
-        '<label>Jumlah lot</label>' +
-        '<input type="number" id="calc-lots" min="0" step="0.01" value="1" />' +
-        '<div class="calc-result" id="calc-out"></div>' +
-        '<div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">' +
-          '<div style="font-size:.78rem;font-weight:700;margin-bottom:.5rem">Ilustrasi 3 langkah</div>' +
-          '<ol class="example-steps">' +
-            '<li><strong>Kamu</strong> bagikan kode → <strong>Member 2</strong> daftar &amp; trade 10 lot → kamu: 10 × $15 = <strong>$150</strong></li>' +
-            '<li><strong>Member 2</strong> ajak <strong>Member 3</strong> → Member 3 trade 10 lot → Member 2: $150 · kamu: 10 × $2 = <strong>$20</strong></li>' +
-            '<li><strong>Member 3</strong> ajak <strong>Member 4</strong> → Member 4 trade 10 lot → kamu (L3): 10 × $1 = <strong>$10</strong></li>' +
-          '</ol>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
-    '<div class="panel network-list">' +
-      '<div class="panel-head"><h2>Downline (simulasi)</h2><span class="sub">Lot &amp; komisi ke kamu · data contoh</span></div>' +
-      memberRows +
     '</div>';
+
+  /* Toggle hierarchy branches */
+  document.querySelectorAll('.hier-toggle:not(.leaf)').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = btn.getAttribute('data-toggle');
+      var child = document.querySelector('[data-children="' + id + '"]');
+      if (!child) return;
+      var open = child.classList.toggle('open');
+      btn.textContent = open ? '▾' : '▸';
+    });
+  });
 
   function renderCalc() {
     var level = parseInt(document.getElementById('calc-level').value, 10);
@@ -195,7 +447,7 @@ if (user) {
     var you = rate * lots;
     var html = '';
     html += '<div class="calc-row"><span>Rate level ' + level + '</span><span class="amt">$' + rate + ' / lot</span></div>';
-    html += '<div class="calc-row"><span>Volume</span><span class="amt">' + lots + ' lot</span></div>';
+    html += '<div class="calc-row"><span>Volume MT-5</span><span class="amt">' + lots + ' lot</span></div>';
     html += '<div class="calc-row total"><span>Kamu terima</span><span class="amt">' + fmt(you) + '</span></div>';
     html += '<div style="margin-top:.85rem;font-size:.75rem;color:var(--text-dim);line-height:1.45">Distribusi total per lot (jika 5 level terisi): L1 $15 + L2 $2 + L3 $1 + L4 $1 + L5 $1 = <strong style="color:var(--text)">$20</strong>.</div>';
     document.getElementById('calc-out').innerHTML = html;
