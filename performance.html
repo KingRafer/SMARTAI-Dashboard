@@ -17,16 +17,12 @@
 .acc-card.basic{border-color:rgba(45,212,191,.35);box-shadow:0 0 0 1px rgba(45,212,191,.08),0 16px 40px rgba(0,0,0,.25)}
 .acc-card.gold{border-color:rgba(251,191,36,.4);box-shadow:0 0 0 1px rgba(251,191,36,.08),0 16px 40px rgba(0,0,0,.25)}
 .acc-card.pro{border-color:rgba(167,139,250,.4);box-shadow:0 0 0 1px rgba(167,139,250,.08),0 16px 40px rgba(0,0,0,.25)}
-.acc-card:nth-child(2){animation-delay:.08s}.acc-card:nth-child(3){animation-delay:.16s}
 .acc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem}
 .acc-pkg{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 .acc-pkg.basic{color:var(--cyan)}.acc-pkg.gold{color:var(--gold)}.acc-pkg.pro{color:var(--purple)}
 .mt5-badge{font-size:.62rem;font-weight:700;letter-spacing:.04em;padding:.28rem .55rem;border-radius:999px;background:rgba(45,212,191,.12);color:var(--cyan);border:1px solid rgba(45,212,191,.25)}
-.acc-card.gold .mt5-badge{background:rgba(251,191,36,.12);color:var(--gold);border-color:rgba(251,191,36,.3)}
-.acc-card.pro .mt5-badge{background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.3)}
 .acc-id{font-size:1.15rem;font-weight:800;letter-spacing:.02em;margin-bottom:1rem;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
-.acc-id .online{font-size:.72rem;font-weight:700;color:var(--green);display:inline-flex;align-items:center;gap:.3rem}
-.acc-id .muted{font-size:.72rem;font-weight:600;color:var(--text-dim)}
+.acc-id .online{font-size:.72rem;font-weight:700;color:var(--green)}.acc-id .muted{font-size:.72rem;font-weight:600;color:var(--text-dim)}
 .acc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1rem}
 .acc-metric{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem}
 .acc-metric .ml{font-size:.65rem;color:var(--text-dim);font-weight:600;letter-spacing:.03em;text-transform:uppercase;margin-bottom:.2rem}
@@ -38,7 +34,7 @@
 .ring-wrap{position:relative;width:72px;height:72px;flex-shrink:0}
 .ring-wrap svg{transform:rotate(-90deg)}
 .ring-wrap .track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:6}
-.ring-wrap .bar{fill:none;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.ring-wrap .bar{fill:none;stroke-width:6;stroke-linecap:round}
 .acc-card.basic .ring-wrap .bar{stroke:var(--cyan)}.acc-card.gold .ring-wrap .bar{stroke:var(--gold)}.acc-card.pro .ring-wrap .bar{stroke:var(--purple)}
 .ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;color:var(--green)}
 .ring-detail{flex:1;font-size:.72rem;color:var(--text-muted);line-height:1.55}
@@ -47,43 +43,35 @@
 .progress-line{height:3px;border-radius:99px;background:rgba(255,255,255,.06);margin-top:.45rem;position:relative;overflow:hidden}
 .progress-line i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;width:100%}
 .acc-card.basic .progress-line i{background:linear-gradient(90deg,transparent,var(--cyan))}
-.acc-card.gold .progress-line i{background:linear-gradient(90deg,transparent,var(--gold))}
-.acc-card.pro .progress-line i{background:linear-gradient(90deg,transparent,var(--purple))}
-.master-perf{margin-top:1.75rem;background:var(--bg-card-solid);border:1px solid var(--border);border-radius:18px;padding:1.35rem 1.4rem 1.2rem;animation:fadeUp .55s .2s both}
+.master-perf{margin-top:1.75rem;background:var(--bg-card-solid);border:1px solid var(--border);border-radius:18px;padding:1.35rem 1.4rem 1.2rem}
 .master-perf-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
 .master-perf-head h3{font-size:1.15rem;font-weight:800}
-.master-perf-head .base{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
 .view-tabs{display:flex;background:rgba(255,255,255,.04);border-radius:999px;padding:3px;border:1px solid var(--border);flex-wrap:wrap}
 .view-tabs button{border:none;background:transparent;color:var(--text-muted);font-size:.78rem;font-weight:600;padding:.45rem .9rem;border-radius:999px;cursor:pointer;font-family:inherit}
-.view-tabs button.active{background:var(--bg-card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.view-tabs button.active{background:var(--bg-card);color:var(--text)}
 .mp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.35rem}
 @media(max-width:800px){.mp-stats{grid-template-columns:1fr 1fr}}
 .mp-stat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem}
-.mp-stat .ml{font-size:.68rem;color:var(--text-dim);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.35rem}
+.mp-stat .ml{font-size:.68rem;color:var(--text-dim);font-weight:600;text-transform:uppercase;margin-bottom:.35rem}
 .mp-stat .mv{font-size:1.25rem;font-weight:800}.mp-stat .mv.up{color:var(--green)}.mp-stat .mv.down{color:var(--red)}
-.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
 .cal-title{font-size:1.05rem;font-weight:700}
-.cal-nav{display:flex;gap:.4rem}
 .cal-nav button{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:1rem}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .cal-dow{text-align:center;font-size:.7rem;font-weight:600;color:var(--text-dim);padding:.35rem 0}
-.cal-day{aspect-ratio:1;min-height:56px;border-radius:12px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.12rem;font-size:.72rem;color:var(--text-muted);background:rgba(255,255,255,.02)}
+.cal-day{aspect-ratio:1;min-height:56px;border-radius:12px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.12rem;font-size:.72rem;background:rgba(255,255,255,.02)}
 .cal-day .d{font-weight:600;font-size:.78rem;color:var(--text)}.cal-day .p{font-weight:700;font-size:.68rem}
 .cal-day.empty{background:transparent;border-color:transparent}.cal-day.none{opacity:.5}
-.cal-day.u3{background:rgba(45,212,191,.08);border-color:rgba(45,212,191,.2)}.cal-day.u3 .p{color:#5eead4}
-.cal-day.m38{background:rgba(45,212,191,.14);border-color:rgba(45,212,191,.28)}.cal-day.m38 .p{color:var(--cyan)}
-.cal-day.m815{background:rgba(45,212,191,.22);border-color:rgba(45,212,191,.35)}.cal-day.m815 .p{color:#2dd4bf}
-.cal-day.above{background:rgba(16,185,129,.28);border-color:rgba(16,185,129,.45)}.cal-day.above .p{color:#34d399}
-.cal-day.loss{background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.3)}.cal-day.loss .p{color:var(--red)}
-.cal-day.today{outline:2px solid var(--cyan);outline-offset:1px}
+.cal-day.u3{background:rgba(45,212,191,.08)}.cal-day.u3 .p{color:#5eead4}
+.cal-day.m38{background:rgba(45,212,191,.14)}.cal-day.m38 .p{color:var(--cyan)}
+.cal-day.m815{background:rgba(45,212,191,.22)}.cal-day.m815 .p{color:#2dd4bf}
+.cal-day.above{background:rgba(16,185,129,.28)}.cal-day.above .p{color:#34d399}
+.cal-day.loss{background:rgba(248,113,113,.12)}.cal-day.loss .p{color:var(--red)}
+.cal-day.today{outline:2px solid var(--cyan)}
 .cal-legend{display:flex;flex-wrap:wrap;gap:.65rem 1.1rem;margin-top:1rem;font-size:.72rem;color:var(--text-muted)}
-.cal-legend span{display:inline-flex;align-items:center;gap:.35rem}
 .cal-legend i{width:12px;height:12px;border-radius:4px;display:inline-block;border:1px solid var(--border)}
-.cal-legend .u3{background:rgba(45,212,191,.08)}.cal-legend .m38{background:rgba(45,212,191,.14)}
-.cal-legend .m815{background:rgba(45,212,191,.22)}.cal-legend .above{background:rgba(16,185,129,.28)}
-.cal-legend .loss{background:rgba(248,113,113,.12)}.cal-legend .none{background:transparent}
-.cal-foot{margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text-dim);line-height:1.5}
-.perf-loading{padding:2rem;text-align:center;color:var(--text-muted);font-size:.9rem}
+.cal-foot{margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text-dim)}
+.perf-loading{padding:2rem;text-align:center;color:var(--text-muted)}
 .perf-loading .spin{display:inline-block;width:28px;height:28px;border:3px solid rgba(45,212,191,.2);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.75rem}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -93,16 +81,21 @@
 <body>
 <script src="js/auth.js?v=20261116d"></script>
 <script src="js/app.js?v=20261116d"></script>
-<script src="js/mt5-api.js?v=20261117live2"></script>
+<script src="js/mt5-api.js?v=20261117meta"></script>
 <script>
 if (typeof getUser === 'function' && !getUser()) {
   if (typeof ensureDemoAccount === 'function') ensureDemoAccount();
-  if (typeof setUser === 'function') {
-    setUser({ nama: 'Demo Member', email: 'demo@smartai.com', hp: '081234567890', referral: 'SMARTAI-REF', avatar: null });
-  }
+  if (typeof setUser === 'function') setUser({ nama: 'Demo Member', email: 'demo@smartai.com', hp: '081234567890', referral: 'SMARTAI-REF', avatar: null });
 }
 if (renderShell('performance')) {
   var packageNames = { ACC01: 'Smart Basic', ACC02: 'Smart Gold', ACC03: 'Smart Pro' };
+  function accSubtitle(a) {
+    var parts = [];
+    if (a.login) parts.push('MT5 ' + a.login);
+    if (a.owner) parts.push(a.owner);
+    if (a.broker_label || a.broker) parts.push(a.broker_label || a.broker);
+    return parts.join(' · ');
+  }
   var calState = { year: new Date().getFullYear(), month: new Date().getMonth() + 1, account: 'ALL' };
 
   function renderAccount(a, index) {
@@ -114,9 +107,11 @@ if (renderShell('performance')) {
     var dailyReturn = Number.isFinite(equity) && equity > 0 && Number.isFinite(daily) ? (daily / equity * 100) : null;
     var returnText = dailyReturn === null ? '\u2014' : ((dailyReturn > 0 ? '+' : '') + dailyReturn.toFixed(2) + '%');
     var stamp = a.updated_at ? SmartAIMT5.escape(a.updated_at) : '\u2014';
+    var sub = accSubtitle(a);
     return '<article class="acc-card ' + cls + '">' +
       '<div class="acc-top"><span class="acc-pkg ' + cls + '">' + (packageNames[a.account_id] || a.name || 'MT5') + '</span><span class="mt5-badge">' + statusLabel + '</span></div>' +
       '<div class="acc-id">' + SmartAIMT5.escape(a.account_id) + ' <span class="' + (online ? 'online' : 'muted') + '">' + statusLabel + '</span></div>' +
+      (sub ? '<div style="font-size:.72rem;color:var(--text-muted);margin:-0.55rem 0 0.85rem;line-height:1.4">' + SmartAIMT5.escape(sub) + '</div>' : '') +
       '<div class="acc-metrics">' +
         '<div class="acc-metric"><div class="ml">Balance</div><div class="mv">' + SmartAIMT5.formatUSD(a.balance) + '</div></div>' +
         '<div class="acc-metric"><div class="ml">Equity</div><div class="mv">' + SmartAIMT5.formatUSD(a.equity) + '</div></div>' +
@@ -132,12 +127,8 @@ if (renderShell('performance')) {
 
   function profitClass(p) {
     if (p == null || !Number.isFinite(p)) return 'none';
-    if (p < 0) return 'loss';
-    if (p === 0) return 'none';
-    if (p < 300) return 'u3';
-    if (p < 800) return 'm38';
-    if (p < 1500) return 'm815';
-    return 'above';
+    if (p < 0) return 'loss'; if (p === 0) return 'none';
+    if (p < 300) return 'u3'; if (p < 800) return 'm38'; if (p < 1500) return 'm815'; return 'above';
   }
   function fmtShort(p) {
     if (p == null || !Number.isFinite(p)) return '\u2014';
@@ -148,7 +139,6 @@ if (renderShell('performance')) {
     try { return new Date(y, m - 1, 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }); }
     catch (e) { return y + '-' + m; }
   }
-
   function renderCalendar(history, year, month, accountFilter) {
     var daysInMonth = new Date(year, month, 0).getDate();
     var firstDow = new Date(year, month - 1, 1).getDay();
@@ -193,40 +183,26 @@ if (renderShell('performance')) {
       html += '</div>';
     }
     html += '</div>';
-    html += '<div class="cal-legend"><span><i class="loss"></i> Loss</span><span><i class="none"></i> Flat</span><span><i class="u3"></i> kecil</span><span><i class="m38"></i> sedang</span><span><i class="m815"></i> bagus</span><span><i class="above"></i> besar</span></div>';
+    html += '<div class="cal-legend"><span><i class="loss" style="background:rgba(248,113,113,.12)"></i> Loss</span><span><i class="none"></i> Flat</span><span><i class="u3" style="background:rgba(45,212,191,.08)"></i> kecil</span><span><i class="m38" style="background:rgba(45,212,191,.14)"></i> sedang</span><span><i class="m815" style="background:rgba(45,212,191,.22)"></i> bagus</span><span><i class="above" style="background:rgba(16,185,129,.28)"></i> besar</span></div>';
     html += '<div class="cal-foot">' + (SmartAIMT5.isLive() ? 'Kalender dari history equity live.' : 'Kalender demo.') + ' Filter akun di tab atas.</div>';
     return html;
   }
-
   function buildTabs() {
-    var tabs = [
-      { id: 'ALL', label: 'Semua Akun' },
-      { id: 'ACC01', label: 'ACC01' },
-      { id: 'ACC02', label: 'ACC02' },
-      { id: 'ACC03', label: 'ACC03' }
-    ];
+    var tabs = [{ id: 'ALL', label: 'Semua Akun' },{ id: 'ACC01', label: 'ACC01' },{ id: 'ACC02', label: 'ACC02' },{ id: 'ACC03', label: 'ACC03' }];
     return '<div class="view-tabs" id="cal-tabs">' + tabs.map(function(t) {
       return '<button type="button" data-acc="' + t.id + '" class="' + (calState.account === t.id ? 'active' : '') + '">' + t.label + '</button>';
     }).join('') + '</div>';
   }
-
   function bindCal() {
     var prev = document.getElementById('cal-prev');
     var next = document.getElementById('cal-next');
-    if (prev) prev.onclick = function() {
-      calState.month--; if (calState.month < 1) { calState.month = 12; calState.year--; }
-      loadPerformance();
-    };
-    if (next) next.onclick = function() {
-      calState.month++; if (calState.month > 12) { calState.month = 1; calState.year++; }
-      loadPerformance();
-    };
+    if (prev) prev.onclick = function() { calState.month--; if (calState.month < 1) { calState.month = 12; calState.year--; } loadPerformance(); };
+    if (next) next.onclick = function() { calState.month++; if (calState.month > 12) { calState.month = 1; calState.year++; } loadPerformance(); };
     var tabs = document.getElementById('cal-tabs');
     if (tabs) tabs.querySelectorAll('button').forEach(function(btn) {
       btn.onclick = function() { calState.account = btn.getAttribute('data-acc'); loadPerformance(); };
     });
   }
-
   async function loadPerformance() {
     var root = document.getElementById('page-content');
     if (!root) return;
@@ -235,31 +211,22 @@ if (renderShell('performance')) {
       var accounts = await SmartAIMT5.getAccounts(true);
       accounts = (accounts || []).slice().sort(function(a,b){ return String(a.account_id).localeCompare(String(b.account_id)); });
       var history = [];
-      try {
-        history = await SmartAIMT5.getDailyHistory(calState.year, calState.month, calState.account === 'ALL' ? null : calState.account);
-      } catch (e) { history = []; }
-
+      try { history = await SmartAIMT5.getDailyHistory(calState.year, calState.month, calState.account === 'ALL' ? null : calState.account); } catch (e) { history = []; }
       var live = SmartAIMT5.isLive && SmartAIMT5.isLive();
       root.innerHTML =
         '<div class="live-head"><h2>Account Performance</h2><p>' +
-          (live
-            ? 'Mode <strong style="color:var(--green)">LIVE</strong> · Data real-time dari API SmartInvestama.'
-            : 'Mode demo · API live belum terjangkau, menampilkan data contoh.') +
+          (live ? 'Mode <strong style="color:var(--green)">LIVE</strong> · Data real-time dari API SmartInvestama.' : 'Mode demo · API live belum terjangkau.') +
         '</p></div>' +
         '<div class="acc-grid">' + (accounts.length ? accounts.map(renderAccount).join('') : '<p>Tidak ada data akun.</p>') + '</div>' +
         '<div class="master-perf">' +
-          '<div class="master-perf-head"><div><h3>Profit Calendar</h3><div class="base">' +
-            (live ? 'Data live' : 'Demo') + ' · filter per akun</div></div>' +
+          '<div class="master-perf-head"><div><h3>Profit Calendar</h3><div class="base" style="font-size:.8rem;color:var(--text-muted)">' + (live ? 'Data live' : 'Demo') + ' · filter per akun</div></div>' +
             buildTabs() +
           '</div>' +
           '<div id="cal-body">' + renderCalendar(history, calState.year, calState.month, calState.account) + '</div>' +
         '</div>';
       bindCal();
     } catch (error) {
-      root.innerHTML =
-        '<div class="live-head"><h2>Account Performance</h2><p>Gagal memuat data.</p></div>' +
-        '<div class="master-perf"><h3>Error</h3><p class="cal-foot">' +
-        SmartAIMT5.escape(error && error.message ? error.message : String(error)) + '</p></div>';
+      root.innerHTML = '<div class="live-head"><h2>Account Performance</h2><p>Gagal memuat data.</p></div><div class="master-perf"><p class="cal-foot">' + SmartAIMT5.escape(error && error.message ? error.message : String(error)) + '</p></div>';
     }
   }
   loadPerformance();
