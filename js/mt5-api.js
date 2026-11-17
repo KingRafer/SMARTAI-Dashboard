@@ -3,8 +3,37 @@
   'use strict';
 
   var LIVE_BASE = 'https://script.google.com/macros/s/AKfycbw8AEMeie38BBxW3S-22bf0WrI_7vGHPkpANGEsoQiTv7Jg86X8rrTEQ3AtDyzQol5D_Q/exec';
+
+  // Identitas pantau MT5 (bukan password). Diisi dari info publik akun.
+  var ACCOUNT_META = {
+    ACC01: {
+      package: 'Smart Basic',
+      login: '100000052',
+      owner: 'willy',
+      server: 'TrijayaPratamaFutures-Live',
+      broker_label: 'PT. Trijaya Pratama Futures',
+      mode: 'Hedge · Access Server'
+    },
+    ACC02: {
+      package: 'Smart Gold',
+      login: null,
+      owner: null,
+      server: null,
+      broker_label: 'PT. Trijaya Pratama Futures',
+      mode: null
+    },
+    ACC03: {
+      package: 'Smart Pro',
+      login: null,
+      owner: null,
+      server: null,
+      broker_label: 'Exness Technologies Ltd',
+      mode: null
+    }
+  };
+
   var demoAccounts = [
-    { account_id:'ACC01', status:'DEMO', balance:89795.21, equity:90786.35, deposit_awal:10000.00, daily_profit:991.14, total_profit:80795.21, daily_dd:1.2, total_penarikan:73862.00, updated_at:'DEMO DATA', name:'Smart Basic' },
+    { account_id:'ACC01', status:'DEMO', balance:89795.21, equity:90786.35, deposit_awal:10000.00, daily_profit:991.14, total_profit:80795.21, daily_dd:1.2, total_penarikan:73862.00, updated_at:'DEMO DATA', name:'Smart Basic', broker:'Trijaya pratama futures' },
     { account_id:'ACC02', status:'DEMO', balance:106455.80, equity:106793.83, deposit_awal:10000.00, daily_profit:338.03, total_profit:96455.80, daily_dd:0.8, total_penarikan:28000.00, updated_at:'DEMO DATA', name:'Smart Gold' },
     { account_id:'ACC03', status:'DEMO', balance:645950.70, equity:656274.00, deposit_awal:60000.00, daily_profit:10323.30, total_profit:585950.70, daily_dd:2.1, total_penarikan:5540000.00, updated_at:'DEMO DATA', name:'Smart Pro' }
   ];
@@ -48,10 +77,17 @@
     if (!a || typeof a !== 'object') return null;
     var id = String(a.account_id || a.id || '');
     if (!id) return null;
+    var meta = ACCOUNT_META[id] || {};
     return {
       account_id: id,
-      name: a.name || null,
-      broker: a.broker || null,
+      name: a.name || meta.package || null,
+      package: meta.package || a.name || null,
+      login: meta.login || null,
+      owner: meta.owner || null,
+      server: meta.server || null,
+      broker: a.broker || meta.broker_label || null,
+      broker_label: meta.broker_label || a.broker || null,
+      mode: meta.mode || null,
       status: a.status || 'WAITING',
       balance: num(a.balance),
       equity: num(a.equity),
@@ -116,7 +152,7 @@
       cache.error = err && err.message ? err.message : String(err);
       cache.isLive = false;
       if (cache.accounts) return cache.accounts.map(function(a){ return Object.assign({}, a); });
-      return demoAccounts.map(function(a){ return Object.assign({}, a); });
+      return demoAccounts.map(function(a){ return normalizeAccount(a); });
     }
   }
 
@@ -193,10 +229,15 @@
     }
   }
 
+  function getAccountMeta(id) {
+    return ACCOUNT_META[id] ? Object.assign({}, ACCOUNT_META[id]) : null;
+  }
+
   w.SmartAIMT5 = {
     base: 'LIVE',
     getAccounts: getAccounts,
     getDailyHistory: getDailyHistory,
+    getAccountMeta: getAccountMeta,
     formatUSD: formatUSD,
     formatNumber: formatNumber,
     escape: escape,
