@@ -1,0 +1,70 @@
+/* Animations for Smart AI landing */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .7; }
+}
+
+.hero-copy,
+.hero-visual {
+  animation: fadeUp .7s cubic-bezier(.22,1,.36,1) both;
+}
+
+.hero-visual {
+  animation-delay: .15s;
+}
+
+.card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .5s ease, transform .5s ease, border-color .25s, box-shadow .25s;
+}
+
+.card.in-view,
+.card.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-title {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+
+.section-title.in-view,
+.section-title.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.status-dot {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-copy,
+  .hero-visual,
+  .card,
+  .section-title {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
