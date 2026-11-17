@@ -1,98 +1,172 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
-  <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-    <title>Registrasi — Smart AI</title>
-    <meta name="theme-color" content="#070d18"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/site.css">
-    <link rel="stylesheet" href="css/daftar.css">
-    <link rel="stylesheet" href="css/animations.css">
-  </head>
-  <body>
-    <nav class="navbar">
-      <a href="index.html" class="logo">SMART<span>AI</span></a>
-      <ul class="nav-links">
-        <li><a href="index.html">Beranda</a></li>
-        <li><a href="performance.html">EA Performance</a></li>
-        <li><a href="kelebihan.html">Kelebihan</a></li>
-        <li><a href="produk.html">Produk</a></li>
-        <li><a href="video.html">Video</a></li>
-        <li><a href="testimoni.html">Testimoni</a></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="our-story.html">About Us</a></li>
-      </ul>
-      <div class="nav-actions">
-        <button class="theme-toggle" id="theme-toggle" aria-label="Theme">
-          <svg class="icon-moon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-          <svg class="icon-sun" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></svg>
-        </button>
-        <a href="daftar.html" class="btn btn-nav active">Registrasi</a>
-        <a href="login.html" class="btn btn-login">Login</a>
-        <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
-      </div>
-    </nav>
-    <div class="mobile-menu" id="mobile-menu">
-      <a href="index.html" onclick="closeMenu()">Beranda</a>
-      <a href="performance.html" onclick="closeMenu()">EA Performance</a>
-      <a href="kelebihan.html" onclick="closeMenu()">Kelebihan</a>
-      <a href="produk.html" onclick="closeMenu()">Produk</a>
-      <a href="video.html" onclick="closeMenu()">Video</a>
-      <a href="testimoni.html" onclick="closeMenu()">Testimoni</a>
-      <a href="faq.html" onclick="closeMenu()">FAQ</a>
-      <a href="our-story.html" onclick="closeMenu()">About Us</a>
-      <a href="login.html" onclick="closeMenu()">Login</a>
-      <a href="daftar.html" class="btn btn-primary" onclick="closeMenu()">Registrasi</a>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Registrasi — Smart AI</title>
+  <meta name="theme-color" content="#070d18"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/daftar.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    .page { min-height: calc(100vh - 68px); display: grid; grid-template-columns: 1fr 1fr; max-width: 1100px; margin: 0 auto; padding: 6rem 1.5rem 3rem; gap: 2.5rem; align-items: center; }
+    @media (max-width: 860px) { .page { grid-template-columns: 1fr; padding-top: 5.5rem; } .side-panel { order: 2; text-align: center; } }
+    .side-label { font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--cyan); margin-bottom: .5rem; }
+    .side-title { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; letter-spacing: -.02em; line-height: 1.2; margin-bottom: .85rem; }
+    .side-desc { color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.65; }
+    .side-points { list-style: none; display: flex; flex-direction: column; gap: .65rem; }
+    .side-points li { display: flex; align-items: center; gap: .6rem; font-size: .9rem; color: var(--text-muted); }
+    .side-points li::before { content: '✓'; color: var(--cyan); font-weight: 800; }
+    .form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; box-shadow: 0 25px 50px rgba(0,0,0,.3); }
+    .form-card h2 { font-size: 1.35rem; font-weight: 800; margin-bottom: .35rem; }
+    .form-card .sub { color: var(--text-muted); font-size: .9rem; margin-bottom: 1.35rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: .78rem; font-weight: 600; color: var(--text-muted); margin-bottom: .35rem; }
+    .form-group label .req { color: var(--cyan); }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
+      border-radius: 11px; padding: .72rem .95rem; color: var(--text); font-size: 15px;
+      font-family: inherit; outline: none; min-height: 46px;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(45,212,191,.15);
+    }
+    .form-group textarea { min-height: 88px; resize: vertical; }
+    .form-success { text-align: center; padding: 1rem 0; }
+    .form-success h3 { font-size: 1.25rem; margin-bottom: .5rem; }
+    .form-note { font-size: .75rem; color: var(--text-dim); margin-top: 1rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">SMART<span>AI</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="performance.html">EA Performance</a></li>
+      <li><a href="kelebihan.html">Kelebihan</a></li>
+      <li><a href="produk.html">Produk</a></li>
+      <li><a href="video.html">Video</a></li>
+      <li><a href="testimoni.html">Testimoni</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="our-story.html">About Us</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Theme">
+        <svg class="icon-moon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></svg>
+      </button>
+      <a href="daftar.html" class="btn btn-nav active">Registrasi</a>
+      <a href="login.html" class="btn btn-login">Login</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
-    <main class="page-main">
-      <div class="container form-wrap">
-        <div class="form-card reveal">
-          <div class="form-header">
-            <h1>Registrasi Akun</h1>
-            <p>Isi data di bawah. Tim akan menghubungi via WhatsApp.</p>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html" onclick="closeMenu()">Beranda</a>
+    <a href="performance.html" onclick="closeMenu()">EA Performance</a>
+    <a href="kelebihan.html" onclick="closeMenu()">Kelebihan</a>
+    <a href="produk.html" onclick="closeMenu()">Produk</a>
+    <a href="video.html" onclick="closeMenu()">Video</a>
+    <a href="testimoni.html" onclick="closeMenu()">Testimoni</a>
+    <a href="faq.html" onclick="closeMenu()">FAQ</a>
+    <a href="our-story.html" onclick="closeMenu()">About Us</a>
+    <a href="login.html" onclick="closeMenu()">Login</a>
+    <a href="daftar.html" class="btn btn-primary" onclick="closeMenu()">Registrasi</a>
+  </div>
+
+  <div class="page">
+    <div class="side-panel reveal">
+      <div class="side-label">Early Access</div>
+      <h2 class="side-title">Penasaran bagaimana sistemnya bekerja?</h2>
+      <p class="side-desc">Isi formulir di samping. Tim siap menjelaskan tanpa tekanan membeli. Tidak ada kewajiban deposit di sisi kami.</p>
+      <ul class="side-points">
+        <li>Konsultasi via WhatsApp</li>
+        <li>Penjelasan EA & risk setting</li>
+        <li>Tanpa biaya pendaftaran formulir</li>
+        <li>Bisa coba demo dashboard dulu</li>
+      </ul>
+      <p style="margin-top:1.5rem;font-size:.85rem;color:var(--text-dim)">Sudah punya akun? <a href="login.html">Login di sini</a> · Atau <a href="#" id="go-demo">coba demo</a></p>
+    </div>
+
+    <div class="form-card reveal">
+      <div id="form-view">
+        <h2>Formulir Minat</h2>
+        <p class="sub">Isi data di bawah. Kami akan segera menghubungi Anda.</p>
+        <form id="interest-form">
+          <div class="form-group">
+            <label for="nama">Nama lengkap <span class="req">*</span></label>
+            <input type="text" id="nama" name="nama" placeholder="Nama Anda" required autocomplete="name"/>
           </div>
-          <form id="daftar-form" novalidate>
-            <div class="form-group">
-              <label>Nama Lengkap <span class pen="req">*</span></label>
-              <input type="text" name="nama" required placeholder="Nama sesuai KTP"/>
-            </div>
-            <div class="form-group">
-              <label>WhatsApp <span class="req">*</span></label>
-              <input type="tel" name="wa" required placeholder="08xxxxxxxxxx"/>
-            </div>
-            <div class="form-group">
-              <label>Email</label>
-              <input type="email" name="email" placeholder="opsional"/>
-            </div>
-            <div class="form-group">
-              <label>Minat</label>
-              <select name="minat">
-                <option value="ea">EA Trading</option>
-                <option value="copy">Copy Trade</option>
-                <option value="keduanya">Keduanya</option>
-                <option value="info">Info dulu</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Catatan</label>
-              <textarea name="catatan" rows="3" placeholder="Pertanyaan atau info tambahan (opsional)"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem">Kirim Formulir</button>
-            <p class="form-note">Dengan mengirim, Anda setuju dihubungi via WhatsApp. Tidak ada kewajiban membeli.</p>
-          </form>
-          <div id="form-success" class="msg success" style="display:none">
-            Terima kasih. Tim akan segera menghubungi Anda.
+          <div class="form-group">
+            <label for="email">Email <span class="req">*</span></label>
+            <input type="email" id="email" name="email" placeholder="nama@email.com" required autocomplete="email"/>
           </div>
-        </div>
+          <div class="form-group">
+            <label for="wa">Nomor WhatsApp <span class="req">*</span></label>
+            <input type="tel" id="wa" name="wa" placeholder="08xxxxxxxxxx" required inputmode="numeric" autocomplete="tel"/>
+          </div>
+          <div class="form-group">
+            <label for="minat">Minat</label>
+            <select id="minat" name="minat">
+              <option value="ea">EA Trading</option>
+              <option value="copy">Copy Trade</option>
+              <option value="keduanya">Keduanya</option>
+              <option value="info">Info dulu saja</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="catatan">Catatan (opsional)</label>
+            <textarea id="catatan" name="catatan" placeholder="Pertanyaan atau info tambahan"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;min-height:48px">Kirim Formulir</button>
+          <p class="form-note">Dengan mengirim, Anda setuju dihubungi via WhatsApp. Tidak ada kewajiban membeli.</p>
+        </form>
       </div>
-    </main>
-    <footer>
-      <div class="footer-bottom">Risk Disclosure: Trading memiliki risiko kerugian.</div>
-    </footer>
-    <a href="https://wa.me/6282137585596" class="wa-float" target="_blank" rel="noopener">WHATSAPP</a>
-    <script src="js/site.js"></script>
-    <script src="js/animations.js"></script>
-    <script src="js/daftar.js"></script>
-  </body>
+      <div id="form-success" class="form-success" style="display:none">
+        <div style="font-size:2.75rem;margin-bottom:.5rem;color:var(--cyan)">✓</div>
+        <h3>Terima kasih!</h3>
+        <p style="color:var(--text-muted);margin:.75rem 0 1.35rem">Data Anda sudah kami terima. Tim akan menghubungi via WhatsApp secepatnya.</p>
+        <a href="login.html" class="btn btn-primary" style="margin-right:.5rem">Coba Demo Login</a>
+        <a href="index.html" class="btn btn-outline">Beranda</a>
+      </div>
+    </div>
+  </div>
+
+  <footer><div class="footer-bottom">Risk Disclosure: Trading memiliki risiko kerugian.</div></footer>
+  <a href="https://wa.me/6282137585596" class="wa-float" target="_blank" rel="noopener">WHATSAPP</a>
+
+  <script src="js/site.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+  (function () {
+    var form = document.getElementById('interest-form');
+    var view = document.getElementById('form-view');
+    var success = document.getElementById('form-success');
+    var goDemo = document.getElementById('go-demo');
+
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var nama = (form.nama.value || '').trim();
+        var email = (form.email.value || '').trim();
+        var wa = (form.wa.value || '').trim();
+        if (!nama || !email || !wa) {
+          alert('Nama, email, dan WhatsApp wajib diisi.');
+          return;
+        }
+        if (view) view.style.display = 'none';
+        if (success) success.style.display = 'block';
+      });
+    }
+
+    if (goDemo) {
+      goDemo.addEventListener('click', function (e) {
+        e.preventDefault();
+        location.href = 'login.html';
+      });
+    }
+  })();
+  </script>
+</body>
 </html>
