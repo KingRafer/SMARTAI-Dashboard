@@ -14,6 +14,7 @@
 <body>
 <script src="js/auth.js?v=pro2"></script>
 <script src="js/app.js?v=pro2"></script>
+<script src="js/mt5-api.js?v=20261117"></script>
 <script>
 const user = renderShell('dashboard');
 if (user) {
@@ -58,7 +59,7 @@ if (user) {
       </div>
       <div class="stat-card">
         <div class="label">Account equity</div>
-        <div class="value">$804K</div>
+        <div class="value" id="account-equity-total">Loading…</div>
         <div class="hint">3 MT5 accounts</div>
       </div>
     </div>
@@ -125,5 +126,21 @@ if (user) {
     </div>`;
 }
 </script>
+<script>
+(function () {
+  var target = document.getElementById('account-equity-total');
+  if (!target || !window.SmartAIMT5) return;
+  async function refreshEquity() {
+    try {
+      var accounts = await SmartAIMT5.getAccounts();
+      var values = accounts.map(function(a){ return Number(a.equity); }).filter(function(v){ return Number.isFinite(v); });
+      target.textContent = values.length ? SmartAIMT5.formatUSD(values.reduce(function(s,v){return s+v;},0)) : '—';
+    } catch (e) { target.textContent = 'API unavailable'; }
+  }
+  refreshEquity();
+  setInterval(refreshEquity, 30000);
+})();
+</script>
 </body>
 </html>
+
