@@ -61,7 +61,7 @@
       showError('Nama, email, dan WhatsApp wajib diisi.');
       return;
     }
-    if (!/^[0-9]{10,15}$/.test(hp) {
+    if (!/^[0-9]{10,15}$/.test(hp)) {
       showError('Nomor WhatsApp harus 10–15 digit angka.');
       return;
     }
