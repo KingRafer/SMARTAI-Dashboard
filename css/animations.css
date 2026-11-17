@@ -20,7 +20,7 @@
   50% { opacity: .7; }
 }
 
-.hero-copy,
+.hero-content,
 .hero-visual {
   animation: fadeUp .7s cubic-bezier(.22,1,.36,1) both;
 }
@@ -29,26 +29,14 @@
   animation-delay: .15s;
 }
 
-.card {
+.reveal {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity .5s ease, transform .5s ease, border-color .25s, box-shadow .25s;
-}
-
-.card.in-view,
-.card.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.section-title {
-  opacity: 0;
-  transform: translateY(16px);
   transition: opacity .5s ease, transform .5s ease;
 }
 
-.section-title.in-view,
-.section-title.revealed {
+.reveal.in-view,
+.reveal.revealed {
   opacity: 1;
   transform: translateY(0);
 }
@@ -58,10 +46,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-copy,
+  .hero-content,
   .hero-visual,
-  .card,
-  .section-title {
+  .reveal {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

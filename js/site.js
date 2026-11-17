@@ -1,4 +1,4 @@
-/* Smart AI site shell — theme, mobile menu, navbar scroll */
+/* Smart AI site shell */
 (function () {
   var html = document.documentElement;
   var themeToggle = document.getElementById('theme-toggle');
@@ -12,7 +12,7 @@
   }
 
   try {
-    var saved = localStorage.getItem('theme') || localStorage.getItem('smartai_theme');
+    var saved = localStorage.getItem('theme');
     if (saved) applyTheme(saved);
   } catch (e) {}
 
@@ -24,25 +24,14 @@
   }
 
   window.closeMenu = function () {
-    if (mobileMenu) {
-      mobileMenu.classList.remove('open');
-      mobileMenu.setAttribute('aria-hidden', 'true');
-    }
-    if (hamburger) {
-      hamburger.classList.remove('open');
-      hamburger.setAttribute('aria-expanded', 'false');
-    }
-    document.body.classList.remove('menu-open');
+    if (mobileMenu) mobileMenu.classList.remove('open');
+    if (hamburger) hamburger.classList.remove('open');
     document.body.style.overflow = '';
   };
 
   if (hamburger && mobileMenu) {
     hamburger.addEventListener('click', function () {
       var open = mobileMenu.classList.toggle('open');
-      hamburger.classList.toggle('open', open);
-      hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
-      mobileMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
-      document.body.classList.toggle('menu-open', open);
       document.body.style.overflow = open ? 'hidden' : '';
     });
   }
