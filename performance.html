@@ -1,62 +1,174 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Performance — Smart AI</title>
-  <meta name="theme-color" content="#070d18"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/animations.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache"/>
+<title>Acc Performance — Smart AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css?v=20261117j">
+<style>
+.live-head{margin-bottom:1.25rem}
+.live-head h2{font-size:1.35rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(90deg,var(--cyan),#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.live-head p{color:var(--text-muted);font-size:.85rem;margin-top:.35rem}
+.acc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.15rem}
+@media(max-width:1100px){.acc-grid{grid-template-columns:1fr}}
+.acc-card{background:var(--bg-card-solid);border-radius:18px;padding:1.25rem 1.2rem 1.15rem;border:1px solid var(--border);position:relative;overflow:hidden;animation:fadeUp .55s cubic-bezier(.22,1,.36,1) both}
+.acc-card.basic{border-color:rgba(45,212,191,.35);box-shadow:0 0 0 1px rgba(45,212,191,.08),0 16px 40px rgba(0,0,0,.25)}
+.acc-card.gold{border-color:rgba(251,191,36,.4);box-shadow:0 0 0 1px rgba(251,191,36,.08),0 16px 40px rgba(0,0,0,.25)}
+.acc-card.pro{border-color:rgba(167,139,250,.4);box-shadow:0 0 0 1px rgba(167,139,250,.08),0 16px 40px rgba(0,0,0,.25)}
+.acc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem}
+.acc-pkg{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.acc-pkg.basic{color:var(--cyan)}.acc-pkg.gold{color:var(--gold)}.acc-pkg.pro{color:var(--purple)}
+.mt5-badge{font-size:.62rem;font-weight:700;letter-spacing:.04em;padding:.28rem .55rem;border-radius:999px;background:rgba(45,212,191,.12);color:var(--cyan);border:1px solid rgba(45,212,191,.25)}
+.acc-id{font-size:1.15rem;font-weight:800;letter-spacing:.02em;margin-bottom:1rem;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
+.acc-id .online{font-size:.72rem;font-weight:700;color:var(--green)}.acc-id .muted{font-size:.72rem;font-weight:600;color:var(--text-dim)}
+.acc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1rem}
+.acc-metric{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem}
+.acc-metric .ml{font-size:.65rem;color:var(--text-dim);font-weight:600;letter-spacing:.03em;text-transform:uppercase;margin-bottom:.2rem}
+.acc-metric .mv{font-size:1.05rem;font-weight:800}.acc-metric .mv.up{color:var(--green)}
+.daily-box{background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(16,185,129,.05));border:1px solid rgba(45,212,191,.2);border-radius:14px;padding:.9rem 1rem;margin-bottom:1rem}
+.daily-box .dl{font-size:.68rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em}
+.daily-box .dv{font-size:1.25rem;font-weight:800;color:var(--green);margin:.15rem 0}
+.daily-box .dr{font-size:.78rem;color:var(--text-muted)}
+.acc-foot{font-size:.7rem;color:var(--text-dim)}
+.master-perf{margin-top:1.5rem;background:var(--bg-card-solid);border:1px solid var(--border);border-radius:18px;padding:1.25rem}
+.master-perf-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem}
+.master-perf-head h3{font-size:1.05rem;font-weight:800;margin:0}
+.cal-tabs{display:flex;flex-wrap:wrap;gap:.4rem}
+.cal-tabs button{border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:.72rem;font-weight:700;padding:.35rem .65rem;border-radius:999px;cursor:pointer;font-family:inherit}
+.cal-tabs button.active{border-color:var(--cyan);color:var(--cyan);background:rgba(45,212,191,.1)}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
+.cal-nav button{border:1px solid var(--border);background:transparent;color:var(--text);width:36px;height:36px;border-radius:10px;cursor:pointer}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.35rem}
+.cal-cell{min-height:64px;border:1px solid var(--border);border-radius:10px;padding:.35rem;font-size:.7rem}
+.cal-cell .d{color:var(--text-dim);font-weight:600}
+.cal-cell .p{font-weight:800;margin-top:.25rem}
+.cal-cell .p.pos{color:var(--green)}.cal-cell .p.neg{color:var(--red)}
+.cal-foot{font-size:.75rem;color:var(--text-muted);margin-top:.75rem}
+.perf-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;padding:3rem;color:var(--text-muted)}
+.spin{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+</style>
 </head>
 <body>
-  <nav class="navbar">
-    <a href="index.html" class="logo">SMART<span>AI</span></a>
-    <ul class="nav-links">
-      <li><a href="index.html">Beranda</a></li>
-      <li><a href="performance.html" class="active">EA Performance</a></li>
-      <li><a href="kelebihan.html">Kelebihan</a></li>
-      <li><a href="produk.html">Produk</a></li>
-      <li><a href="video.html">Video</a></li>
-      <li><a href="testimoni.html">Testimoni</a></li>
-      <li><a href="faq.html">FAQ</a></li>
-      <li><a href="our-story.html">About Us</a></li>
-    </ul>
-    <div class="nav-actions">
-      <button class="theme-toggle" id="theme-toggle" aria-label="Theme"><svg class="icon-moon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg class="icon-sun" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></svg></button>
-      <a href="daftar.html" class="btn btn-nav">Registrasi</a>
-      <a href="login.html" class="btn btn-login">Login</a>
-      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
-    </div>
-  </nav>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="index.html" onclick="closeMenu()">Beranda</a>
-    <a href="performance.html" onclick="closeMenu()">EA Performance</a>
-    <a href="kelebihan.html" onclick="closeMenu()">Kelebihan</a>
-    <a href="produk.html" onclick="closeMenu()">Produk</a>
-    <a href="video.html" onclick="closeMenu()">Video</a>
-    <a href="testimoni.html" onclick="closeMenu()">Testimoni</a>
-    <a href="faq.html" onclick="closeMenu()">FAQ</a>
-    <a href="our-story.html" onclick="closeMenu()">About Us</a>
-    <a href="login.html" onclick="closeMenu()">Login</a>
-    <a href="daftar.html" class="btn btn-primary" onclick="closeMenu()">Registrasi</a>
-  </div>
-  <main style="padding-top:100px">
-    <div class="container" style="padding:3rem 0 4rem">
-      <div class="section-label reveal">Live Performance</div>
-      <h2 class="section-title reveal">Data aktual. Bukan sekadar janji.</h2>
-      <p class="section-desc reveal">Pantau hasil eksekusi EA secara transparan. Angka di bawah bersifat ilustrasi demo.</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-top:2rem">
-        <div class="form-card reveal"><h3>Profit Factor</h3><p style="font-size:2rem;font-weight:800;color:var(--cyan);margin:.5rem 0">1.84</p><p style="color:var(--text-muted);font-size:.85rem">Demo data</p></div>
-        <div class="form-card reveal"><h3>Win Rate</h3><p style="font-size:2rem;font-weight:800;color:var(--cyan);margin:.5rem 0">62%</p><p style="color:var(--text-muted);font-size:.85rem">Demo data</p></div>
-        <div class="form-card reveal"><h3>Max Drawdown</h3><p style="font-size:2rem;font-weight:800;color:var(--cyan);margin:.5rem 0">8.4%</p><p style="color:var(--text-muted);font-size:.85rem">Demo data</p></div>
-      </div>
-      <p style="margin-top:2rem;font-size:.8rem;color:var(--text-dim)">⚠️ Data di halaman ini adalah contoh untuk keperluan demonstrasi UI. Bukan jaminan hasil trading.</p>
-    </div>
-  </main>
-  <footer><div class="footer-bottom">Risk Disclosure: Trading memiliki risiko kerugian.</div></footer>
-  <a href="https://wa.me/6282137585596" class="wa-float" target="_blank" rel="noopener">WHATSAPP</a>
-  <script src="js/site.js"></script>
-  <script src="js/animations.js"></script>
+<script src="js/auth.js?v=20261117j"></script>
+<script src="js/app.js?v=20261117j"></script>
+<script src="js/mt5-api.js?v=20261117j"></script>
+<script>
+if (typeof getUser === 'function' && !getUser()) {
+  if (typeof ensureDemoAccount === 'function') ensureDemoAccount();
+  if (typeof setUser === 'function') setUser({ nama: 'Demo Member', email: 'demo@smartai.id', hp: '081234567890', referral: 'SMARTAI-REF', avatar: null });
+}
+if (renderShell('performance')) {
+  var packageNames = { ACC01: 'Smart Basic', ACC02: 'Smart Gold', ACC03: 'Smart Pro' };
+  function accSubtitle(a) {
+    var parts = [];
+    if (a.login) parts.push('MT5 ' + a.login);
+    if (a.owner) parts.push(a.owner);
+    if (a.broker_label || a.broker) parts.push(a.broker_label || a.broker);
+    return parts.join(' · ');
+  }
+  var calState = { year: new Date().getFullYear(), month: new Date().getMonth() + 1, account: 'ALL' };
+
+  function renderAccount(a, index) {
+    var cls = ['basic','gold','pro'][index] || 'basic';
+    var online = String(a.status || '').toUpperCase() === 'ONLINE';
+    var statusLabel = String(a.status || 'WAITING').toUpperCase();
+    var equity = Number(a.equity);
+    var daily = Number(a.daily_profit);
+    var dailyReturn = Number.isFinite(equity) && equity > 0 && Number.isFinite(daily) ? (daily / equity * 100) : null;
+    var returnText = dailyReturn === null ? '\u2014' : ((dailyReturn > 0 ? '+' : '') + dailyReturn.toFixed(2) + '%');
+    var stamp = a.updated_at ? SmartAIMT5.escape(a.updated_at) : '\u2014';
+    var sub = accSubtitle(a);
+    return '<article class="acc-card ' + cls + '">' +
+      '<div class="acc-top"><span class="acc-pkg ' + cls + '">' + (packageNames[a.account_id] || a.name || 'MT5') + '</span><span class="mt5-badge">' + statusLabel + '</span></div>' +
+      '<div class="acc-id">' + SmartAIMT5.escape(a.account_id) + ' <span class="' + (online ? 'online' : 'muted') + '">' + statusLabel + '</span></div>' +
+      (sub ? '<div style="font-size:.72rem;color:var(--text-muted);margin:-0.55rem 0 0.85rem;line-height:1.4">' + SmartAIMT5.escape(sub) + '</div>' : '') +
+      '<div class="acc-metrics">' +
+        '<div class="acc-metric"><div class="ml">Balance</div><div class="mv">' + SmartAIMT5.formatUSD(a.balance) + '</div></div>' +
+        '<div class="acc-metric"><div class="ml">Equity</div><div class="mv">' + SmartAIMT5.formatUSD(a.equity) + '</div></div>' +
+        '<div class="acc-metric"><div class="ml">Deposit Awal</div><div class="mv">' + SmartAIMT5.formatUSD(a.deposit_awal) + '</div></div>' +
+        '<div class="acc-metric"><div class="ml">Total Profit</div><div class="mv ' + (Number(a.total_profit) >= 0 ? 'up' : '') + '">' + SmartAIMT5.formatUSD(a.total_profit) + '</div></div>' +
+      '</div>' +
+      '<div class="daily-box"><div class="dl">Daily Profit</div><div class="dv">' + SmartAIMT5.formatUSD(a.daily_profit) + '</div><div class="dr">Return ' + returnText + '</div></div>' +
+      '<div class="acc-foot">Update ' + stamp + '</div></article>';
+  }
+
+  function buildTabs() {
+    var tabs = [{ id: 'ALL', label: 'Semua' }, { id: 'ACC01', label: 'Basic' }, { id: 'ACC02', label: 'Gold' }, { id: 'ACC03', label: 'Pro' }];
+    return '<div class="cal-tabs" id="cal-tabs">' + tabs.map(function(t) {
+      return '<button type="button" data-acc="' + t.id + '" class="' + (calState.account === t.id ? 'active' : '') + '">' + t.label + '</button>';
+    }).join('') + '</div>';
+  }
+
+  function renderCalendar(history, year, month, account) {
+    var daysInMonth = new Date(year, month, 0).getDate();
+    var firstDow = new Date(year, month - 1, 1).getDay();
+    var map = {};
+    (history || []).forEach(function(h) {
+      var d = String(h.date || h.day || '').slice(-2);
+      if (d) map[parseInt(d, 10)] = h;
+    });
+    var monthNames = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    var html = '<div class="cal-nav"><button type="button" id="cal-prev">‹</button><strong>' + monthNames[month-1] + ' ' + year + '</strong><button type="button" id="cal-next">›</button></div>';
+    html += '<div class="cal-grid">';
+    var labels = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+    labels.forEach(function(l){ html += '<div style="text-align:center;font-size:.65rem;color:var(--text-dim);font-weight:700">' + l + '</div>'; });
+    for (var i = 0; i < firstDow; i++) html += '<div></div>';
+    for (var day = 1; day <= daysInMonth; day++) {
+      var row = map[day];
+      var profit = row ? Number(row.profit || row.daily_profit || 0) : null;
+      var cls = profit === null ? '' : (profit >= 0 ? 'pos' : 'neg');
+      html += '<div class="cal-cell"><div class="d">' + day + '</div>' +
+        (profit === null ? '' : '<div class="p ' + cls + '">' + (profit >= 0 ? '+' : '') + profit.toFixed(0) + '</div>') +
+        '</div>';
+    }
+    html += '</div><p class="cal-foot">Filter: ' + account + ' · Data dari API / demo</p>';
+    return html;
+  }
+
+  function bindCal() {
+    var prev = document.getElementById('cal-prev');
+    var next = document.getElementById('cal-next');
+    if (prev) prev.onclick = function() { calState.month--; if (calState.month < 1) { calState.month = 12; calState.year--; } loadPerformance(); };
+    if (next) next.onclick = function() { calState.month++; if (calState.month > 12) { calState.month = 1; calState.year++; } loadPerformance(); };
+    var tabs = document.getElementById('cal-tabs');
+    if (tabs) tabs.querySelectorAll('button').forEach(function(btn) {
+      btn.onclick = function() { calState.account = btn.getAttribute('data-acc'); loadPerformance(); };
+    });
+  }
+
+  async function loadPerformance() {
+    var root = document.getElementById('page-content');
+    if (!root) return;
+    root.innerHTML = '<div class="perf-loading"><div class="spin"></div><div>Memuat data akun…</div></div>';
+    try {
+      var accounts = await SmartAIMT5.getAccounts(true);
+      accounts = (accounts || []).slice().sort(function(a,b){ return String(a.account_id).localeCompare(String(b.account_id)); });
+      var history = [];
+      try { history = await SmartAIMT5.getDailyHistory(calState.year, calState.month, calState.account === 'ALL' ? null : calState.account); } catch (e) { history = []; }
+      var live = SmartAIMT5.isLive && SmartAIMT5.isLive();
+      root.innerHTML =
+        '<div class="live-head"><h2>Account Performance</h2><p>' +
+          (live ? 'Mode <strong style="color:var(--green)">LIVE</strong> · Data real-time dari API SmartInvestama.' : 'Mode demo · API live belum terjangkau.') +
+        '</p></div>' +
+        '<div class="acc-grid">' + (accounts.length ? accounts.map(renderAccount).join('') : '<p>Tidak ada data akun.</p>') + '</div>' +
+        '<div class="master-perf">' +
+          '<div class="master-perf-head"><div><h3>Profit Calendar</h3><div class="base" style="font-size:.8rem;color:var(--text-muted)">' + (live ? 'Data live' : 'Demo') + ' · filter per akun</div></div>' +
+            buildTabs() +
+          '</div>' +
+          '<div id="cal-body">' + renderCalendar(history, calState.year, calState.month, calState.account) + '</div>' +
+        '</div>';
+      bindCal();
+    } catch (error) {
+      root.innerHTML = '<div class="live-head"><h2>Account Performance</h2><p>Gagal memuat data.</p></div><div class="master-perf"><p class="cal-foot">' + SmartAIMT5.escape(error && error.message ? error.message : String(error)) + '</p></div>';
+    }
+  }
+  loadPerformance();
+  setInterval(function(){ loadPerformance(); }, 45000);
+}
+</script>
 </body>
 </html>
