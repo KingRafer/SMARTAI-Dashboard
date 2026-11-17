@@ -7,66 +7,192 @@
 <meta http-equiv="Cache-Control" content="no-cache"/>
 <title>Dashboard — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=20261117g">
+<link rel="stylesheet" href="css/app.css?v=20261117h">
 <style>
-.dash-ref{background:var(--bg-card-solid);border:1px solid var(--border);border-radius:16px;padding:1.1rem 1.25rem;margin-bottom:1.25rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between}
+.dash-ref{
+  background:var(--bg-card-solid);border:1px solid var(--border);border-radius:16px;
+  padding:1.1rem 1.25rem;margin-bottom:1.25rem;
+  display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;
+}
 .dash-ref .info h3{font-size:.95rem;font-weight:800;margin:0 0 .15rem}
 .dash-ref .info p{font-size:.78rem;color:var(--text-muted);margin:0}
 .dash-ref .actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
-.dash-ref code{font-family:ui-monospace,monospace;font-weight:700;color:var(--cyan);padding:.4rem .7rem;border-radius:8px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.2);font-size:.85rem}
-.dash-ref .btn-copy{border:1px solid var(--border);background:transparent;color:var(--text);padding:.4rem .75rem;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit}
+.dash-ref code{
+  font-family:ui-monospace,monospace;font-weight:700;color:var(--cyan);
+  padding:.4rem .7rem;border-radius:8px;background:rgba(45,212,191,.1);
+  border:1px solid rgba(45,212,191,.2);font-size:.85rem;
+}
+.dash-ref .btn-copy{
+  border:1px solid var(--border);background:transparent;color:var(--text);
+  padding:.4rem .75rem;border-radius:8px;font-size:.78rem;font-weight:600;
+  cursor:pointer;font-family:inherit;
+}
 .dash-ref .btn-copy:hover{border-color:var(--cyan);color:var(--cyan)}
 .dash-ref a.btn-link{font-size:.78rem;font-weight:600;color:var(--cyan);text-decoration:none;padding:.4rem .5rem}
 .dash-ref a.btn-link:hover{text-decoration:underline}
+.mt5-mini-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem;
+}
+@media(max-width:960px){.mt5-mini-grid{grid-template-columns:1fr}}
+.mt5-mini{
+  background:var(--bg-card-solid);border:1px solid var(--border);border-radius:16px;
+  padding:1.1rem 1.15rem;position:relative;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s,transform .15s;
+}
+.mt5-mini:hover{border-color:rgba(45,212,191,.35);box-shadow:0 8px 24px var(--glow);transform:translateY(-2px)}
+.mt5-mini::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:16px 0 0 16px;
+  background:var(--cyan);
+}
+.mt5-mini.basic::before{background:var(--cyan)}
+.mt5-mini.gold::before{background:var(--gold)}
+.mt5-mini.pro::before{background:var(--purple)}
+.mt5-mini .pkg{
+  font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--text-dim);margin-bottom:.35rem;
+}
+.mt5-mini.gold .pkg{color:var(--gold)}
+.mt5-mini.pro .pkg{color:#a78bfa}
+.mt5-mini .aid{
+  font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:.75rem;
+  display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+}
+.mt5-mini .st{
+  font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:999px;
+  text-transform:uppercase;letter-spacing:.04em;
+}
+.mt5-mini .st.on{background:rgba(34,197,94,.15);color:var(--green)}
+.mt5-mini .st.off{background:rgba(148,163,184,.12);color:var(--text-muted)}
+.mt5-mini .row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.82rem;
+}
+.mt5-mini .row:last-of-type{border-bottom:none}
+.mt5-mini .row span{color:var(--text-muted)}
+.mt5-mini .row strong{color:var(--text);font-weight:700}
+.mt5-mini .dp{
+  margin-top:.75rem;padding:.45rem .65rem;border-radius:10px;
+  background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.15);
+  font-size:.8rem;font-weight:700;color:var(--cyan);text-align:center;
+}
+.page-loading{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:220px;gap:.85rem;color:var(--text-muted);
+}
+.page-loading .spin{
+  width:36px;height:36px;border-radius:50%;
+  border:3px solid rgba(45,212,191,.15);border-top-color:var(--cyan);
+  animation:dashSpin .7s linear infinite;
+}
+@keyframes dashSpin{to{transform:rotate(360deg)}}
+.page-loading p{font-size:.85rem;margin:0}
 </style>
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
-<script src="js/auth.js?v=20261117g"></script>
-<script src="js/app.js?v=20261117g"></script>
-<script src="js/mt5-api.js?v=20261117meta"></script>
+<script src="js/auth.js?v=20261117h"></script>
+<script src="js/app.js?v=20261117h"></script>
+<script src="js/mt5-api.js?v=20261117h"></script>
 <script>
 const user = renderShell('dashboard');
 if (user) {
   var root = document.getElementById('page-content');
-  root.innerHTML = '<div style="padding:2rem;color:var(--text-muted);text-align:center">Memuat dashboard…</div>';
+  root.innerHTML = '<div class="page-loading"><div class="spin" aria-hidden="true"></div><p>Memuat dashboard…</p></div>';
+
+  function copyText(text, btn) {
+    function ok() {
+      var old = btn.textContent;
+      btn.textContent = 'Tersalin ✓';
+      setTimeout(function () { btn.textContent = old; }, 1500);
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); ok(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(ok).catch(fallback);
+    } else {
+      fallback();
+    }
+  }
 
   async function loadDash() {
     var accounts = [];
-    try { accounts = await SmartAIMT5.getAccounts(true); } catch (e) { accounts = []; }
-    accounts.sort(function(a,b){ return String(a.account_id).localeCompare(String(b.account_id)); });
-    var live = SmartAIMT5.isLive && SmartAIMT5.isLive();
+    try {
+      if (typeof SmartAIMT5 !== 'undefined' && SmartAIMT5.getAccounts) {
+        accounts = await SmartAIMT5.getAccounts(true);
+      }
+    } catch (e) {
+      accounts = [];
+    }
+    accounts = accounts || [];
+    accounts.sort(function (a, b) {
+      return String(a.account_id || '').localeCompare(String(b.account_id || ''));
+    });
+
     var totalEq = 0, totalDaily = 0, totalProfit = 0, totalWd = 0, onlineN = 0;
-    accounts.forEach(function(a) {
+    accounts.forEach(function (a) {
       if (Number.isFinite(Number(a.equity))) totalEq += Number(a.equity);
       if (Number.isFinite(Number(a.daily_profit))) totalDaily += Number(a.daily_profit);
       if (Number.isFinite(Number(a.total_profit))) totalProfit += Number(a.total_profit);
       if (Number.isFinite(Number(a.total_penarikan))) totalWd += Number(a.total_penarikan);
-      if (String(a.status).toUpperCase() === 'ONLINE') onlineN++;
+      if (String(a.status || '').toUpperCase() === 'ONLINE') onlineN++;
     });
-    var refCode = (user.referral && String(user.referral).trim()) ? String(user.referral).trim().toUpperCase() : 'SMARTAI-REF';
-    var refLink = location.origin + location.pathname.replace(/[^/]+$/, '') + 'register.html?ref=' + encodeURIComponent(refCode);
-    var pkgClass = { ACC01:'basic', ACC02:'gold', ACC03:'pro' };
-    var pkgName = { ACC01:'Smart Basic', ACC02:'Smart Gold', ACC03:'Smart Pro' };
 
-    var cards = accounts.map(function(a) {
+    var refCode = (user.referral && String(user.referral).trim())
+      ? String(user.referral).trim().toUpperCase()
+      : 'SMARTAI-REF';
+    var refLink = location.origin + location.pathname.replace(/[^/]+$/, '') +
+      'register.html?ref=' + encodeURIComponent(refCode);
+
+    var pkgClass = { ACC01: 'basic', ACC02: 'gold', ACC03: 'pro' };
+    var pkgName = { ACC01: 'Smart Basic', ACC02: 'Smart Gold', ACC03: 'Smart Pro' };
+    var fmt = (typeof SmartAIMT5 !== 'undefined' && SmartAIMT5.formatUSD)
+      ? SmartAIMT5.formatUSD
+      : function (n) {
+          return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n || 0);
+        };
+    var esc = (typeof SmartAIMT5 !== 'undefined' && SmartAIMT5.escape)
+      ? SmartAIMT5.escape
+      : function (s) {
+          return String(s == null ? '' : s)
+            .replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>')
+            .replace(/"/g, '"').replace(/'/g, '&#39;');
+        };
+
+    var cards = accounts.map(function (a) {
       var cls = pkgClass[a.account_id] || 'basic';
-      var on = String(a.status).toUpperCase() === 'ONLINE';
-      return '<div class="mt5-mini ' + cls + '">' +
-        '<div class="pkg">' + (pkgName[a.account_id] || a.name || 'MT5') + '</div>' +
-        '<div class="aid">' + SmartAIMT5.escape(a.account_id) +
-          ' <span class="st ' + (on?'on':'off') + '">' + SmartAIMT5.escape(a.status || '\u2014') + '</span></div>' +
-        (a.login ? '<div class="row"><span>Login MT5</span><strong>' + SmartAIMT5.escape(a.login) + (a.owner ? ' · ' + SmartAIMT5.escape(a.owner) : '') + '</strong></div>' : '') +
-        (a.broker_label || a.broker ? '<div class="row"><span>Broker</span><strong>' + SmartAIMT5.escape(a.broker_label || a.broker) + '</strong></div>' : '') +
-        '<div class="row"><span>Balance</span><strong>' + SmartAIMT5.formatUSD(a.balance) + '</strong></div>' +
-        '<div class="row"><span>Equity</span><strong>' + SmartAIMT5.formatUSD(a.equity) + '</strong></div>' +
-        '<div class="row"><span>Total profit</span><strong>' + SmartAIMT5.formatUSD(a.total_profit) + '</strong></div>' +
-        '<div class="dp">Daily ' + SmartAIMT5.formatUSD(a.daily_profit) + '</div></div>';
+      var on = String(a.status || '').toUpperCase() === 'ONLINE';
+      var html = '<div class="mt5-mini ' + cls + '">';
+      html += '<div class="pkg">' + esc(pkgName[a.account_id] || a.name || 'MT5') + '</div>';
+      html += '<div class="aid">' + esc(a.account_id || '—');
+      html += ' <span class="st ' + (on ? 'on' : 'off') + '">' + esc(a.status || '—') + '</span></div>';
+      if (a.login) {
+        html += '<div class="row"><span>Login MT5</span><strong>' + esc(a.login) +
+          (a.owner ? ' · ' + esc(a.owner) : '') + '</strong></div>';
+      }
+      if (a.broker_label || a.broker) {
+        html += '<div class="row"><span>Broker</span><strong>' + esc(a.broker_label || a.broker) + '</strong></div>';
+      }
+      html += '<div class="row"><span>Balance</span><strong>' + fmt(a.balance) + '</strong></div>';
+      html += '<div class="row"><span>Equity</span><strong>' + fmt(a.equity) + '</strong></div>';
+      html += '<div class="row"><span>Total profit</span><strong>' + fmt(a.total_profit) + '</strong></div>';
+      html += '<div class="dp">Daily ' + fmt(a.daily_profit) + '</div>';
+      html += '</div>';
+      return html;
     }).join('');
+
+    if (!cards) {
+      cards = '<div class="panel" style="padding:1.25rem;text-align:center;color:var(--text-muted)">Belum ada data akun MT5.</div>';
+    }
 
     root.innerHTML =
       '<div class="page-header">' +
-        '<div><h1>Dashboard</h1><p>Ringkasan 3 akun MT5 (ACC01 / ACC02 / ACC03).</p></div>' +
+        '<div><h1>Dashboard</h1><p>Ringkasan akun MT5 dan kode referral kamu.</p></div>' +
         '<div class="date-chip">' + escapeHtml(formatToday()) + '</div>' +
       '</div>' +
       '<div class="dash-ref">' +
@@ -77,21 +203,22 @@ if (user) {
           '<button type="button" class="btn-copy" id="dash-copy-code">Salin kode</button>' +
           '<button type="button" class="btn-copy" id="dash-copy-link">Salin link</button>' +
           '<a class="btn-link" href="referral.html">Lihat network →</a>' +
-        '</div></div>' +
+        '</div>' +
+      '</div>' +
       '<div class="stats-grid">' +
-        '<div class="stat-card"><div class="label">Total equity</div><div class="value" id="account-equity-total">' + SmartAIMT5.formatUSD(totalEq) + '</div><div class="hint">' + accounts.length + ' akun · ' + onlineN + ' online</div></div>' +
-        '<div class="stat-card"><div class="label">Daily profit (all)</div><div class="value ' + (totalDaily>=0?'up':'') + '">' + SmartAIMT5.formatUSD(totalDaily) + '</div><div class="hint">Hari ini</div></div>' +
-        '<div class="stat-card"><div class="label">Total profit</div><div class="value up">' + SmartAIMT5.formatUSD(totalProfit) + '</div><div class="hint">Kumulatif</div></div>' +
-        '<div class="stat-card"><div class="label">Total penarikan</div><div class="value">' + SmartAIMT5.formatUSD(totalWd) + '</div><div class="hint">Semua akun</div></div>' +
+        '<div class="stat-card"><div class="label">Total equity</div><div class="value">' + fmt(totalEq) + '</div><div class="hint">' + accounts.length + ' akun · ' + onlineN + ' online</div></div>' +
+        '<div class="stat-card"><div class="label">Daily profit (all)</div><div class="value ' + (totalDaily >= 0 ? 'up' : '') + '">' + fmt(totalDaily) + '</div><div class="hint">Hari ini</div></div>' +
+        '<div class="stat-card"><div class="label">Total profit</div><div class="value up">' + fmt(totalProfit) + '</div><div class="hint">Kumulatif</div></div>' +
+        '<div class="stat-card"><div class="label">Total penarikan</div><div class="value">' + fmt(totalWd) + '</div><div class="hint">Semua akun</div></div>' +
       '</div>' +
       '<div class="panel-head" style="margin-bottom:.75rem"><h2 style="font-size:1rem;font-weight:700">Akun MT5</h2></div>' +
-      '<div class="mt5-mini-grid">' + (cards || '<p>Tidak ada data akun.</p>') + '</div>' +
+      '<div class="mt5-mini-grid">' + cards + '</div>' +
       '<div class="grid-2">' +
         '<div class="panel"><div class="panel-head"><h2>Account summary</h2><span class="sub">Member</span></div>' +
           '<div class="table-wrap"><table><tbody>' +
-            '<tr><td style="width:36%">Email</td><td>' + escapeHtml(user.email) + '</td></tr>' +
-            '<tr><td>WhatsApp</td><td>' + escapeHtml(user.hp || '\u2014') + '</td></tr>' +
-            '<tr><td>Referral</td><td><strong style="color:var(--cyan)">' + escapeHtml(user.referral || 'SMARTAI-REF') + '</strong></td></tr>' +
+            '<tr><td style="width:36%">Email</td><td>' + escapeHtml(user.email || '—') + '</td></tr>' +
+            '<tr><td>WhatsApp</td><td>' + escapeHtml(user.hp || '—') + '</td></tr>' +
+            '<tr><td>Referral</td><td><strong style="color:var(--cyan)">' + escapeHtml(refCode) + '</strong></td></tr>' +
             '<tr><td>Status</td><td><span class="badge ok">Active</span></td></tr>' +
           '</tbody></table></div></div>' +
         '<div class="panel"><div class="panel-head"><h2>Quick access</h2></div>' +
@@ -105,22 +232,12 @@ if (user) {
           '</div></div>' +
       '</div>';
 
-    function copyText(text, btn) {
-      function ok(){ var old = btn.textContent; btn.textContent = 'Tersalin ✓'; setTimeout(function(){ btn.textContent = old; }, 1500); }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(ok).catch(function(){ fallback(); });
-      } else fallback();
-      function fallback(){
-        var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
-        try { document.execCommand('copy'); ok(); } catch (e) {}
-        document.body.removeChild(ta);
-      }
-    }
     var btnCode = document.getElementById('dash-copy-code');
     var btnLink = document.getElementById('dash-copy-link');
-    if (btnCode) btnCode.onclick = function(){ copyText(refCode, this); };
-    if (btnLink) btnLink.onclick = function(){ copyText(refLink, this); };
+    if (btnCode) btnCode.onclick = function () { copyText(refCode, this); };
+    if (btnLink) btnLink.onclick = function () { copyText(refLink, this); };
   }
+
   loadDash();
   setInterval(loadDash, 45000);
 }
