@@ -1,0 +1,17 @@
+.form-group{margin-bottom:.9rem}
+.form-group label{display:block;font-size:.78rem;font-weight:700;color:var(--text-muted);margin-bottom:.35rem}
+.form-group .opt{font-weight:500;color:var(--text-dim)}
+.form-group input{
+  width:100%;padding:.7rem .85rem;border-radius:10px;border:1px solid var(--border);
+  background:rgba(255,255,255,.03);color:var(--text);font-family:inherit;font-size:.9rem;
+}
+.form-group input:focus{outline:none;border-color:rgba(45,212,191,.45)}
+.password-wrap{position:relative}
+.password-wrap input{padding-right:2.75rem}
+.toggle-pass{position:absolute;right:.55rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:1rem}
+.error-msg{display:none;padding:.7rem .85rem;border-radius:10px;margin-bottom:.9rem;font-size:.85rem;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:var(--red)}
+.error-msg.show{display:block}
+.success-box{text-align:center;padding:2rem 1rem}
+.success-box h2{font-size:1.25rem;margin-bottom:.5rem}
+.success-box p{color:var(--text-muted)}
+.btn-submit{min-height:48px}
