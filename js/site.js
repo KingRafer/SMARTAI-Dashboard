@@ -10,7 +10,6 @@
     html.setAttribute('data-theme', theme);
     try { localStorage.setItem('theme', theme); } catch (e) {}
   }
-
   try {
     var saved = localStorage.getItem('theme');
     if (saved) applyTheme(saved);
@@ -45,9 +44,7 @@
   window.toggleFaq = function (btn) {
     var item = btn.parentElement;
     var was = item.classList.contains('active');
-    document.querySelectorAll('.faq-item').forEach(function (i) {
-      i.classList.remove('active');
-    });
+    document.querySelectorAll('.faq-item').forEach(function (i) { i.classList.remove('active'); });
     if (!was) item.classList.add('active');
   };
 })();
