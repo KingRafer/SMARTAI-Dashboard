@@ -1,160 +1,18 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="id">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Daftar member Smart AI — buat akun portal untuk dashboard, referral, dan komisi."/>
-<meta name="theme-color" content="#050a12"/>
-<title>Create account — Smart AI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=pro2">
-<script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<meta http-equiv="refresh" content="0;url=daftar.html"/>
+<title>Register — Smart AI</title>
+<script>
+(function () {
+  var q = location.search || '';
+  location.replace('daftar.html' + q);
+})();
+</script>
 </head>
 <body>
-<div class="auth-page">
-  <aside class="auth-brand">
-    <div class="auth-brand-top">
-      <div class="auth-brand-logo">
-        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></span>
-        SMART<span>AI</span>
-      </div>
-    </div>
-    <div class="auth-brand-mid">
-      <h2>Join the Smart AI network</h2>
-      <p>Create your member account to access performance dashboards, client tools, and referral tracking.</p>
-      <div class="auth-features">
-        <div class="auth-feature">
-          <div class="ico"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
-          <div><strong>Secure member access</strong><span>Session-based portal for registered members</span></div>
-        </div>
-        <div class="auth-feature">
-          <div class="ico"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
-          <div><strong>Client &amp; network tools</strong><span>Manage downlines and commission sources</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="auth-brand-foot">© 2026 Smart AI · Member Portal</div>
-  </aside>
-
-  <div class="auth-form-side">
-    <div class="auth-card register">
-      <div class="auth-logo">SMART<span>AI</span><span class="auth-logo-badge">Member</span></div>
-      <h1>Create account</h1>
-      <p class="auth-sub">Fill in your details to get started.</p>
-      <form id="register-form" novalidate>
-        <div class="form-group">
-          <label for="nama">Full name <span class="req">*</span></label>
-          <input type="text" id="nama" required autocomplete="name" placeholder="Your full name"/>
-        </div>
-        <div class="form-group">
-          <label for="email">Email <span class="req">*</span></label>
-          <input type="email" id="email" required autocomplete="email" placeholder="name@email.com"/>
-        </div>
-        <div class="form-group">
-          <label for="hp">Phone / WhatsApp <span class="req">*</span></label>
-          <input type="tel" id="hp" required pattern="[0-9]{10,15}" inputmode="numeric" placeholder="0812xxxxxxxx"/>
-        </div>
-        <div class="form-group">
-          <label for="password">Password <span class="req">*</span></label>
-          <div class="password-wrap">
-            <input type="password" id="password" required minlength="6" autocomplete="new-password" placeholder="Min. 6 characters"/>
-            <button type="button" class="toggle-pass" id="toggle-pass" aria-label="Show password">
-              <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            </button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="password2">Confirm password <span class="req">*</span></label>
-          <div class="password-wrap">
-            <input type="password" id="password2" required minlength="6" autocomplete="new-password" placeholder="Repeat password"/>
-            <button type="button" class="toggle-pass" id="toggle-pass2" aria-label="Show password">
-              <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            </button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="referral">Referral code <span class="opt">(optional)</span></label>
-          <input type="text" id="referral" placeholder="If you have one"/>
-        </div>
-        <label class="check" style="margin-bottom:.95rem">
-          <input type="checkbox" id="agree" required/>
-          I agree to the terms of service and understand trading risks
-        </label>
-        <div class="msg error" id="error" role="alert"></div>
-        <div class="msg success" id="success" role="status"></div>
-        <button type="submit" class="btn-primary" id="btn">Create account</button>
-      </form>
-      <div class="auth-divider"><span>or</span></div>
-      <p class="auth-footer">Already have an account? <a href="login.html">Sign in</a></p>
-    </div>
-  </div>
-</div>
-<script src="js/auth.js?v=pro2"></script>
-<script>
-redirectIfLoggedIn();
-ensureDemoAccount();
-setupPasswordToggle('toggle-pass', 'password');
-setupPasswordToggle('toggle-pass2', 'password2');
-
-try {
-  var params = new URLSearchParams(location.search);
-  var refQ = params.get('ref');
-  if (refQ) document.getElementById('referral').value = refQ;
-} catch (e) {}
-
-document.getElementById('register-form').addEventListener('submit', function (e) {
-  e.preventDefault();
-  var nama = document.getElementById('nama').value.trim();
-  var email = document.getElementById('email').value.trim();
-  var hp = document.getElementById('hp').value.trim().replace(/\s/g, '');
-  var password = document.getElementById('password').value;
-  var password2 = document.getElementById('password2').value;
-  var referral = document.getElementById('referral').value.trim();
-  var err = document.getElementById('error');
-  var ok = document.getElementById('success');
-  err.classList.remove('show');
-  ok.classList.remove('show');
-  if (!nama || !email || !hp) {
-    err.textContent = 'Please complete all required fields.';
-    err.classList.add('show');
-    return;
-  }
-  if (!/^[0-9]{10,15}$/.test(hp)) {
-    err.textContent = 'Phone must be 10–15 digits.';
-    err.classList.add('show');
-    return;
-  }
-  if (password.length < 6) {
-    err.textContent = 'Password must be at least 6 characters.';
-    err.classList.add('show');
-    return;
-  }
-  if (password !== password2) {
-    err.textContent = 'Passwords do not match.';
-    err.classList.add('show');
-    return;
-  }
-  if (!document.getElementById('agree').checked) {
-    err.textContent = 'You must accept the terms to continue.';
-    err.classList.add('show');
-    return;
-  }
-  var accounts = getAccounts();
-  if (accounts.some(function (a) { return a.email && a.email.toLowerCase() === email.toLowerCase(); })) {
-    err.textContent = 'This email is already registered. Please sign in.';
-    err.classList.add('show');
-    return;
-  }
-  var record = { nama: nama, email: email, hp: hp, password: password, referral: referral, avatar: null };
-  accounts.push(record);
-  localStorage.setItem('smartai_accounts', JSON.stringify(accounts));
-  setUser(sessionFromAccount(record));
-  ok.textContent = 'Account created. Redirecting…';
-  ok.classList.add('show');
-  setTimeout(function () { location.href = 'dashboard.html'; }, 800);
-});
-</script>
+<p>Mengalihkan ke <a href="daftar.html">Registrasi</a>…</p>
 </body>
 </html>
