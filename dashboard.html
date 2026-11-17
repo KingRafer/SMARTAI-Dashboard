@@ -135,6 +135,8 @@ if (user) {
       var accounts = await SmartAIMT5.getAccounts();
       var values = accounts.map(function(a){ return Number(a.equity); }).filter(function(v){ return Number.isFinite(v); });
       target.textContent = values.length ? SmartAIMT5.formatUSD(values.reduce(function(s,v){return s+v;},0)) : '—';
+      var note = target.closest('.stat-card');
+      if (note) { var label = note.querySelector('.label'); if (label && !label.textContent.includes('DEMO')) label.textContent += ' · DEMO'; }
     } catch (e) { target.textContent = 'API unavailable'; }
   }
   refreshEquity();
