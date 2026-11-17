@@ -139,10 +139,8 @@ if (renderShell('performance')) {
         '<div class="master-perf"><h3>API belum terhubung</h3><p class="base">Pastikan file PHP sudah diunggah ke hosting smartinvestama.com dan endpoint dapat diakses melalui HTTPS.</p><p class="cal-foot">' + SmartAIMT5.escape(error.message) + '</p></div>';
     }
   }
-  if (renderShell('performance')) {
-    loadPerformance();
-    setInterval(loadPerformance, 30000);
-  }
+  loadPerformance();
+  setInterval(loadPerformance, 30000);
 </script>
 </body>
 </html>
