@@ -27,7 +27,7 @@
 <body>
 <script src="js/auth.js?v=pro2"></script>
 <script src="js/app.js?v=pro2"></script>
-<script src="js/mt5-api.js?v=20261117live2"></script>
+<script src="js/mt5-api.js?v=20261117meta"></script>
 <script>
 const user = renderShell('dashboard');
 if (user) {
@@ -57,6 +57,8 @@ if (user) {
         '<div class="pkg">' + (pkgName[a.account_id] || a.name || 'MT5') + '</div>' +
         '<div class="aid">' + SmartAIMT5.escape(a.account_id) +
           ' <span class="st ' + (on?'on':'off') + '">' + SmartAIMT5.escape(a.status || '\u2014') + '</span></div>' +
+        (a.login ? '<div class="row"><span>Login MT5</span><strong>' + SmartAIMT5.escape(a.login) + (a.owner ? ' · ' + SmartAIMT5.escape(a.owner) : '') + '</strong></div>' : '') +
+        (a.broker_label || a.broker ? '<div class="row"><span>Broker</span><strong>' + SmartAIMT5.escape(a.broker_label || a.broker) + '</strong></div>' : '') +
         '<div class="row"><span>Balance</span><strong>' + SmartAIMT5.formatUSD(a.balance) + '</strong></div>' +
         '<div class="row"><span>Equity</span><strong>' + SmartAIMT5.formatUSD(a.equity) + '</strong></div>' +
         '<div class="row"><span>Total profit</span><strong>' + SmartAIMT5.formatUSD(a.total_profit) + '</strong></div>' +
