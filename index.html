@@ -6,7 +6,6 @@
   <title>Sign In — Smart AI</title>
   <meta name="theme-color" content="#050a12"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css">
   <style>
     :root, [data-theme=dark] {
       --bg: #050a12;
@@ -19,6 +18,18 @@
       --text-dim: #64748b;
       --green: #34d399;
       --glow: rgba(45,212,191,.2);
+    }
+    [data-theme=light] {
+      --bg: #eef2f7;
+      --bg-card: #fff;
+      --border: rgba(15,23,42,.08);
+      --cyan: #0f766e;
+      --teal: #0d9488;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --green: #059669;
+      --glow: rgba(13,148,136,.15);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -34,10 +45,7 @@
         radial-gradient(ellipse 70% 50% at 20% 10%, rgba(45,212,191,.12), transparent 55%),
         radial-gradient(ellipse 50% 40% at 90% 90%, rgba(99,102,241,.08), transparent 50%);
     }
-    .auth-shell {
-      width: 100%;
-      max-width: 420px;
-    }
+    .auth-shell { width: 100%; max-width: 420px; }
     .logo {
       text-align: center;
       font-size: 1.4rem;
@@ -56,18 +64,8 @@
       padding: 1.75rem 1.6rem;
       box-shadow: 0 25px 50px -20px rgba(0,0,0,.55);
     }
-    .card h1 {
-      font-size: 1.35rem;
-      font-weight: 750;
-      margin-bottom: .3rem;
-      text-align: center;
-    }
-    .card .sub {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: .875rem;
-      margin-bottom: 1.35rem;
-    }
+    .card h1 { font-size: 1.35rem; font-weight: 750; margin-bottom: .3rem; text-align: center; }
+    .card .sub { text-align: center; color: var(--text-muted); font-size: .875rem; margin-bottom: 1.35rem; }
     .demo-box {
       border: 1px dashed rgba(45,212,191,.4);
       background: rgba(45,212,191,.07);
@@ -76,21 +74,13 @@
       margin-bottom: 1.25rem;
     }
     .demo-box .row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: .5rem .75rem;
-      font-size: .82rem;
-      color: var(--text-muted);
+      display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem;
+      font-size: .82rem; color: var(--text-muted);
     }
     .demo-badge {
-      font-size: .62rem;
-      font-weight: 800;
-      letter-spacing: .05em;
+      font-size: .62rem; font-weight: 800; letter-spacing: .05em;
       background: linear-gradient(135deg, var(--cyan), var(--teal));
-      color: #042f2e;
-      padding: .18rem .45rem;
-      border-radius: 5px;
+      color: #042f2e; padding: .18rem .45rem; border-radius: 5px;
     }
     .btn-demo {
       margin-left: auto;
@@ -113,11 +103,8 @@
     }
     .form-group { margin-bottom: 1rem; }
     .form-group label {
-      display: block;
-      font-size: .75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: .35rem;
+      display: block; font-size: .75rem; font-weight: 600;
+      color: var(--text-muted); margin-bottom: .35rem;
     }
     .form-group input {
       width: 100%;
@@ -130,6 +117,10 @@
       font-family: inherit;
       outline: none;
       min-height: 46px;
+    }
+    [data-theme=light] .form-group input {
+      background: rgba(15,23,42,.03);
+      border-color: rgba(15,23,42,.1);
     }
     .form-group input:focus {
       border-color: var(--cyan);
@@ -150,6 +141,7 @@
       min-height: 48px;
     }
     .btn-primary:hover { filter: brightness(1.05); }
+    .btn-primary:disabled { opacity: .6; cursor: wait; }
     .msg {
       display: none;
       margin-top: .85rem;
@@ -220,7 +212,7 @@
           <label for="password">Password</label>
           <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required/>
         </div>
-        <button type="submit" class="btn-primary">Masuk ke Dashboard</button>
+        <button type="submit" class="btn-primary" id="btn-submit">Masuk ke Dashboard</button>
       </form>
 
       <div id="msg" class="msg"></div>
@@ -231,35 +223,40 @@
     </div>
   </div>
 
+  <script src="js/auth.js"></script>
   <script>
   (function () {
     var html = document.documentElement;
     var themeBtn = document.getElementById('theme-toggle');
     try {
-      var saved = localStorage.getItem('theme');
+      var saved = localStorage.getItem('smartai_theme') || localStorage.getItem('theme');
       if (saved) html.setAttribute('data-theme', saved);
     } catch (e) {}
     if (themeBtn) {
       themeBtn.addEventListener('click', function () {
         var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         html.setAttribute('data-theme', next);
-        try { localStorage.setItem('theme', next); } catch (e) {}
+        try {
+          localStorage.setItem('smartai_theme', next);
+          localStorage.setItem('theme', next);
+        } catch (e) {}
       });
     }
 
-    // Already logged in? go dashboard
-    try {
-      if (localStorage.getItem('smartai_logged_in') === '1') {
-        location.replace('dashboard.html');
-        return;
-      }
-    } catch (e) {}
+    // Sudah login → dashboard
+    if (typeof redirectIfLoggedIn === 'function') {
+      redirectIfLoggedIn();
+    } else if (typeof getUser === 'function' && getUser()) {
+      location.replace('dashboard.html');
+      return;
+    }
 
     var form = document.getElementById('login-form');
     var emailEl = document.getElementById('email');
     var passEl = document.getElementById('password');
     var msg = document.getElementById('msg');
     var btnDemo = document.getElementById('btn-demo');
+    var btnSubmit = document.getElementById('btn-submit');
 
     if (btnDemo) {
       btnDemo.addEventListener('click', function () {
@@ -272,20 +269,47 @@
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var email = (emailEl.value || '').trim().toLowerCase();
+      var email = (emailEl.value || '').trim();
       var pass = passEl.value || '';
 
-      if (email === 'demo@smartai.id' && pass === 'demo123') {
-        try {
-          localStorage.setItem('smartai_logged_in', '1');
-          localStorage.setItem('smartai_user', email);
-        } catch (err) {}
+      btnSubmit.disabled = true;
+
+      var session = null;
+      if (typeof loginWithCredentials === 'function') {
+        session = loginWithCredentials(email, pass);
+      } else if (typeof findAccount === 'function' && typeof setUser === 'function') {
+        var found = findAccount(email, pass);
+        if (found) {
+          session = sessionFromAccount(found);
+          setUser(session);
+        }
+      }
+
+      // Fallback jika auth.js gagal load: terima demo hardcode
+      if (!session) {
+        var em = email.toLowerCase();
+        if ((em === 'demo@smartai.id' || em === 'demo@smartai.com') && pass === 'demo123') {
+          session = {
+            nama: 'Demo Member',
+            email: 'demo@smartai.id',
+            hp: '081234567890',
+            referral: 'SMARTAI-REF',
+            avatar: null
+          };
+          try {
+            localStorage.setItem('smartai_user', JSON.stringify(session));
+          } catch (err) {}
+        }
+      }
+
+      if (session) {
         msg.className = 'msg show success';
         msg.textContent = 'Login berhasil. Mengalihkan...';
-        setTimeout(function () { location.href = 'dashboard.html'; }, 500);
+        setTimeout(function () { location.href = 'dashboard.html'; }, 400);
       } else {
+        btnSubmit.disabled = false;
         msg.className = 'msg show error';
-        msg.textContent = 'Email atau password salah. Gunakan akun demo.';
+        msg.textContent = 'Email atau password salah. Klik "Isi akun demo".';
       }
     });
   })();
