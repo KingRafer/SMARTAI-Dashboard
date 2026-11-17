@@ -97,83 +97,51 @@
 <script src="js/app.js?v=20261116d"></script>
 <script>
 if (renderShell('performance')) {
-  var now = new Date();
-  var stamp = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })
-    + ', ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
-  function ring(pct) {
-    var r = 30, c = 2 * Math.PI * r;
-    var offset = c * (1 - Math.min(Math.abs(pct), 5) / 5);
-    return { c: c.toFixed(1), offset: offset.toFixed(1) };
-  }
-  var accounts = [
-    { cls: 'basic', pkg: 'Smart Basic', id: 'ACC01', deposit: '$10,000.00', equity: '$90,786.35', daily: '+$991.14', withdraw: '$73,862.00', ret: 1.09, retLabel: '+1.09%' },
-    { cls: 'gold', pkg: 'Smart Gold', id: 'ACC02', deposit: '$10,000.00', equity: '$106,793.83', daily: '+$338.03', withdraw: '$28,000.00', ret: 0.32, retLabel: '+0.32%' },
-    { cls: 'pro', pkg: 'Smart Pro', id: 'ACC03', deposit: '$60,000.00', equity: '$656,274.00', daily: '+$10,323.30', withdraw: '$5,540,000.00', ret: 1.57, retLabel: '+1.57%' }
-  ];
-  var cards = accounts.map(function (a) {
-    var rg = ring(a.ret);
-    return '<div class="acc-card ' + a.cls + '">' +
-      '<div class="acc-top"><span class="acc-pkg ' + a.cls + '">' + a.pkg.toUpperCase() + '</span><span class="mt5-badge">SAMPLE DATA</span></div>' +
-      '<div class="acc-id">' + a.id + ' <span class="online">CONTOH</span></div>' +
+  var packageNames = { ACC01: 'Smart Basic', ACC02: 'Smart Gold', ACC03: 'Smart Pro' };
+  function renderAccount(a, index) {
+    var cls = ['basic','gold','pro'][index] || 'basic';
+    var online = a.status === 'ONLINE';
+    var statusLabel = online ? 'ONLINE' : (a.status === 'OFFLINE' ? 'OFFLINE' : 'WAITING');
+    var equity = Number(a.equity);
+    var daily = Number(a.daily_profit);
+    var dailyReturn = Number.isFinite(equity) && equity > 0 && Number.isFinite(daily) ? (daily / equity * 100) : null;
+    var returnText = dailyReturn === null ? '—' : ((dailyReturn > 0 ? '+' : '') + dailyReturn.toFixed(2) + '%');
+    var stamp = a.updated_at ? SmartAIMT5.escape(a.updated_at) : 'Belum ada pembaruan';
+    return '<article class="acc-card ' + cls + '">' +
+      '<div class="acc-top"><span class="acc-pkg ' + cls + '">' + (packageNames[a.account_id] || 'MT5 Account') + '</span><span class="mt5-badge">' + statusLabel + '</span></div>' +
+      '<div class="acc-id">' + SmartAIMT5.escape(a.account_id) + ' <span class="' + (online ? 'online' : 'muted') + '">' + statusLabel + '</span></div>' +
       '<div class="acc-metrics">' +
-        '<div class="acc-metric"><div class="ml">Deposit Awal</div><div class="mv">' + a.deposit + '</div></div>' +
-        '<div class="acc-metric"><div class="ml">Equity Saat Ini</div><div class="mv">' + a.equity + '</div></div>' +
-        '<div class="acc-metric"><div class="ml">Daily Profit</div><div class="mv up">' + a.daily + '</div></div>' +
-        '<div class="acc-metric"><div class="ml">Total Penarikan</div><div class="mv muted">' + a.withdraw + '</div></div>' +
+        '<div class="acc-metric"><div class="ml">Balance</div><div class="mv">' + SmartAIMT5.formatUSD(a.balance) + '</div></div>' +
+        '<div class="acc-metric"><div class="ml">Equity</div><div class="mv">' + SmartAIMT5.formatUSD(a.equity) + '</div></div>' +
+        '<div class="acc-metric"><div class="ml">Deposit Awal</div><div class="mv">' + SmartAIMT5.formatUSD(a.deposit_awal) + '</div></div>' +
+        '<div class="acc-metric"><div class="ml">Total Profit</div><div class="mv ' + (Number(a.total_profit) >= 0 ? 'up' : '') + '">' + SmartAIMT5.formatUSD(a.total_profit) + '</div></div>' +
       '</div>' +
-      '<div class="daily-box"><div class="db-label">Daily Return</div><div class="db-val">' + a.retLabel + '</div><div class="db-sub">Daily Profit ÷ Equity Saat Ini</div></div>' +
-      '<div class="acc-foot"><div class="ring-wrap"><svg viewBox="0 0 72 72"><circle class="track" cx="36" cy="36" r="30"/><circle class="bar" cx="36" cy="36" r="30" stroke-dasharray="' + rg.c + '" stroke-dashoffset="' + rg.offset + '"/></svg><div class="ring-pct">' + a.retLabel + '</div></div>' +
-      '<div class="ring-detail">Persentase terhadap Equity Saat Ini<br/>Daily Profit: <strong>' + a.daily + '</strong><br/>Equity Saat Ini: <strong>' + a.equity + '</strong><br/>Daily Drawdown: <strong>0.00%</strong></div></div>' +
-      '<div class="acc-update">Contoh tampilan · ' + stamp + '<div class="progress-line"><i></i></div></div></div>';
-  }).join('');
-  var calData = { year: 2026, month: 8, label: 'September 2026', monthPct: '+129.0%', tradingDays: 19,
-    days: { 1:6.8,2:8.9,3:7.9,7:13.1,8:3.7,9:2.1,10:15.4,11:12.2,14:10.7,16:8.7,17:14.9,18:2.7,21:4.0,22:-8.7,23:5.3,24:7.0,25:4.8,28:6.2,29:3.3 } };
-  function dayClass(v) {
-    if (v == null) return 'none';
-    if (v < 0) return 'loss';
-    if (v < 3) return 'u3';
-    if (v < 8) return 'm38';
-    if (v <= 15) return 'm815';
-    return 'above';
+      '<div class="daily-box"><div class="db-label">Daily Profit</div><div class="db-val">' + SmartAIMT5.formatUSD(a.daily_profit) + '</div><div class="db-sub">Daily Return: ' + returnText + '</div></div>' +
+      '<div class="acc-foot"><div class="ring-wrap"><svg viewBox="0 0 72 72"><circle class="track" cx="36" cy="36" r="30"/><circle class="bar" cx="36" cy="36" r="30" stroke-dasharray="188.5" stroke-dashoffset="' + (dailyReturn === null ? '188.5' : (188.5 * (1 - Math.min(Math.abs(dailyReturn),5)/5)).toFixed(1)) + '"/></svg><div class="ring-pct">' + returnText + '</div></div>' +
+      '<div class="ring-detail">Total Penarikan: <strong>' + SmartAIMT5.formatUSD(a.total_penarikan) + '</strong><br/>Daily Drawdown (nilai EA): <strong>' + SmartAIMT5.formatNumber(a.daily_dd, 2) + '</strong><br/>Data diperbarui: <strong>' + stamp + '</strong></div></div>' +
+      '<div class="acc-update">Sumber: MT5 Live API<div class="progress-line"><i style="width:' + (online ? '100%' : '8%') + '"></i></div></div>' +
+    '</article>';
   }
-  function buildCalendar(data) {
-    var first = new Date(data.year, data.month, 1);
-    var startDow = (first.getDay() + 6) % 7;
-    var daysInMonth = new Date(data.year, data.month + 1, 0).getDate();
-    var cells = '', dows = ['M','T','W','T','F','S','S'];
-    cells += dows.map(function(d){ return '<div class="cal-dow">'+d+'</div>'; }).join('');
-    for (var i = 0; i < startDow; i++) cells += '<div class="cal-day empty"></div>';
-    for (var d = 1; d <= daysInMonth; d++) {
-      var v = data.days[d];
-      var cls = dayClass(v);
-      var pct = v == null ? '' : ((v > 0 ? '+' : '') + v.toFixed(1) + '%');
-      cells += '<div class="cal-day '+cls+'"><span class="d">'+d+'</span>'+(pct?'<span class="p">'+pct+'</span>':'')+'</div>';
+  async function loadPerformance() {
+    var root = document.getElementById('page-content');
+    try {
+      var accounts = await SmartAIMT5.getAccounts();
+      accounts.sort(function(a,b){ return String(a.account_id).localeCompare(String(b.account_id)); });
+      root.innerHTML =
+        '<div class="live-head"><h2>Live Performance</h2><p>Data akun MetaTrader 5 dari server SmartInvestama. Pembaruan otomatis setiap 30 detik.</p></div>' +
+        '<div class="acc-grid">' + accounts.map(renderAccount).join('') + '</div>' +
+        '<div class="master-perf"><div class="master-perf-head"><div><h3>MT5 Data Connection</h3><div class="base">Endpoint: smartinvestama.com · Read-only account feed</div></div><span class="mt5-badge">CONNECTED</span></div>' +
+        '<div class="cal-foot">Status ONLINE mengikuti pembaruan EA. Akun tanpa data akan tampil WAITING; data yang melewati batas waktu server akan tampil OFFLINE. Nilai performa berasal dari payload EA, bukan angka contoh.</div></div>';
+    } catch (error) {
+      root.innerHTML =
+        '<div class="live-head"><h2>Live Performance</h2><p>Belum dapat mengambil data akun MT5.</p></div>' +
+        '<div class="master-perf"><h3>API belum terhubung</h3><p class="base">Pastikan file PHP sudah diunggah ke hosting smartinvestama.com dan endpoint dapat diakses melalui HTTPS.</p><p class="cal-foot">' + SmartAIMT5.escape(error.message) + '</p></div>';
     }
-    return cells;
   }
-  var calHtml =
-    '<div class="master-perf">' +
-      '<div class="master-perf-head"><div><h3>Master performance</h3><div class="base">Base 20,000 USC = 100%</div></div>' +
-      '<div class="view-tabs"><button type="button" class="active">Calendar</button><button type="button">Weekly</button></div></div>' +
-      '<div class="mp-stats">' +
-        '<div class="mp-stat"><div class="ml">Realized Profit</div><div class="mv up">+256.1%</div><div class="ms">51,215 USC</div></div>' +
-        '<div class="mp-stat"><div class="ml">This Week So Far</div><div class="mv up">+9.5%</div><div class="ms">1,903 USC</div></div>' +
-        '<div class="mp-stat"><div class="ml">Win Rate</div><div class="mv">64.8%</div><div class="ms">645 closed trades</div></div>' +
-      '</div>' +
-      '<div class="cal-head"><div><h4>'+calData.label+'</h4><div class="sub">'+calData.monthPct+' this month · '+calData.tradingDays+' trading days</div></div>' +
-      '<div class="cal-nav"><button type="button" aria-label="Prev">‹</button><button type="button" aria-label="Next">›</button></div></div>' +
-      '<div class="cal-grid">'+buildCalendar(calData)+'</div>' +
-      '<div class="cal-legend">' +
-        '<span><i class="u3"></i> under +3%</span><span><i class="m38"></i> +3 to +8%</span>' +
-        '<span><i class="m815"></i> +8 to +15%</span><span><i class="above"></i> above +15%</span>' +
-        '<span><i class="loss"></i> loss day</span><span><i class="none"></i> no trading</span>' +
-      '</div>' +
-      '<div class="cal-foot">as of 29 Sep 2026, 09:30 WIB · live feed<br/>Worst day −8.7% (22 Sep) · deposits not shown</div>' +
-    '</div>';
-  document.getElementById('page-content').innerHTML =
-    '<div class="live-head"><h2>Live Performance</h2><p>Data aktual akun Smart Basic, Smart Gold, dan Smart Pro.</p></div>' +
-    '<div class="acc-grid">' + cards + '</div>' + calHtml;
-}
+  if (renderShell('performance')) {
+    loadPerformance();
+    setInterval(loadPerformance, 30000);
+  }
 </script>
 </body>
 </html>
