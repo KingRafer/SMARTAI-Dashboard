@@ -25,25 +25,19 @@
 .acc-card.gold .mt5-badge{background:rgba(251,191,36,.12);color:var(--gold);border-color:rgba(251,191,36,.3)}
 .acc-card.pro .mt5-badge{background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.3)}
 .acc-id{font-size:1.15rem;font-weight:800;letter-spacing:.02em;margin-bottom:1rem;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
-.acc-id .online{font-size:.72rem;font-weight:700;color:var(--green);display:inline-flex;align-items:center;gap:.3rem}
-.acc-id .online::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s ease-in-out infinite}
-.acc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.85rem}
+.acc-id .online{font-size:.72rem;font-weight:700;color:var(--green);display:inline-flex;align-items:center;gap:.3rem}.acc-id .muted{font-size:.72rem;font-weight:600;color:var(--text-dim)}
+.acc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1rem}
 .acc-metric{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem}
-[data-theme=light] .acc-metric{background:rgba(15,23,42,.03)}
-.acc-metric .ml{font-size:.65rem;color:var(--text-dim);font-weight:500;margin-bottom:.25rem}
-.acc-metric .mv{font-size:.95rem;font-weight:700;color:var(--text)}
-.acc-metric .mv.up{color:var(--green)}.acc-metric .mv.muted{color:var(--text-muted)}
-.daily-box{background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.2);border-radius:12px;padding:.75rem 1rem;margin-bottom:1rem}
-.acc-card.gold .daily-box{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.22)}
-.acc-card.pro .daily-box{background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.22)}
-.daily-box .db-label{font-size:.68rem;color:var(--text-dim);font-weight:600;margin-bottom:.2rem}
-.daily-box .db-val{font-size:1.25rem;font-weight:800;color:var(--green)}
-.daily-box .db-sub{font-size:.68rem;color:var(--text-muted);margin-top:.15rem}
-.acc-foot{display:flex;align-items:center;gap:1rem;margin-bottom:.75rem}
+.acc-metric .ml{font-size:.65rem;color:var(--text-dim);font-weight:600;letter-spacing:.03em;text-transform:uppercase;margin-bottom:.2rem}
+.acc-metric .mv{font-size:1.05rem;font-weight:800}.acc-metric .mv.up{color:var(--green)}
+.daily-box{background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(16,185,129,.05));border:1px solid rgba(45,212,191,.2);border-radius:14px;padding:.9rem 1rem;margin-bottom:1rem}
+.db-label{font-size:.68rem;color:var(--text-dim);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.db-val{font-size:1.4rem;font-weight:800;color:var(--cyan);margin:.2rem 0}.db-sub{font-size:.78rem;color:var(--text-muted)}
+.acc-foot{display:flex;gap:1rem;align-items:center;margin-bottom:.85rem}
 .ring-wrap{position:relative;width:72px;height:72px;flex-shrink:0}
-.ring-wrap svg{width:72px;height:72px;transform:rotate(-90deg)}
+.ring-wrap svg{transform:rotate(-90deg)}
 .ring-wrap .track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:6}
-.ring-wrap .bar{fill:none;stroke-width:6;stroke-linecap:round}
+.ring-wrap .bar{fill:none;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
 .acc-card.basic .ring-wrap .bar{stroke:var(--cyan)}.acc-card.gold .ring-wrap .bar{stroke:var(--gold)}.acc-card.pro .ring-wrap .bar{stroke:var(--purple)}
 .ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;color:var(--green)}
 .ring-detail{flex:1;font-size:.72rem;color:var(--text-muted);line-height:1.55}
@@ -68,7 +62,6 @@
 .mp-stat .mv{font-size:1.35rem;font-weight:800}.mp-stat .mv.up{color:var(--green)}
 .mp-stat .ms{font-size:.78rem;color:var(--text-muted);margin-top:.15rem}
 .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem}
-.cal-head h4{font-size:1rem;font-weight:700}.cal-head .sub{font-size:.8rem;color:var(--text-muted);margin-top:.2rem}
 .cal-nav{display:flex;gap:.4rem}
 .cal-nav button{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:1rem}
 .cal-nav button:hover{border-color:var(--cyan);color:var(--cyan)}
@@ -97,6 +90,13 @@
 <script src="js/app.js?v=20261116d"></script>
 <script src="js/mt5-api.js?v=20261117"></script>
 <script>
+// Auto-login demo agar halaman Acc Performance tidak blank saat belum login
+if (typeof getUser === 'function' && !getUser()) {
+  if (typeof ensureDemoAccount === 'function') ensureDemoAccount();
+  if (typeof setUser === 'function') {
+    setUser({ nama: 'Demo Member', email: 'demo@smartai.com', hp: '081234567890', referral: 'SMARTAI-REF', avatar: null });
+  }
+}
 if (renderShell('performance')) {
   var packageNames = { ACC01: 'Smart Basic', ACC02: 'Smart Gold', ACC03: 'Smart Pro' };
   function renderAccount(a, index) {
@@ -141,6 +141,7 @@ if (renderShell('performance')) {
   }
   loadPerformance();
   setInterval(loadPerformance, 30000);
+}
 </script>
 </body>
 </html>
