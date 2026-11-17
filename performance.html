@@ -25,7 +25,8 @@
 .acc-card.gold .mt5-badge{background:rgba(251,191,36,.12);color:var(--gold);border-color:rgba(251,191,36,.3)}
 .acc-card.pro .mt5-badge{background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.3)}
 .acc-id{font-size:1.15rem;font-weight:800;letter-spacing:.02em;margin-bottom:1rem;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
-.acc-id .online{font-size:.72rem;font-weight:700;color:var(--green);display:inline-flex;align-items:center;gap:.3rem}.acc-id .muted{font-size:.72rem;font-weight:600;color:var(--text-dim)}
+.acc-id .online{font-size:.72rem;font-weight:700;color:var(--green);display:inline-flex;align-items:center;gap:.3rem}
+.acc-id .muted{font-size:.72rem;font-weight:600;color:var(--text-dim)}
 .acc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1rem}
 .acc-metric{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem}
 .acc-metric .ml{font-size:.65rem;color:var(--text-dim);font-weight:600;letter-spacing:.03em;text-transform:uppercase;margin-bottom:.2rem}
@@ -48,33 +49,43 @@
 .acc-card.basic .progress-line i{background:linear-gradient(90deg,transparent,var(--cyan))}
 .acc-card.gold .progress-line i{background:linear-gradient(90deg,transparent,var(--gold))}
 .acc-card.pro .progress-line i{background:linear-gradient(90deg,transparent,var(--purple))}
+
+/* Calendar Profit */
 .master-perf{margin-top:1.75rem;background:var(--bg-card-solid);border:1px solid var(--border);border-radius:18px;padding:1.35rem 1.4rem 1.2rem;animation:fadeUp .55s .2s both}
 .master-perf-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
 .master-perf-head h3{font-size:1.15rem;font-weight:800}
 .master-perf-head .base{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
-.view-tabs{display:flex;background:rgba(255,255,255,.04);border-radius:999px;padding:3px;border:1px solid var(--border)}
+.view-tabs{display:flex;background:rgba(255,255,255,.04);border-radius:999px;padding:3px;border:1px solid var(--border);flex-wrap:wrap}
 .view-tabs button{border:none;background:transparent;color:var(--text-muted);font-size:.78rem;font-weight:600;padding:.45rem .9rem;border-radius:999px;cursor:pointer;font-family:inherit}
 .view-tabs button.active{background:var(--bg-card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.2)}
 [data-theme=light] .view-tabs{background:#f1f5f9}
-.mp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.35rem}
-@media(max-width:700px){.mp-stats{grid-template-columns:1fr}}
+.mp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.35rem}
+@media(max-width:800px){.mp-stats{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.mp-stats{grid-template-columns:1fr}}
+.mp-stat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem}
 .mp-stat .ml{font-size:.68rem;color:var(--text-dim);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.35rem}
-.mp-stat .mv{font-size:1.35rem;font-weight:800}.mp-stat .mv.up{color:var(--green)}
+.mp-stat .mv{font-size:1.25rem;font-weight:800}.mp-stat .mv.up{color:var(--green)}.mp-stat .mv.down{color:var(--red)}
 .mp-stat .ms{font-size:.78rem;color:var(--text-muted);margin-top:.15rem}
+
 .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem}
-.cal-nav{display:flex;gap:.4rem}
-.cal-nav button{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:1rem}
+.cal-title{font-size:1.05rem;font-weight:700}
+.cal-nav{display:flex;gap:.4rem;align-items:center}
+.cal-nav button{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:1rem;display:inline-flex;align-items:center;justify-content:center}
 .cal-nav button:hover{border-color:var(--cyan);color:var(--cyan)}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .cal-dow{text-align:center;font-size:.7rem;font-weight:600;color:var(--text-dim);padding:.35rem 0}
-.cal-day{aspect-ratio:1;min-height:52px;border-radius:12px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;font-size:.72rem;color:var(--text-muted);background:rgba(255,255,255,.02)}
-.cal-day .d{font-weight:600;font-size:.78rem;color:var(--text)}.cal-day .p{font-weight:700;font-size:.72rem}
-.cal-day.empty{background:transparent;border-color:transparent}.cal-day.none{opacity:.45}
+.cal-day{aspect-ratio:1;min-height:56px;border-radius:12px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.12rem;font-size:.72rem;color:var(--text-muted);background:rgba(255,255,255,.02);cursor:default;transition:transform .15s}
+.cal-day:hover:not(.empty){transform:scale(1.04)}
+.cal-day .d{font-weight:600;font-size:.78rem;color:var(--text)}
+.cal-day .p{font-weight:700;font-size:.68rem}
+.cal-day.empty{background:transparent;border-color:transparent}
+.cal-day.none{opacity:.5}
 .cal-day.u3{background:rgba(45,212,191,.08);border-color:rgba(45,212,191,.2)}.cal-day.u3 .p{color:#5eead4}
 .cal-day.m38{background:rgba(45,212,191,.14);border-color:rgba(45,212,191,.28)}.cal-day.m38 .p{color:var(--cyan)}
 .cal-day.m815{background:rgba(45,212,191,.22);border-color:rgba(45,212,191,.35)}.cal-day.m815 .p{color:#2dd4bf}
 .cal-day.above{background:rgba(16,185,129,.28);border-color:rgba(16,185,129,.45)}.cal-day.above .p{color:#34d399}
 .cal-day.loss{background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.3)}.cal-day.loss .p{color:var(--red)}
+.cal-day.today{outline:2px solid var(--cyan);outline-offset:1px}
 .cal-legend{display:flex;flex-wrap:wrap;gap:.65rem 1.1rem;margin-top:1rem;font-size:.72rem;color:var(--text-muted)}
 .cal-legend span{display:inline-flex;align-items:center;gap:.35rem}
 .cal-legend i{width:12px;height:12px;border-radius:4px;display:inline-block;border:1px solid var(--border)}
@@ -82,13 +93,15 @@
 .cal-legend .m815{background:rgba(45,212,191,.22)}.cal-legend .above{background:rgba(16,185,129,.28)}
 .cal-legend .loss{background:rgba(248,113,113,.12)}.cal-legend .none{background:transparent}
 .cal-foot{margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text-dim);line-height:1.5}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 </style>
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
 <script src="js/auth.js?v=20261116d"></script>
 <script src="js/app.js?v=20261116d"></script>
-<script src="js/mt5-api.js?v=20261117"></script>
+<script src="js/mt5-api.js?v=20261117b"></script>
 <script>
 // Auto-login demo agar halaman Acc Performance tidak blank saat belum login
 if (typeof getUser === 'function' && !getUser()) {
@@ -99,6 +112,8 @@ if (typeof getUser === 'function' && !getUser()) {
 }
 if (renderShell('performance')) {
   var packageNames = { ACC01: 'Smart Basic', ACC02: 'Smart Gold', ACC03: 'Smart Pro' };
+  var calState = { year: new Date().getFullYear(), month: new Date().getMonth() + 1, account: 'ALL' };
+
   function renderAccount(a, index) {
     var cls = ['basic','gold','pro'][index] || 'basic';
     var online = a.status === 'ONLINE';
@@ -123,16 +138,157 @@ if (renderShell('performance')) {
       '<div class="acc-update">Sumber: data simulasi · bukan akun live<div class="progress-line"><i style="width:100%"></i></div></div>' +
     '</article>';
   }
+
+  function profitClass(p) {
+    if (p === null || p === undefined || !Number.isFinite(p)) return 'none';
+    if (p < 0) return 'loss';
+    if (p === 0) return 'none';
+    if (p < 300) return 'u3';
+    if (p < 800) return 'm38';
+    if (p < 1500) return 'm815';
+    return 'above';
+  }
+
+  function fmtShort(p) {
+    if (p === null || p === undefined || !Number.isFinite(p)) return '—';
+    if (Math.abs(p) >= 1000) return (p > 0 ? '+' : '') + (p / 1000).toFixed(1) + 'k';
+    return (p > 0 ? '+' : '') + Math.round(p);
+  }
+
+  function monthName(y, m) {
+    try {
+      return new Date(y, m - 1, 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+    } catch (e) {
+      return y + '-' + m;
+    }
+  }
+
+  function renderCalendar(history, year, month, accountFilter) {
+    var daysInMonth = new Date(year, month, 0).getDate();
+    var firstDow = new Date(year, month - 1, 1).getDay();
+    var startPad = (firstDow + 6) % 7;
+
+    var byDate = {};
+    history.forEach(function(h) {
+      if (accountFilter && accountFilter !== 'ALL' && h.account_id !== accountFilter) return;
+      if (!byDate[h.date]) byDate[h.date] = 0;
+      byDate[h.date] += h.profit;
+    });
+
+    var total = 0, winDays = 0, lossDays = 0, flatDays = 0, best = null, worst = null;
+    for (var d = 1; d <= daysInMonth; d++) {
+      var key = year + '-' + String(month).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+      var p = byDate[key];
+      if (p === undefined) continue;
+      total += p;
+      if (p > 0) winDays++;
+      else if (p < 0) lossDays++;
+      else flatDays++;
+      if (best === null || p > best) best = p;
+      if (worst === null || p < worst) worst = p;
+    }
+
+    var today = new Date();
+    var isCurrentMonth = today.getFullYear() === year && (today.getMonth() + 1) === month;
+    var todayDate = today.getDate();
+
+    var html = '';
+    html += '<div class="mp-stats">';
+    html += '<div class="mp-stat"><div class="ml">Total Profit Bulan</div><div class="mv ' + (total >= 0 ? 'up' : 'down') + '">' + SmartAIMT5.formatUSD(total) + '</div></div>';
+    html += '<div class="mp-stat"><div class="ml">Hari Profit</div><div class="mv up">' + winDays + '</div><div class="ms">hari hijau</div></div>';
+    html += '<div class="mp-stat"><div class="ml">Hari Loss</div><div class="mv down">' + lossDays + '</div><div class="ms">hari merah</div></div>';
+    html += '<div class="mp-stat"><div class="ml">Best / Worst</div><div class="mv">' + fmtShort(best) + ' / ' + fmtShort(worst) + '</div></div>';
+    html += '</div>';
+
+    html += '<div class="cal-head">';
+    html += '<div class="cal-title">' + monthName(year, month) + '</div>';
+    html += '<div class="cal-nav">';
+    html += '<button type="button" id="cal-prev" title="Bulan sebelumnya">‹</button>';
+    html += '<button type="button" id="cal-next" title="Bulan berikutnya">›</button>';
+    html += '</div></div>';
+
+    html += '<div class="cal-grid">';
+    ['Sen','Sel','Rab','Kam','Jum','Sab','Min'].forEach(function(dow) {
+      html += '<div class="cal-dow">' + dow + '</div>';
+    });
+    for (var i = 0; i < startPad; i++) html += '<div class="cal-day empty"></div>';
+    for (var d = 1; d <= daysInMonth; d++) {
+      var key = year + '-' + String(month).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+      var p = byDate[key];
+      var cls = profitClass(p);
+      if (isCurrentMonth && d === todayDate) cls += ' today';
+      html += '<div class="cal-day ' + cls + '" title="' + key + (p !== undefined ? ': ' + SmartAIMT5.formatUSD(p) : '') + '">';
+      html += '<span class="d">' + d + '</span>';
+      if (p !== undefined) html += '<span class="p">' + fmtShort(p) + '</span>';
+      html += '</div>';
+    }
+    html += '</div>';
+
+    html += '<div class="cal-legend">';
+    html += '<span><i class="loss"></i> Loss</span>';
+    html += '<span><i class="none"></i> Flat / 0</span>';
+    html += '<span><i class="u3"></i> < $300</span>';
+    html += '<span><i class="m38"></i> $300–800</span>';
+    html += '<span><i class="m815"></i> $800–1500</span>';
+    html += '<span><i class="above"></i> > $1500</span>';
+    html += '</div>';
+
+    html += '<div class="cal-foot">Kalender profit demo · data simulasi berdasarkan pola harian. Bukan hasil trading aktual. Klik ‹ › untuk ganti bulan. Filter akun di tab atas.</div>';
+    return html;
+  }
+
+  function buildTabs() {
+    var tabs = [
+      { id: 'ALL', label: 'Semua Akun' },
+      { id: 'ACC01', label: 'ACC01 Basic' },
+      { id: 'ACC02', label: 'ACC02 Gold' },
+      { id: 'ACC03', label: 'ACC03 Pro' }
+    ];
+    return '<div class="view-tabs" id="cal-tabs">' + tabs.map(function(t) {
+      return '<button type="button" data-acc="' + t.id + '" class="' + (calState.account === t.id ? 'active' : '') + '">' + t.label + '</button>';
+    }).join('') + '</div>';
+  }
+
   async function loadPerformance() {
     var root = document.getElementById('page-content');
     try {
       var accounts = await SmartAIMT5.getAccounts();
       accounts.sort(function(a,b){ return String(a.account_id).localeCompare(String(b.account_id)); });
+
+      var history = SmartAIMT5.getDailyHistory(calState.year, calState.month, calState.account === 'ALL' ? null : calState.account);
+
       root.innerHTML =
         '<div class="live-head"><h2>Account Performance</h2><p>Mode demo · Data simulasi untuk pratinjau tampilan akun MT5. Bukan data trading aktual.</p></div>' +
         '<div class="acc-grid">' + accounts.map(renderAccount).join('') + '</div>' +
-        '<div class="master-perf"><div class="master-perf-head"><div><h3>Demo Account Preview</h3><div class="base">Contoh struktur data akun MT5 · belum terhubung ke server live</div></div><span class="mt5-badge">DEMO MODE</span></div>' +
-        '<div class="cal-foot">Status ONLINE mengikuti pembaruan EA. Akun tanpa data akan tampil WAITING; data yang melewati batas waktu server akan tampil OFFLINE. Nilai performa berasal dari payload EA, bukan angka contoh.</div></div>';
+        '<div class="master-perf">' +
+          '<div class="master-perf-head">' +
+            '<div><h3>Profit Calendar</h3><div class="base">Kalender profit harian · filter per akun · navigasi bulan</div></div>' +
+            buildTabs() +
+          '</div>' +
+          '<div id="cal-body">' + renderCalendar(history, calState.year, calState.month, calState.account) + '</div>' +
+        '</div>';
+
+      var prev = document.getElementById('cal-prev');
+      var next = document.getElementById('cal-next');
+      if (prev) prev.addEventListener('click', function() {
+        calState.month--;
+        if (calState.month < 1) { calState.month = 12; calState.year--; }
+        loadPerformance();
+      });
+      if (next) next.addEventListener('click', function() {
+        calState.month++;
+        if (calState.month > 12) { calState.month = 1; calState.year++; }
+        loadPerformance();
+      });
+      var tabs = document.getElementById('cal-tabs');
+      if (tabs) {
+        tabs.querySelectorAll('button').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            calState.account = btn.getAttribute('data-acc');
+            loadPerformance();
+          });
+        });
+      }
     } catch (error) {
       root.innerHTML =
         '<div class="live-head"><h2>Live Performance</h2><p>Belum dapat mengambil data akun MT5.</p></div>' +
@@ -140,7 +296,6 @@ if (renderShell('performance')) {
     }
   }
   loadPerformance();
-  setInterval(loadPerformance, 30000);
 }
 </script>
 </body>
