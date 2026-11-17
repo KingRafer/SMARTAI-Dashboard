@@ -101,7 +101,7 @@
 <body>
 <script src="js/auth.js?v=20261116d"></script>
 <script src="js/app.js?v=20261116d"></script>
-<script src="js/mt5-api.js?v=20261117b"></script>
+<script src="js/mt5-api.js?v=20261117live"></script>
 <script>
 // Auto-login demo agar halaman Acc Performance tidak blank saat belum login
 if (typeof getUser === 'function' && !getUser()) {
@@ -117,14 +117,14 @@ if (renderShell('performance')) {
   function renderAccount(a, index) {
     var cls = ['basic','gold','pro'][index] || 'basic';
     var online = a.status === 'ONLINE';
-    var statusLabel = a.status === 'DEMO' ? 'DEMO' : (online ? 'ONLINE' : (a.status === 'OFFLINE' ? 'OFFLINE' : 'WAITING'));
+    var statusLabel = a.status === 'DEMO' ? 'DEMO' : (a.status === 'ONLINE' || online ? 'ONLINE' : (a.status === 'OFFLINE' ? 'OFFLINE' : (a.status || 'WAITING')));
     var equity = Number(a.equity);
     var daily = Number(a.daily_profit);
     var dailyReturn = a.equity !== null && a.equity !== undefined && a.daily_profit !== null && a.daily_profit !== undefined && Number.isFinite(equity) && equity > 0 && Number.isFinite(daily) ? (daily / equity * 100) : null;
     var returnText = dailyReturn === null ? '—' : ((dailyReturn > 0 ? '+' : '') + dailyReturn.toFixed(2) + '%');
     var stamp = a.updated_at ? SmartAIMT5.escape(a.updated_at) : 'Belum ada pembaruan';
     return '<article class="acc-card ' + cls + '">' +
-      '<div class="acc-top"><span class="acc-pkg ' + cls + '">' + (packageNames[a.account_id] || 'MT5 Account') + '</span><span class="mt5-badge">' + statusLabel + '</span></div>' +
+      '<div class="acc-top"><span class="acc-pkg ' + cls + '">' + (packageNames[a.account_id] || a.name || 'MT5 Account') + '</span><span class="mt5-badge">' + statusLabel + '</span></div>' +
       '<div class="acc-id">' + SmartAIMT5.escape(a.account_id) + ' <span class="' + (online ? 'online' : 'muted') + '">' + statusLabel + '</span></div>' +
       '<div class="acc-metrics">' +
         '<div class="acc-metric"><div class="ml">Balance</div><div class="mv">' + SmartAIMT5.formatUSD(a.balance) + '</div></div>' +
@@ -135,7 +135,7 @@ if (renderShell('performance')) {
       '<div class="daily-box"><div class="db-label">Daily Profit</div><div class="db-val">' + SmartAIMT5.formatUSD(a.daily_profit) + '</div><div class="db-sub">Daily Return: ' + returnText + '</div></div>' +
       '<div class="acc-foot"><div class="ring-wrap"><svg viewBox="0 0 72 72"><circle class="track" cx="36" cy="36" r="30"/><circle class="bar" cx="36" cy="36" r="30" stroke-dasharray="188.5" stroke-dashoffset="' + (dailyReturn === null ? '188.5' : (188.5 * (1 - Math.min(Math.abs(dailyReturn),5)/5)).toFixed(1)) + '"/></svg><div class="ring-pct">' + returnText + '</div></div>' +
       '<div class="ring-detail">Total Penarikan: <strong>' + SmartAIMT5.formatUSD(a.total_penarikan) + '</strong><br/>Daily Drawdown (nilai EA): <strong>' + SmartAIMT5.formatNumber(a.daily_dd, 2) + '</strong><br/>Data diperbarui: <strong>' + stamp + '</strong></div></div>' +
-      '<div class="acc-update">Sumber: data simulasi · bukan akun live<div class="progress-line"><i style="width:100%"></i></div></div>' +
+      '<div class="acc-update">' + (SmartAIMT5.isLive && SmartAIMT5.isLive() ? 'Sumber: API live SmartInvestama' : 'Sumber: data simulasi · bukan akun live') + '<div class="progress-line"><i style="width:100%"></i></div></div>' +
     '</article>';
   }
 
@@ -233,7 +233,7 @@ if (renderShell('performance')) {
     html += '<span><i class="above"></i> > $1500</span>';
     html += '</div>';
 
-    html += '<div class="cal-foot">Kalender profit demo · data simulasi berdasarkan pola harian. Bukan hasil trading aktual. Klik ‹ › untuk ganti bulan. Filter akun di tab atas.</div>';
+    html += '<div class="cal-foot">' + (SmartAIMT5.isLive && SmartAIMT5.isLive() ? 'Kalender profit dari perubahan equity harian (API history live).' : 'Kalender profit demo · data simulasi.') + ' Klik ‹ › untuk ganti bulan. Filter akun di tab atas.</div>';
     return html;
   }
 
@@ -255,14 +255,14 @@ if (renderShell('performance')) {
       var accounts = await SmartAIMT5.getAccounts();
       accounts.sort(function(a,b){ return String(a.account_id).localeCompare(String(b.account_id)); });
 
-      var history = SmartAIMT5.getDailyHistory(calState.year, calState.month, calState.account === 'ALL' ? null : calState.account);
+      var history = await SmartAIMT5.getDailyHistory(calState.year, calState.month, calState.account === 'ALL' ? null : calState.account);
 
       root.innerHTML =
-        '<div class="live-head"><h2>Account Performance</h2><p>Mode demo · Data simulasi untuk pratinjau tampilan akun MT5. Bukan data trading aktual.</p></div>' +
+        '<div class="live-head"><h2>Account Performance</h2><p>' + (SmartAIMT5.isLive && SmartAIMT5.isLive() ? 'Mode <strong style="color:var(--green)">LIVE</strong> · Data real-time dari API SmartInvestama. Terakhir diperbarui otomatis.' : 'Mode demo · Data simulasi (API live belum terjangkau).') + '</p></div>' +
         '<div class="acc-grid">' + accounts.map(renderAccount).join('') + '</div>' +
         '<div class="master-perf">' +
           '<div class="master-perf-head">' +
-            '<div><h3>Profit Calendar</h3><div class="base">Kalender profit harian · filter per akun · navigasi bulan</div></div>' +
+            '<div><h3>Profit Calendar</h3><div class="base">' + (SmartAIMT5.isLive && SmartAIMT5.isLive() ? 'Data live · filter per akun · navigasi bulan' : 'Demo · filter per akun · navigasi bulan') + '</div></div>' +
             buildTabs() +
           '</div>' +
           '<div id="cal-body">' + renderCalendar(history, calState.year, calState.month, calState.account) + '</div>' +
@@ -292,10 +292,11 @@ if (renderShell('performance')) {
     } catch (error) {
       root.innerHTML =
         '<div class="live-head"><h2>Live Performance</h2><p>Belum dapat mengambil data akun MT5.</p></div>' +
-        '<div class="master-perf"><h3>API belum terhubung</h3><p class="base">Pastikan file PHP sudah diunggah ke hosting smartinvestama.com dan endpoint dapat diakses melalui HTTPS.</p><p class="cal-foot">' + SmartAIMT5.escape(error.message) + '</p></div>';
+        '<div class="master-perf"><h3>API belum terhubung</h3><p class="base">Pastikan koneksi internet aktif dan API SmartInvestama dapat diakses.</p><p class="cal-foot">' + SmartAIMT5.escape(error.message) + '</p></div>';
     }
   }
   loadPerformance();
+  setInterval(function(){ loadPerformance(); }, 30000);
 }
 </script>
 </body>
