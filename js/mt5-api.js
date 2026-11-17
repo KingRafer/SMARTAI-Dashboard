@@ -1,11 +1,16 @@
-/* SMARTAI MT5-shaped demo data. Clearly simulated; no live account connection. */
+/* SMARTAI MT5 API — live + demo fallback */
 (function (w) {
   'use strict';
+
+  var LIVE_BASE = 'https://script.google.com/macros/s/AKfycbw8AEMeie38BBxW3S-22bf0WrI_7vGHPkpANGEsoQiTv7Jg86X8rrTEQ3AtDyzQol5D_Q/exec';
+  // Optional: set window.SMARTAI_API_PROXY = 'https://your-domain.com/api' to use PHP proxy instead
   var demoAccounts = [
-    { account_id:'ACC01', status:'DEMO', balance:89795.21, equity:90786.35, deposit_awal:10000.00, daily_profit:991.14, total_profit:80795.21, daily_dd:1.2, total_penarikan:73862.00, updated_at:'DEMO DATA · illustrative sample' },
-    { account_id:'ACC02', status:'DEMO', balance:106455.80, equity:106793.83, deposit_awal:10000.00, daily_profit:338.03, total_profit:96455.80, daily_dd:0.8, total_penarikan:28000.00, updated_at:'DEMO DATA · illustrative sample' },
-    { account_id:'ACC03', status:'DEMO', balance:645950.70, equity:656274.00, deposit_awal:60000.00, daily_profit:10323.30, total_profit:585950.70, daily_dd:2.1, total_penarikan:5540000.00, updated_at:'DEMO DATA · illustrative sample' }
+    { account_id:'ACC01', status:'DEMO', balance:89795.21, equity:90786.35, deposit_awal:10000.00, daily_profit:991.14, total_profit:80795.21, daily_dd:1.2, total_penarikan:73862.00, updated_at:'DEMO DATA · illustrative sample', name:'Smart Basic' },
+    { account_id:'ACC02', status:'DEMO', balance:106455.80, equity:106793.83, deposit_awal:10000.00, daily_profit:338.03, total_profit:96455.80, daily_dd:0.8, total_penarikan:28000.00, updated_at:'DEMO DATA · illustrative sample', name:'Smart Gold' },
+    { account_id:'ACC03', status:'DEMO', balance:645950.70, equity:656274.00, deposit_awal:60000.00, daily_profit:10323.30, total_profit:585950.70, daily_dd:2.1, total_penarikan:5540000.00, updated_at:'DEMO DATA · illustrative sample', name:'Smart Pro' }
   ];
+
+  var cache = { accounts: null, history: null, isLive: false, fetchedAt: null, error: null };
 
   function formatUSD(value) {
     if (value === null || value === undefined || value === '' || !Number.isFinite(Number(value))) return '—';
@@ -17,74 +22,184 @@
   }
   function escape(value) {
     return String(value == null ? '' : value).replace(/[&<>"']/g, function(c) {
-      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+      return ({'&':'&','<':'<','>':'>','"':'"',"'":'&#39;'})[c];
     });
   }
 
-  // Deterministic pseudo-random based on seed (account + date)
+  function apiUrl(action, extra) {
+    var proxy = (typeof w.SMARTAI_API_PROXY === 'string' && w.SMARTAI_API_PROXY) ? w.SMARTAI_API_PROXY.replace(/\/$/, '') : null;
+    if (proxy) {
+      if (action === 'live') return proxy + '/live.php';
+      if (action === 'history') return proxy + '/history.php' + (extra || '');
+    }
+    var q = '?action=' + encodeURIComponent(action);
+    if (extra) q += extra.replace(/^\?/, '&');
+    return LIVE_BASE + q;
+  }
+
+  function num(v) {
+    if (v === null || v === undefined || v === '' || !isFinite(Number(v))) return null;
+    return Number(v);
+  }
+
+  function normalizeAccount(a) {
+    if (!a || typeof a !== 'object') return null;
+    var id = String(a.account_id || a.id || '');
+    if (!id) return null;
+    return {
+      account_id: id,
+      name: a.name || null,
+      broker: a.broker || null,
+      status: a.status || 'WAITING',
+      balance: num(a.balance),
+      equity: num(a.equity),
+      deposit_awal: num(a.deposit_awal),
+      daily_profit: num(a.daily_profit),
+      total_profit: num(a.total_profit),
+      daily_dd: num(a.daily_dd),
+      total_dd: num(a.total_dd),
+      total_penarikan: num(a.total_penarikan != null ? a.total_penarikan : a.total_withdrawal),
+      updated_at: a.updated_at || null
+    };
+  }
+
+  async function fetchJson(url) {
+    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function(){ try { ctrl.abort(); } catch(e){} }, 18000) : null;
+    try {
+      var res = await fetch(url, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-store',
+        signal: ctrl ? ctrl.signal : undefined,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      return data;
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }
+
+  async function getAccounts(force) {
+    if (!force && cache.accounts && cache.fetchedAt && (Date.now() - cache.fetchedAt < 25000)) {
+      return cache.accounts.map(function(a){ return Object.assign({}, a); });
+    }
+    try {
+      var data = await fetchJson(apiUrl('live'));
+      if (!data || !data.ok || !Array.isArray(data.accounts)) throw new Error('Invalid live response');
+      var list = data.accounts.map(normalizeAccount).filter(Boolean);
+      if (!list.length) throw new Error('No accounts in live response');
+      cache.accounts = list;
+      cache.isLive = true;
+      cache.fetchedAt = Date.now();
+      cache.error = null;
+      return list.map(function(a){ return Object.assign({}, a); });
+    } catch (err) {
+      cache.error = err && err.message ? err.message : String(err);
+      cache.isLive = false;
+      if (cache.accounts) return cache.accounts.map(function(a){ return Object.assign({}, a); });
+      return demoAccounts.map(function(a){ return Object.assign({}, a); });
+    }
+  }
+
+  function equityHistoryToDailyProfit(historyRows) {
+    var byAcc = {};
+    (historyRows || []).forEach(function(h) {
+      if (!h || !h.account_id || h.equity == null) return;
+      var ts = String(h.timestamp || '');
+      var day = ts.slice(0, 10);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return;
+      var eq = Number(h.equity);
+      if (!Number.isFinite(eq)) return;
+      if (!byAcc[h.account_id]) byAcc[h.account_id] = {};
+      byAcc[h.account_id][day] = eq;
+    });
+
+    var out = [];
+    Object.keys(byAcc).forEach(function(accId) {
+      var days = Object.keys(byAcc[accId]).sort();
+      var prev = null;
+      days.forEach(function(day) {
+        var eq = byAcc[accId][day];
+        var profit = prev === null ? 0 : Math.round((eq - prev) * 100) / 100;
+        out.push({ date: day, profit: profit, account_id: accId, equity: eq });
+        prev = eq;
+      });
+    });
+    return out;
+  }
+
+  async function getDailyHistory(year, month, accountId) {
+    var needDays = 45;
+    try {
+      if (!cache.history || !cache.historyFetchedAt || (Date.now() - cache.historyFetchedAt > 60000)) {
+        var data = await fetchJson(apiUrl('history', '?days=' + needDays));
+        if (!data || !data.ok || !Array.isArray(data.history)) throw new Error('Invalid history');
+        cache.history = equityHistoryToDailyProfit(data.history);
+        cache.historyFetchedAt = Date.now();
+        cache.isLive = true;
+      }
+      var y = year, m = month;
+      var prefix = y + '-' + String(m).padStart(2, '0');
+      return cache.history.filter(function(r) {
+        if (accountId && r.account_id !== accountId) return false;
+        return r.date.indexOf(prefix) === 0;
+      }).map(function(r){ return Object.assign({}, r); });
+    } catch (err) {
+      return generateDemoHistory(year, month, accountId);
+    }
+  }
+
   function seededRand(seed) {
     var x = Math.sin(seed) * 10000;
     return x - Math.floor(x);
   }
 
-  /**
-   * Generate demo daily profit history for a given year-month.
-   * Returns array of { date: 'YYYY-MM-DD', profit: number, account_id: string }
-   */
-  function getDailyHistory(year, month, accountId) {
+  function generateDemoHistory(year, month, accountId) {
     var results = [];
     var daysInMonth = new Date(year, month, 0).getDate();
     var accounts = accountId
       ? demoAccounts.filter(function(a) { return a.account_id === accountId; })
       : demoAccounts;
-
     accounts.forEach(function(acc) {
       var base = Number(acc.daily_profit) || 200;
       for (var d = 1; d <= daysInMonth; d++) {
         var dateStr = year + '-' + String(month).padStart(2, '0') + '-' + String(d).padStart(2, '0');
         var seed = year * 10000 + month * 100 + d + (acc.account_id.charCodeAt(4) || 1) * 17;
         var r = seededRand(seed);
-        var weekday = new Date(year, month - 1, d).getDay(); // 0=Sun
-
-        // Weekend: often flat / small
+        var weekday = new Date(year, month - 1, d).getDay();
         var profit;
         if (weekday === 0 || weekday === 6) {
           profit = r < 0.75 ? 0 : (r < 0.9 ? base * 0.15 * (r - 0.5) : base * 0.4 * (r - 0.5));
         } else {
-          // Weekday: mostly positive with occasional loss
-          if (r < 0.12) {
-            profit = -(base * (0.3 + r * 1.5)); // loss day
-          } else if (r < 0.25) {
-            profit = base * (0.1 + r * 0.4); // small
-          } else if (r < 0.7) {
-            profit = base * (0.6 + r * 0.8); // normal
-          } else if (r < 0.9) {
-            profit = base * (1.2 + r * 0.9); // strong
-          } else {
-            profit = base * (1.8 + r * 1.5); // big day
-          }
+          if (r < 0.12) profit = -(base * (0.3 + r * 1.5));
+          else if (r < 0.25) profit = base * (0.1 + r * 0.4);
+          else if (r < 0.7) profit = base * (0.6 + r * 0.8);
+          else if (r < 0.9) profit = base * (1.2 + r * 0.9);
+          else profit = base * (1.8 + r * 1.5);
         }
-        profit = Math.round(profit * 100) / 100;
-        results.push({
-          date: dateStr,
-          profit: profit,
-          account_id: acc.account_id
-        });
+        results.push({ date: dateStr, profit: Math.round(profit * 100) / 100, account_id: acc.account_id });
       }
     });
     return results;
   }
 
-  async function getAccounts() {
-    return demoAccounts.map(function(account){ return Object.assign({}, account); });
-  }
+  function isLive() { return !!cache.isLive; }
+  function lastError() { return cache.error; }
+  function lastFetchedAt() { return cache.fetchedAt; }
 
   w.SmartAIMT5 = {
-    base: 'DEMO MODE',
+    base: 'LIVE',
     getAccounts: getAccounts,
     getDailyHistory: getDailyHistory,
     formatUSD: formatUSD,
     formatNumber: formatNumber,
-    escape: escape
+    escape: escape,
+    isLive: isLive,
+    lastError: lastError,
+    lastFetchedAt: lastFetchedAt
   };
 })(window);
