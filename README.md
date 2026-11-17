@@ -1,30 +1,26 @@
 # SMARTAI Dashboard
 
-Portal Smart AI — landing page marketing + member dashboard (demo UI).
+Portal member Smart AI — **sign in + dashboard** (prototype UI).
 
-## Struktur
+## Akses
 
-### Marketing / Landing
-- `index.html` — Beranda
-- `performance.html` — EA Performance
-- `kelebihan.html` — Kelebihan
-- `produk.html` — Produk
-- `video.html` — Video
-- `testimoni.html` — Testimoni
-- `faq.html` — FAQ
-- `our-story.html` — About Us
-- `daftar.html` — Registrasi
-- `login.html` — Login
+- **Sign in:** buka `index.html`
+- **Demo account**
+  - Email: `demo@smartai.id`
+  - Password: `demo123`
+  - Atau klik tombol **Isi akun demo**
 
-### Member Dashboard (demo)
-- `dashboard.html`, `clients.html`, `commission.html`, `referral.html`, `transactions.html`, `profile.html`, `support.html`, `trading-report.html`, `risk-notice.html`
+Setelah login → `dashboard.html`
 
-### Assets
-- `css/` — site.css (landing), app.css (dashboard), page-specific CSS
-- `js/` — site.js, animations.js, app.js, auth.js, dll
+## Halaman member
+
+- `dashboard.html` — ringkasan
+- `clients.html`, `commission.html`, `referral.html`, `transactions.html`
+- `profile.html`, `support.html`, `trading-report.html`, `performance.html`
+- `risk-notice.html`
 
 ## Catatan
 
-Ini adalah **prototype frontend statis**. Data login, dashboard, angka, dan grafik bersifat contoh (localStorage / mock). Tidak ada backend, broker, atau pemrosesan uang nyata.
+Prototype frontend statis. Auth & data memakai `localStorage` / mock. Bukan sistem produksi.
 
-**Preview:** buka `index.html` secara lokal atau deploy ke GitHub Pages / Vercel.
+Halaman marketing (landing, FAQ, dll.) masih ada di repo tetapi **bukan entry point**. Entry = sign in.
