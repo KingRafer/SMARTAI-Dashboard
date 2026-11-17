@@ -8,39 +8,44 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css?v=20261116f">
 <style>
-.pyramid-wrap{background:linear-gradient(180deg,rgba(45,212,191,.04),transparent 35%),var(--input-bg);border:1px solid var(--border);border-radius:18px;padding:0;position:relative;overflow:hidden}
-.tree-toolbar{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;padding:.75rem 1rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15)}
-[data-theme=light] .tree-toolbar{background:rgba(15,23,42,.03)}
-.tree-toolbar .hint{font-size:.75rem;color:var(--text-dim)}
-.zoom-btns{display:flex;align-items:center;gap:.4rem}
-.zoom-btns button{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card-solid);color:var(--text);font-size:1.1rem;font-weight:700;cursor:pointer;font-family:inherit;line-height:1}
-.zoom-btns button:hover{border-color:var(--cyan);color:var(--cyan)}
-.zoom-btns .z-label{font-size:.78rem;color:var(--text-muted);min-width:48px;text-align:center;font-weight:600}
-.tree-viewport{overflow:auto;max-height:min(70vh,640px);cursor:grab;padding:1rem .75rem 1.25rem;-webkit-overflow-scrolling:touch}
-.tree-viewport.dragging{cursor:grabbing}
-.tree-stage{transform-origin:top left;transition:transform .15s ease;width:max-content;min-width:100%}
-.pyramid-svg{display:block;height:auto}
-.pyramid-svg .edge{stroke:#64748b;stroke-width:2.2;stroke-linecap:square;stroke-linejoin:miter;fill:none;opacity:.7}
-[data-theme=light] .pyramid-svg .edge{stroke:#64748b;opacity:.5}
-.pyramid-svg .node-ring{fill:none;stroke:rgba(255,255,255,.1);stroke-width:1.5}
-.pyramid-svg .node-group{cursor:default}
-.pyramid-svg text{font-family:Inter,system-ui,sans-serif;text-anchor:middle}
-.pyramid-svg .lbl{fill:#94a3b8;font-size:9px;font-weight:600;dominant-baseline:hanging}
-.pyramid-svg .lbl-root{fill:#2dd4bf;font-size:11px;font-weight:700;dominant-baseline:hanging}
-.pyramid-svg .lvl-tag{fill:#64748b;font-size:10px;font-weight:700;text-anchor:start}
-.pyramid-svg .av-text{fill:#042f2e;font-size:11px;font-weight:700;dominant-baseline:central}
-.pyramid-svg .av-text.light{fill:#fff}.pyramid-svg .av-text.sm{font-size:9px}.pyramid-svg .av-text.empty{fill:#64748b;font-size:12px;font-weight:500}
-.tree-note{text-align:center;font-size:.78rem;color:var(--text-dim);margin-top:.65rem;padding:0 1rem 1rem}
-.tree-legend{display:flex;flex-wrap:wrap;gap:.6rem 1.1rem;justify-content:center;padding:.75rem 1rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--text-muted)}
-.tree-legend span{display:flex;align-items:center;gap:.35rem}
-.tree-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
-.tree-legend i.l0{background:linear-gradient(135deg,#2dd4bf,#0d9488)}
-.tree-legend i.l1{background:linear-gradient(135deg,#5eead4,#14b8a6)}
-.tree-legend i.l2{background:linear-gradient(135deg,#c4b5fd,#7c3aed)}
-.tree-legend i.l3{background:linear-gradient(135deg,#fcd34d,#d97706)}
-.tree-legend i.l4{background:linear-gradient(135deg,#60a5fa,#2563eb)}
-.tree-legend i.l5{background:linear-gradient(135deg,#fb7185,#e11d48)}
-.tree-legend i.empty{border:1.5px dashed #64748b;background:transparent;box-sizing:border-box}
+.ref-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1.25rem}
+@media(max-width:960px){.ref-grid{grid-template-columns:1fr}}
+.rule-card{background:var(--bg-card-solid);border:1px solid var(--border);border-radius:16px;padding:1.2rem 1.3rem}
+.rule-card h3{font-size:1rem;font-weight:800;margin-bottom:.35rem}
+.rule-card p.sub{font-size:.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.45}
+.level-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.level-table th,.level-table td{padding:.55rem .4rem;text-align:left;border-bottom:1px solid var(--border)}
+.level-table th{font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-dim);font-weight:700}
+.level-table td strong{color:var(--cyan);font-weight:800}
+.level-pill{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:22px;padding:0 .45rem;border-radius:999px;font-size:.68rem;font-weight:800;background:rgba(45,212,191,.12);color:var(--cyan)}
+.flow-box{margin-top:1rem;padding:.9rem 1rem;border-radius:12px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.18);font-size:.8rem;color:var(--text-muted);line-height:1.55}
+.flow-box strong{color:var(--text)}
+.calc-box{background:var(--bg-card-solid);border:1px solid var(--border);border-radius:16px;padding:1.2rem 1.3rem}
+.calc-box label{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-dim);margin-bottom:.35rem}
+.calc-box input,.calc-box select{width:100%;padding:.65rem .75rem;border-radius:10px;border:1px solid var(--border);background:var(--input-bg,rgba(0,0,0,.25));color:var(--text);font-family:inherit;font-size:.9rem;margin-bottom:.85rem}
+.calc-result{margin-top:.5rem}
+.calc-row{display:flex;justify-content:space-between;align-items:center;padding:.45rem 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.calc-row:last-child{border-bottom:none;font-weight:800;padding-top:.7rem}
+.calc-row .amt{color:var(--cyan);font-weight:700}
+.calc-row.total .amt{color:var(--green);font-size:1.05rem}
+.network-list{margin-top:1.25rem}
+.member-row{display:grid;grid-template-columns:40px 1fr auto auto;gap:.75rem;align-items:center;padding:.75rem .9rem;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.02);margin-bottom:.55rem}
+.member-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;background:rgba(45,212,191,.15);color:var(--cyan)}
+.member-av.l2{background:rgba(251,191,36,.15);color:var(--gold)}
+.member-av.l3{background:rgba(167,139,250,.15);color:var(--purple)}
+.member-av.l4{background:rgba(248,113,113,.12);color:#fb7185}
+.member-av.l5{background:rgba(148,163,184,.15);color:#94a3b8}
+.member-name{font-weight:700;font-size:.88rem}
+.member-meta{font-size:.72rem;color:var(--text-muted)}
+.member-lots{font-size:.8rem;color:var(--text-muted);text-align:right}
+.member-earn{font-weight:800;color:var(--green);font-size:.9rem;text-align:right}
+.ref-code-box{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:.75rem}
+.ref-code-box code{font-family:ui-monospace,monospace;font-weight:700;color:var(--cyan);padding:.4rem .7rem;border-radius:8px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.2);font-size:.85rem}
+.btn-copy{border:1px solid var(--border);background:transparent;color:var(--text);padding:.4rem .75rem;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-copy:hover{border-color:var(--cyan);color:var(--cyan)}
+.example-steps{margin:0;padding-left:1.1rem;font-size:.8rem;color:var(--text-muted);line-height:1.55}
+.example-steps li{margin-bottom:.35rem}
+.example-steps strong{color:var(--text)}
 </style>
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
@@ -50,111 +55,179 @@
 <script>
 const user = renderShell('referral');
 if (user) {
-  const me = escapeHtml(user.nama || 'You');
-  const shortMe = me.length > 10 ? me.slice(0, 9) + '…' : me;
-  const ini = initials(user.nama || 'You');
-  const refCode = (user.referral && user.referral.trim()) ? user.referral.trim().toUpperCase() : 'SMARTAI-REF';
-  const refLink = location.origin + location.pathname.replace(/[^/]+$/, '') + 'register.html?ref=' + encodeURIComponent(refCode);
-  function slot(av, label, full, empty) { return { av: av, label: label || '', full: full || label, empty: !!empty }; }
-  const roster = {
-    0: [slot(ini, shortMe, me + ' (Kamu)', false)],
-    1: [slot('FS','Fajar','Fajar S.'), slot('ML','Maya','Maya L.'), slot('RK','Rizky','Rizky K.'), slot('SW','Sari','Sari W.')],
-    2: [slot('TH','Tono','Tono H.'), slot('NA','Nina','Nina A.'), slot('DW','Dina','Dina W.'), slot('BP','Bima','Bima P.'), slot('YP','Yoga','Yoga P.'), slot('SA','Sinta','Sinta A.'), slot('EH','Eko','Eko H.'), slot('RM','Rina','Rina M.')],
-    3: [slot('AR','Andi','Andi R.'), slot('DK','Dedi','Dedi K.'), slot('FL','Fira','Fira L.'), slot('GH','Gilang','Gilang H.'), slot('IR','Indra','Indra R.'), slot('JN','Joko','Joko N.'), slot('KL','Kiki','Kiki L.'), slot('LN','Lina','Lina N.'), slot('+','','Slot kosong',true), slot('OP','Omar','Omar P.'), slot('+','','Slot kosong',true), slot('QR','Qori','Qori R.'), slot('ST','Susi','Susi T.'), slot('+','','Slot kosong',true), slot('UV','Umi','Umi V.'), slot('+','','Slot kosong',true)],
-    4: [slot('W1','Wati','Wati A.'), slot('X2','Xena','Xena B.'), slot('+','','Slot kosong',true), slot('Y3','Yudi','Yudi C.'), slot('Z4','Zaki','Zaki D.'), slot('+','','Slot kosong',true), slot('A5','Alya','Alya E.'), slot('B6','Bagus','Bagus F.'), slot('+','','Slot kosong',true), slot('C7','Cici','Cici G.'), slot('D8','Dika','Dika H.'), slot('+','','Slot kosong',true)],
-    5: [slot('L6','Lulu','Lulu P.'), slot('+','','Slot kosong',true), slot('M7','Mira','Mira Q.'), slot('N8','Nico','Nico R.'), slot('+','','Slot kosong',true), slot('O9','Oki','Oki S.'), slot('+','','Slot kosong',true), slot('P0','Putri','Putri T.'), slot('Q1','Rafi','Rafi U.'), slot('+','','Slot kosong',true)]
-  };
-  const MAX_LEVEL = 5;
-  const maxCount = Math.max.apply(null, [0,1,2,3,4,5].map(function (l) { return (roster[l] || []).length; }));
-  const colW = 56, leftPad = 52, W = leftPad + maxCount * colW + 40, rowH = 92, topPad = 40, H = topPad + (MAX_LEVEL + 1) * rowH + 30;
-  const radii = [24, 20, 18, 14, 12, 11];
-  const nodes = [];
-  for (let level = 0; level <= MAX_LEVEL; level++) {
-    const list = roster[level] || [];
-    const count = list.length, y = topPad + level * rowH, r = radii[level] || 11, span = W - leftPad - 30;
-    for (let i = 0; i < count; i++) {
-      const x = leftPad + ((i + 0.5) / count) * span, d = list[i];
-      nodes.push({ id: 'L' + level + '_' + i, level: level, i: i, x: x, y: y, r: r, av: d.av, label: d.label, full: d.full, empty: d.empty, parent: level === 0 ? null : 'L' + (level - 1) + '_' + Math.floor(i * (roster[level - 1].length) / count) });
-    }
+  var COMMISSION = { 1: 15, 2: 2, 3: 1, 4: 1, 5: 1 };
+  var MAX_LEVEL = 5;
+  var refCode = (user.referral && user.referral.trim()) ? user.referral.trim().toUpperCase() : 'SMARTAI-REF';
+  var refLink = location.origin + location.pathname.replace(/[^/]+$/, '') + 'register.html?ref=' + encodeURIComponent(refCode);
+
+  var network = [
+    { id: 'M2A', name: 'Fajar S.', level: 1, lots: 12, invitedBy: 'YOU' },
+    { id: 'M2B', name: 'Maya L.', level: 1, lots: 8, invitedBy: 'YOU' },
+    { id: 'M2C', name: 'Rizky K.', level: 1, lots: 5, invitedBy: 'YOU' },
+    { id: 'M3A', name: 'Tono H.', level: 2, lots: 6, invitedBy: 'M2A' },
+    { id: 'M3B', name: 'Nina A.', level: 2, lots: 4, invitedBy: 'M2A' },
+    { id: 'M3C', name: 'Dina W.', level: 2, lots: 3, invitedBy: 'M2B' },
+    { id: 'M4A', name: 'Andi R.', level: 3, lots: 5, invitedBy: 'M3A' },
+    { id: 'M4B', name: 'Fira L.', level: 3, lots: 2, invitedBy: 'M3B' },
+    { id: 'M5A', name: 'Wati A.', level: 4, lots: 3, invitedBy: 'M4A' },
+    { id: 'M6A', name: 'Lulu P.', level: 5, lots: 2, invitedBy: 'M5A' }
+  ];
+
+  function earnFromMember(level, lots) {
+    var rate = COMMISSION[level] || 0;
+    return rate * (Number(lots) || 0);
   }
-  const byId = Object.fromEntries(nodes.map(function (n) { return [n.id, n]; }));
-  const fills = ['url(#g0)','url(#g1)','url(#g2)','url(#g3)','url(#g4)','url(#g5)'];
-  const childrenOf = {};
-  nodes.forEach(function (n) { if (!n.parent) return; if (!childrenOf[n.parent]) childrenOf[n.parent] = []; childrenOf[n.parent].push(n); });
-  var edgeSvg = '';
-  Object.keys(childrenOf).forEach(function (pid) {
-    var parent = byId[pid], kids = childrenOf[pid];
-    if (!parent || !kids.length) return;
-    var py1 = parent.y + parent.r, midY = (parent.y + kids[0].y) / 2;
-    edgeSvg += '<path class="edge" d="M' + parent.x.toFixed(1) + ' ' + py1.toFixed(1) + ' V' + midY.toFixed(1) + '"/>';
-    if (kids.length === 1) {
-      var k = kids[0];
-      edgeSvg += '<path class="edge" d="M' + parent.x.toFixed(1) + ' ' + midY.toFixed(1) + ' H' + k.x.toFixed(1) + ' V' + (k.y - k.r).toFixed(1) + '"/>';
-    } else {
-      var minX = kids[0].x, maxX = kids[0].x;
-      kids.forEach(function (k) { if (k.x < minX) minX = k.x; if (k.x > maxX) maxX = k.x; });
-      edgeSvg += '<path class="edge" d="M' + minX.toFixed(1) + ' ' + midY.toFixed(1) + ' H' + maxX.toFixed(1) + '"/>';
-      kids.forEach(function (k) { edgeSvg += '<path class="edge" d="M' + k.x.toFixed(1) + ' ' + midY.toFixed(1) + ' V' + (k.y - k.r).toFixed(1) + '"/>'; });
-    }
-  });
-  const levelTags = [0,1,2,3,4,5].map(function (lv) { return '<text class="lvl-tag" x="8" y="' + (topPad + lv * rowH + 4) + '">L' + lv + '</text>'; }).join('');
-  const nodeSvg = nodes.map(function (n) {
-    if (n.empty) return '<g class="node-group" transform="translate(' + n.x + ',' + n.y + ')"><title>Kosong</title><circle r="' + n.r + '" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="3 2"/><text class="av-text empty" y="1">+</text></g>';
-    const fill = fills[n.level] || fills[5];
-    const avCls = (n.level === 2 || n.level >= 4) ? 'av-text light sm' : (n.level >= 3 ? 'av-text sm' : 'av-text');
-    const lblCls = n.level === 0 ? 'lbl-root' : 'lbl';
-    const showLbl = n.level <= 2;
-    return '<g class="node-group" transform="translate(' + n.x + ',' + n.y + ')"><title>' + escapeHtml(n.full) + '</title><circle r="' + n.r + '" fill="' + fill + '"/><circle class="node-ring" r="' + n.r + '"/><text class="' + avCls + '" y="1">' + escapeHtml(n.av) + '</text>' + (showLbl && n.label ? '<text class="' + lblCls + '" y="' + (n.r + 8) + '">' + escapeHtml(n.label) + '</text>' : '') + '</g>';
+  function totalYouEarn() {
+    return network.reduce(function(s, m) { return s + earnFromMember(m.level, m.lots); }, 0);
+  }
+  function levelStats() {
+    var out = {};
+    for (var L = 1; L <= MAX_LEVEL; L++) out[L] = { count: 0, lots: 0, earn: 0 };
+    network.forEach(function(m) {
+      if (!out[m.level]) return;
+      out[m.level].count++;
+      out[m.level].lots += m.lots;
+      out[m.level].earn += earnFromMember(m.level, m.lots);
+    });
+    return out;
+  }
+
+  var stats = levelStats();
+  var totalEarn = totalYouEarn();
+  var totalLots = network.reduce(function(s, m) { return s + m.lots; }, 0);
+  var totalMembers = network.length;
+
+  function fmt(n) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
+  }
+  function avClass(level) { return level === 1 ? '' : 'l' + level; }
+
+  var levelRows = '';
+  for (var L = 1; L <= MAX_LEVEL; L++) {
+    levelRows += '<tr><td><span class="level-pill">L' + L + '</span></td>' +
+      '<td>' + (L === 1 ? 'Direct (yang kamu ajak)' : 'Upline level ' + L) + '</td>' +
+      '<td><strong>$' + COMMISSION[L].toFixed(0) + '</strong> / lot</td>' +
+      '<td>' + (stats[L].count) + ' member</td>' +
+      '<td>' + fmt(stats[L].earn) + '</td></tr>';
+  }
+
+  var memberRows = network.map(function(m) {
+    var earn = earnFromMember(m.level, m.lots);
+    var ini = m.name.split(' ').map(function(p){ return p[0]; }).join('').slice(0, 2).toUpperCase();
+    return '<div class="member-row">' +
+      '<div class="member-av ' + avClass(m.level) + '">' + ini + '</div>' +
+      '<div><div class="member-name">' + escapeHtml(m.name) + '</div>' +
+      '<div class="member-meta">Level ' + m.level + ' · diajak oleh ' + escapeHtml(m.invitedBy === 'YOU' ? 'kamu' : m.invitedBy) + '</div></div>' +
+      '<div class="member-lots">' + m.lots + ' lot</div>' +
+      '<div class="member-earn">+' + fmt(earn) + '</div>' +
+    '</div>';
   }).join('');
-  const filledCount = nodes.filter(function (n) { return !n.empty; }).length;
+
   document.getElementById('page-content').innerHTML =
-    '<div class="stats-grid">' +
-      '<div class="stat-card"><div class="label">Nodes di pohon</div><div class="value">' + filledCount + '</div><div class="hint">Demo terisi</div></div>' +
-      '<div class="stat-card"><div class="label">Max depth</div><div class="value">5</div><div class="hint">Mentok level 5</div></div>' +
-      '<div class="stat-card"><div class="label">L1 Direct</div><div class="value">4</div><div class="hint">Direct members</div></div>' +
-      '<div class="stat-card"><div class="label">Posisi</div><div class="value">∞</div><div class="hint">Tak terbatas / level</div></div>' +
+    '<div class="page-header">' +
+      '<div><h1>Referral Network</h1>' +
+      '<p>Skema komisi multilevel sampai 5 level — bonus dihitung per lot transaksi downline.</p></div>' +
     '</div>' +
-    '<div class="panel"><div class="panel-head"><h2>Bagikan referral</h2><span class="sub">Salin kode / link</span></div>' +
-      '<div class="ref-share">' +
-        '<div class="ref-field"><div class="rf-label">Kode referral</div><div class="rf-row"><span class="rf-value code" id="ref-code">' + escapeHtml(refCode) + '</span><button type="button" class="btn-copy" id="copy-code">Salin kode</button></div></div>' +
-        '<div class="ref-field"><div class="rf-label">Link referral</div><div class="rf-row"><span class="rf-value" id="ref-link">' + escapeHtml(refLink) + '</span><button type="button" class="btn-copy" id="copy-link">Salin link</button></div></div>' +
-      '</div></div>' +
-    '<div class="panel"><div class="panel-head"><h2>Pohon Jaringan</h2><span class="sub">Scroll · drag · zoom</span></div>' +
-      '<div class="pyramid-wrap">' +
-        '<div class="tree-toolbar"><span class="hint">Scroll / seret · Zoom − / +</span><div class="zoom-btns"><button type="button" id="zoom-out">−</button><span class="z-label" id="zoom-label">100%</span><button type="button" id="zoom-in">+</button><button type="button" id="zoom-reset" style="width:auto;padding:0 .7rem;font-size:.75rem">Reset</button></div></div>' +
-        '<div class="tree-viewport" id="tree-viewport"><div class="tree-stage" id="tree-stage">' +
-          '<svg class="pyramid-svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' +
-            '<defs>' +
-              '<linearGradient id="g0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2dd4bf"/><stop offset="100%" stop-color="#0d9488"/></linearGradient>' +
-              '<linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#5eead4"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient>' +
-              '<linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c4b5fd"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>' +
-              '<linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fcd34d"/><stop offset="100%" stop-color="#d97706"/></linearGradient>' +
-              '<linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#93c5fd"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>' +
-              '<linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fda4af"/><stop offset="100%" stop-color="#e11d48"/></linearGradient>' +
-            '</defs>' + levelTags + edgeSvg + nodeSvg +
-          '</svg></div></div>' +
-        '<p class="tree-note">L0–L5 · geser & zoom jika tidak muat.</p>' +
-        '<div class="tree-legend"><span><i class="l0"></i> L0</span><span><i class="l1"></i> L1</span><span><i class="l2"></i> L2</span><span><i class="l3"></i> L3</span><span><i class="l4"></i> L4</span><span><i class="l5"></i> L5</span><span><i class="empty"></i> Kosong</span></div>' +
-      '</div></div>' +
-    '<div class="copy-toast" id="copy-toast">Disalin!</div>';
-  var scale = 1, stage = document.getElementById('tree-stage'), viewport = document.getElementById('tree-viewport'), label = document.getElementById('zoom-label');
-  function applyZoom() { stage.style.transform = 'scale(' + scale + ')'; stage.style.width = (W * scale) + 'px'; stage.style.height = (H * scale) + 'px'; label.textContent = Math.round(scale * 100) + '%'; }
-  document.getElementById('zoom-in').onclick = function () { scale = Math.min(1.8, Math.round((scale + 0.15) * 100) / 100); applyZoom(); };
-  document.getElementById('zoom-out').onclick = function () { scale = Math.max(0.35, Math.round((scale - 0.15) * 100) / 100); applyZoom(); };
-  document.getElementById('zoom-reset').onclick = function () { scale = 1; applyZoom(); viewport.scrollLeft = 0; viewport.scrollTop = 0; };
-  var dragging = false, sx = 0, sy = 0, sl = 0, st = 0;
-  viewport.addEventListener('mousedown', function (e) { if (e.button !== 0) return; dragging = true; viewport.classList.add('dragging'); sx = e.clientX; sy = e.clientY; sl = viewport.scrollLeft; st = viewport.scrollTop; });
-  window.addEventListener('mousemove', function (e) { if (!dragging) return; viewport.scrollLeft = sl - (e.clientX - sx); viewport.scrollTop = st - (e.clientY - sy); });
-  window.addEventListener('mouseup', function () { dragging = false; viewport.classList.remove('dragging'); });
-  function showToast(msg) { var t = document.getElementById('copy-toast'); t.textContent = msg; t.classList.add('show'); setTimeout(function () { t.classList.remove('show'); }, 1800); }
-  function copyText(text, btn) {
-    function ok() { btn.classList.add('copied'); var old = btn.textContent; btn.textContent = 'Tersalin ✓'; showToast('Berhasil disalin'); setTimeout(function () { btn.classList.remove('copied'); btn.textContent = old; }, 1600); }
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok).catch(function () { fallback(); });
-    else fallback();
-    function fallback() { var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch (e) {} document.body.removeChild(ta); }
+    '<div class="stats-grid">' +
+      '<div class="stat-card"><div class="label">Estimasi komisi (demo)</div><div class="value up">' + fmt(totalEarn) + '</div><div class="hint">Dari volume jaringan</div></div>' +
+      '<div class="stat-card"><div class="label">Member di network</div><div class="value">' + totalMembers + '</div><div class="hint">Level 1–5</div></div>' +
+      '<div class="stat-card"><div class="label">Total lot downline</div><div class="value">' + totalLots + '</div><div class="hint">Bulan ini · simulasi</div></div>' +
+      '<div class="stat-card"><div class="label">Direct (L1)</div><div class="value">' + stats[1].count + '</div><div class="hint">' + fmt(stats[1].earn) + ' dari L1</div></div>' +
+    '</div>' +
+    '<div class="ref-grid">' +
+      '<div class="rule-card">' +
+        '<h3>Aturan komisi per 1 lot</h3>' +
+        '<p class="sub">Setiap kali member di jaringanmu menutup transaksi <strong>1 lot</strong>, komisi mengalir ke upline sampai maksimal 5 level.</p>' +
+        '<table class="level-table">' +
+          '<thead><tr><th>Level</th><th>Posisi</th><th>Bonus</th><th>Di network</th><th>Estimasi</th></tr></thead>' +
+          '<tbody>' + levelRows + '</tbody>' +
+        '</table>' +
+        '<div class="flow-box">' +
+          '<strong>Contoh alur:</strong><br/>' +
+          'Member 1 (kamu) ajak Member 2 → Member 2 trade 1 lot → kamu dapat <strong>$15</strong>.<br/>' +
+          'Member 2 ajak Member 3 → Member 3 trade 1 lot → Member 2 dapat <strong>$15</strong>, kamu (L2) dapat <strong>$2</strong>.<br/>' +
+          'Member 3 ajak Member 4 → Member 4 trade 1 lot → Member 3 dapat $15, Member 2 dapat $2, kamu dapat <strong>$1</strong> (L3).<br/>' +
+          'Begitu seterusnya sampai level 5 ($1).' +
+        '</div>' +
+        '<div style="margin-top:1rem">' +
+          '<div style="font-size:.78rem;font-weight:700;margin-bottom:.4rem;color:var(--text-muted)">Kode referral kamu</div>' +
+          '<div class="ref-code-box">' +
+            '<code id="ref-code">' + escapeHtml(refCode) + '</code>' +
+            '<button type="button" class="btn-copy" id="copy-code">Salin kode</button>' +
+            '<button type="button" class="btn-copy" id="copy-link">Salin link daftar</button>' +
+          '</div>' +
+          '<div style="font-size:.72rem;color:var(--text-dim);margin-top:.5rem;word-break:break-all" id="ref-link">' + escapeHtml(refLink) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="calc-box">' +
+        '<h3 style="font-size:1rem;font-weight:800;margin-bottom:.35rem">Kalkulator komisi</h3>' +
+        '<p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Hitung berapa yang kamu terima jika downline di level tertentu trade N lot.</p>' +
+        '<label>Level downline relatif ke kamu</label>' +
+        '<select id="calc-level">' +
+          '<option value="1">Level 1 — direct ($15/lot)</option>' +
+          '<option value="2">Level 2 — ($2/lot)</option>' +
+          '<option value="3">Level 3 — ($1/lot)</option>' +
+          '<option value="4">Level 4 — ($1/lot)</option>' +
+          '<option value="5">Level 5 — ($1/lot)</option>' +
+        '</select>' +
+        '<label>Jumlah lot</label>' +
+        '<input type="number" id="calc-lots" min="0" step="0.01" value="1" />' +
+        '<div class="calc-result" id="calc-out"></div>' +
+        '<div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">' +
+          '<div style="font-size:.78rem;font-weight:700;margin-bottom:.5rem">Ilustrasi 3 langkah</div>' +
+          '<ol class="example-steps">' +
+            '<li><strong>Kamu</strong> bagikan kode → <strong>Member 2</strong> daftar &amp; trade 10 lot → kamu: 10 × $15 = <strong>$150</strong></li>' +
+            '<li><strong>Member 2</strong> ajak <strong>Member 3</strong> → Member 3 trade 10 lot → Member 2: $150 · kamu: 10 × $2 = <strong>$20</strong></li>' +
+            '<li><strong>Member 3</strong> ajak <strong>Member 4</strong> → Member 4 trade 10 lot → kamu (L3): 10 × $1 = <strong>$10</strong></li>' +
+          '</ol>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="panel network-list">' +
+      '<div class="panel-head"><h2>Downline (simulasi)</h2><span class="sub">Lot &amp; komisi ke kamu · data contoh</span></div>' +
+      memberRows +
+    '</div>';
+
+  function renderCalc() {
+    var level = parseInt(document.getElementById('calc-level').value, 10);
+    var lots = parseFloat(document.getElementById('calc-lots').value) || 0;
+    var rate = COMMISSION[level] || 0;
+    var you = rate * lots;
+    var html = '';
+    html += '<div class="calc-row"><span>Rate level ' + level + '</span><span class="amt">$' + rate + ' / lot</span></div>';
+    html += '<div class="calc-row"><span>Volume</span><span class="amt">' + lots + ' lot</span></div>';
+    html += '<div class="calc-row total"><span>Kamu terima</span><span class="amt">' + fmt(you) + '</span></div>';
+    html += '<div style="margin-top:.85rem;font-size:.75rem;color:var(--text-dim);line-height:1.45">Distribusi total per lot (jika 5 level terisi): L1 $15 + L2 $2 + L3 $1 + L4 $1 + L5 $1 = <strong style="color:var(--text)">$20</strong>.</div>';
+    document.getElementById('calc-out').innerHTML = html;
   }
-  document.getElementById('copy-code').onclick = function () { copyText(document.getElementById('ref-code').textContent, this); };
-  document.getElementById('copy-link').onclick = function () { copyText(document.getElementById('ref-link').textContent, this); };
+  document.getElementById('calc-level').onchange = renderCalc;
+  document.getElementById('calc-lots').oninput = renderCalc;
+  renderCalc();
+
+  function copyText(text, btn) {
+    function ok() {
+      var old = btn.textContent;
+      btn.textContent = 'Tersalin ✓';
+      setTimeout(function(){ btn.textContent = old; }, 1500);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(ok).catch(function(){ fallback(); });
+    } else fallback();
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); ok(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  }
+  document.getElementById('copy-code').onclick = function() {
+    copyText(document.getElementById('ref-code').textContent, this);
+  };
+  document.getElementById('copy-link').onclick = function() {
+    copyText(document.getElementById('ref-link').textContent, this);
+  };
 }
 </script>
 </body>
