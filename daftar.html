@@ -4,92 +4,209 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>Registrasi — Smart AI</title>
-  <meta name="theme-color" content="#070d18"/>
+  <meta name="theme-color" content="#050a12"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/daftar.css">
-  <link rel="stylesheet" href="css/animations.css">
   <style>
-    .page { min-height: calc(100vh - 68px); display: grid; grid-template-columns: 1fr 1fr; max-width: 1100px; margin: 0 auto; padding: 6rem 1.5rem 3rem; gap: 2.5rem; align-items: center; }
-    @media (max-width: 860px) { .page { grid-template-columns: 1fr; padding-top: 5.5rem; } .side-panel { order: 2; text-align: center; } }
-    .side-label { font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--cyan); margin-bottom: .5rem; }
-    .side-title { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; letter-spacing: -.02em; line-height: 1.2; margin-bottom: .85rem; }
-    .side-desc { color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.65; }
-    .side-points { list-style: none; display: flex; flex-direction: column; gap: .65rem; }
-    .side-points li { display: flex; align-items: center; gap: .6rem; font-size: .9rem; color: var(--text-muted); }
-    .side-points li::before { content: '✓'; color: var(--cyan); font-weight: 800; }
-    .form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; box-shadow: 0 25px 50px rgba(0,0,0,.3); }
-    .form-card h2 { font-size: 1.35rem; font-weight: 800; margin-bottom: .35rem; }
-    .form-card .sub { color: var(--text-muted); font-size: .9rem; margin-bottom: 1.35rem; }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; font-size: .78rem; font-weight: 600; color: var(--text-muted); margin-bottom: .35rem; }
-    .form-group label .req { color: var(--cyan); }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
-      border-radius: 11px; padding: .72rem .95rem; color: var(--text); font-size: 15px;
-      font-family: inherit; outline: none; min-height: 46px;
-      transition: border-color .18s, box-shadow .18s;
+    :root, [data-theme=dark] {
+      --bg: #050a12;
+      --bg-card: #0c1220;
+      --border: rgba(148,163,184,.12);
+      --cyan: #2dd4bf;
+      --teal: #14b8a6;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --green: #34d399;
+      --glow: rgba(45,212,191,.2);
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(45,212,191,.15);
+    [data-theme=light] {
+      --bg: #eef2f7;
+      --bg-card: #fff;
+      --border: rgba(15,23,42,.08);
+      --cyan: #0f766e;
+      --teal: #0d9488;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --green: #059669;
+      --glow: rgba(13,148,136,.15);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 70% 50% at 15% 0%, rgba(45,212,191,.1), transparent 55%),
+        radial-gradient(ellipse 50% 40% at 95% 90%, rgba(99,102,241,.07), transparent 50%);
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .logo span { color: var(--cyan); }
+    .top-actions { display: flex; align-items: center; gap: .6rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: .5rem 1rem; border-radius: 999px; font-weight: 700; font-size: .85rem;
+      text-decoration: none; font-family: inherit; cursor: pointer; border: 1px solid transparent;
+    }
+    .btn-ghost {
+      border-color: var(--border); color: var(--text); background: transparent;
+    }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--teal));
+      color: #042f2e; border: none;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+    .theme-btn {
+      width: 38px; height: 38px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text-muted); cursor: pointer;
+    }
+    .page {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    @media (max-width: 800px) {
+      .page { grid-template-columns: 1fr; }
+      .side { order: 2; text-align: center; }
+      .side-points { align-items: center; }
+    }
+    .side-label {
+      font-size: .72rem; font-weight: 800; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--cyan); margin-bottom: .5rem;
+    }
+    .side h1 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800; letter-spacing: -.02em; line-height: 1.2; margin-bottom: .85rem;
+    }
+    .side p { color: var(--text-muted); line-height: 1.65; margin-bottom: 1.35rem; }
+    .side-points { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+    .side-points li {
+      display: flex; align-items: center; gap: .55rem;
+      font-size: .9rem; color: var(--text-muted);
+    }
+    .side-points li::before { content: '✓'; color: var(--cyan); font-weight: 800; }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.75rem 1.5rem;
+      box-shadow: 0 25px 50px -20px rgba(0,0,0,.5);
+    }
+    .card h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: .3rem; }
+    .card .sub { color: var(--text-muted); font-size: .88rem; margin-bottom: 1.25rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block; font-size: .75rem; font-weight: 600;
+      color: var(--text-muted); margin-bottom: .35rem;
+    }
+    .form-group label .req { color: var(--cyan); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 11px;
+      padding: .72rem .95rem;
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      min-height: 46px;
+    }
+    [data-theme=light] .form-group input,
+    [data-theme=light] .form-group select,
+    [data-theme=light] .form-group textarea {
+      background: rgba(15,23,42,.03);
+      border-color: rgba(15,23,42,.1);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px var(--glow);
     }
     .form-group textarea { min-height: 88px; resize: vertical; }
-    .form-success { text-align: center; padding: 1rem 0; }
-    .form-success h3 { font-size: 1.25rem; margin-bottom: .5rem; }
-    .form-note { font-size: .75rem; color: var(--text-dim); margin-top: 1rem; text-align: center; }
+    .form-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+    }
+    .btn-submit {
+      width: 100%;
+      margin-top: .25rem;
+      padding: .88rem;
+      border: none;
+      border-radius: 11px;
+      font-weight: 700;
+      font-size: .92rem;
+      font-family: inherit;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--cyan), var(--teal));
+      color: #042f2e;
+      min-height: 48px;
+    }
+    .btn-submit:hover { filter: brightness(1.05); }
+    .note {
+      font-size: .75rem;
+      color: var(--text-dim);
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .note a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+    .success { text-align: center; padding: 1.5rem 0; display: none; }
+    .success.show { display: block; }
+    .success .ico { font-size: 2.5rem; color: var(--cyan); margin-bottom: .5rem; }
+    .success h3 { font-size: 1.2rem; margin-bottom: .5rem; }
+    .success p { color: var(--text-muted); margin-bottom: 1.25rem; font-size: .9rem; }
+    #form-view.hide { display: none; }
   </style>
 </head>
 <body>
-  <nav class="navbar">
+  <div class="topbar">
     <a href="index.html" class="logo">SMART<span>AI</span></a>
-    <ul class="nav-links">
-      <li><a href="index.html">Beranda</a></li>
-      <li><a href="performance.html">EA Performance</a></li>
-      <li><a href="kelebihan.html">Kelebihan</a></li>
-      <li><a href="produk.html">Produk</a></li>
-      <li><a href="video.html">Video</a></li>
-      <li><a href="testimoni.html">Testimoni</a></li>
-      <li><a href="faq.html">FAQ</a></li>
-      <li><a href="our-story.html">About Us</a></li>
-    </ul>
-    <div class="nav-actions">
-      <button class="theme-toggle" id="theme-toggle" aria-label="Theme">
-        <svg class="icon-moon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-        <svg class="icon-sun" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></svg>
-      </button>
-      <a href="daftar.html" class="btn btn-nav active">Registrasi</a>
-      <a href="login.html" class="btn btn-login">Login</a>
-      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="top-actions">
+      <button type="button" class="theme-btn" id="theme-toggle" aria-label="Tema">◐</button>
+      <a href="index.html" class="btn btn-ghost">Sign In</a>
     </div>
-  </nav>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="index.html" onclick="closeMenu()">Beranda</a>
-    <a href="performance.html" onclick="closeMenu()">EA Performance</a>
-    <a href="kelebihan.html" onclick="closeMenu()">Kelebihan</a>
-    <a href="produk.html" onclick="closeMenu()">Produk</a>
-    <a href="video.html" onclick="closeMenu()">Video</a>
-    <a href="testimoni.html" onclick="closeMenu()">Testimoni</a>
-    <a href="faq.html" onclick="closeMenu()">FAQ</a>
-    <a href="our-story.html" onclick="closeMenu()">About Us</a>
-    <a href="login.html" onclick="closeMenu()">Login</a>
-    <a href="daftar.html" class="btn btn-primary" onclick="closeMenu()">Registrasi</a>
   </div>
 
   <div class="page">
-    <div class="side-panel reveal">
+    <div class="side">
       <div class="side-label">Early Access</div>
-      <h2 class="side-title">Penasaran bagaimana sistemnya bekerja?</h2>
-      <p class="side-desc">Isi formulir di samping. Tim siap menjelaskan tanpa tekanan membeli. Tidak ada kewajiban deposit di sisi kami.</p>
+      <h1>Daftar minat Smart AI</h1>
+      <p>Isi formulir di samping. Tim siap menjelaskan tanpa tekanan membeli. Tidak ada kewajiban deposit di sisi kami.</p>
       <ul class="side-points">
         <li>Konsultasi via WhatsApp</li>
-        <li>Penjelasan EA & risk setting</li>
+        <li>Penjelasan EA &amp; risk setting</li>
         <li>Tanpa biaya pendaftaran formulir</li>
         <li>Bisa coba demo dashboard dulu</li>
       </ul>
-      <p style="margin-top:1.5rem;font-size:.85rem;color:var(--text-dim)">Sudah punya akun? <a href="login.html">Login di sini</a> · Atau <a href="#" id="go-demo">coba demo</a></p>
     </div>
 
-    <div class="form-card reveal">
+    <div class="card">
       <div id="form-view">
         <h2>Formulir Minat</h2>
         <p class="sub">Isi data di bawah. Kami akan segera menghubungi Anda.</p>
@@ -119,31 +236,42 @@
             <label for="catatan">Catatan (opsional)</label>
             <textarea id="catatan" name="catatan" placeholder="Pertanyaan atau info tambahan"></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;min-height:48px">Kirim Formulir</button>
-          <p class="form-note">Dengan mengirim, Anda setuju dihubungi via WhatsApp. Tidak ada kewajiban membeli.</p>
+          <button type="submit" class="btn-submit">Kirim Formulir</button>
+          <p class="note">Sudah punya akun? <a href="index.html">Sign In</a> · Atau coba <a href="index.html">demo dashboard</a></p>
         </form>
       </div>
-      <div id="form-success" class="form-success" style="display:none">
-        <div style="font-size:2.75rem;margin-bottom:.5rem;color:var(--cyan)">✓</div>
+
+      <div id="form-success" class="success">
+        <div class="ico">✓</div>
         <h3>Terima kasih!</h3>
-        <p style="color:var(--text-muted);margin:.75rem 0 1.35rem">Data Anda sudah kami terima. Tim akan menghubungi via WhatsApp secepatnya.</p>
-        <a href="login.html" class="btn btn-primary" style="margin-right:.5rem">Coba Demo Login</a>
-        <a href="index.html" class="btn btn-outline">Beranda</a>
+        <p>Data Anda sudah kami terima. Tim akan menghubungi via WhatsApp secepatnya.</p>
+        <a href="index.html" class="btn btn-primary">Ke Sign In / Demo</a>
       </div>
     </div>
   </div>
 
-  <footer><div class="footer-bottom">Risk Disclosure: Trading memiliki risiko kerugian.</div></footer>
-  <a href="https://wa.me/6282137585596" class="wa-float" target="_blank" rel="noopener">WHATSAPP</a>
-
-  <script src="js/site.js"></script>
-  <script src="js/animations.js"></script>
   <script>
   (function () {
+    var html = document.documentElement;
+    var themeBtn = document.getElementById('theme-toggle');
+    try {
+      var saved = localStorage.getItem('smartai_theme') || localStorage.getItem('theme');
+      if (saved) html.setAttribute('data-theme', saved);
+    } catch (e) {}
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function () {
+        var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        try {
+          localStorage.setItem('smartai_theme', next);
+          localStorage.setItem('theme', next);
+        } catch (e) {}
+      });
+    }
+
     var form = document.getElementById('interest-form');
     var view = document.getElementById('form-view');
     var success = document.getElementById('form-success');
-    var goDemo = document.getElementById('go-demo');
 
     if (form) {
       form.addEventListener('submit', function (e) {
@@ -155,15 +283,8 @@
           alert('Nama, email, dan WhatsApp wajib diisi.');
           return;
         }
-        if (view) view.style.display = 'none';
-        if (success) success.style.display = 'block';
-      });
-    }
-
-    if (goDemo) {
-      goDemo.addEventListener('click', function (e) {
-        e.preventDefault();
-        location.href = 'login.html';
+        if (view) view.classList.add('hide');
+        if (success) success.classList.add('show');
       });
     }
   })();
