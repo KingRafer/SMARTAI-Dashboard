@@ -105,7 +105,7 @@ if (renderShell('performance')) {
     var statusLabel = online ? 'ONLINE' : (a.status === 'OFFLINE' ? 'OFFLINE' : 'WAITING');
     var equity = Number(a.equity);
     var daily = Number(a.daily_profit);
-    var dailyReturn = Number.isFinite(equity) && equity > 0 && Number.isFinite(daily) ? (daily / equity * 100) : null;
+    var dailyReturn = a.equity !== null && a.equity !== undefined && a.daily_profit !== null && a.daily_profit !== undefined && Number.isFinite(equity) && equity > 0 && Number.isFinite(daily) ? (daily / equity * 100) : null;
     var returnText = dailyReturn === null ? '—' : ((dailyReturn > 0 ? '+' : '') + dailyReturn.toFixed(2) + '%');
     var stamp = a.updated_at ? SmartAIMT5.escape(a.updated_at) : 'Belum ada pembaruan';
     return '<article class="acc-card ' + cls + '">' +
