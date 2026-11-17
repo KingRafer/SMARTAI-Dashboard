@@ -12,47 +12,59 @@
 <body>
 <script src="js/auth.js"></script>
 <script src="js/app.js"></script>
-<script src="js/mt5-api.js?v=20261117live2"></script>
+<script src="js/mt5-api.js?v=20261117meta"></script>
 <script>
 if (renderShell('commission')) {
   var root = document.getElementById('page-content');
-  root.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted)">Memuat…</div>';
+  var RATES = {1:15,2:2,3:1,4:1,5:1};
+  var demoLots = {1:25, 2:13, 3:7, 4:3, 5:2};
+  var byLevel = {};
+  var total = 0;
+  for (var L=1;L<=5;L++) {
+    byLevel[L] = demoLots[L] * RATES[L];
+    total += byLevel[L];
+  }
 
   async function loadComm() {
     var accounts = [];
     try { accounts = await SmartAIMT5.getAccounts(true); } catch (e) {}
     var live = SmartAIMT5.isLive && SmartAIMT5.isLive();
-    var totalProfit = 0, totalDaily = 0;
+    var totalDaily = 0, totalProfit = 0;
     accounts.forEach(function(a) {
-      if (Number.isFinite(Number(a.total_profit))) totalProfit += Number(a.total_profit);
       if (Number.isFinite(Number(a.daily_profit))) totalDaily += Number(a.daily_profit);
+      if (Number.isFinite(Number(a.total_profit))) totalProfit += Number(a.total_profit);
     });
+    function fmt(n) {
+      return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);
+    }
+    var levelRows = [1,2,3,4,5].map(function(L) {
+      return '<tr><td>Level '+L+'</td><td>$'+RATES[L]+' / lot</td><td>'+demoLots[L]+' lot</td><td style="color:var(--green);font-weight:700">'+fmt(byLevel[L])+'</td></tr>';
+    }).join('');
+
     root.innerHTML =
-      '<div class="page-header"><div><h1>Commission</h1><p>Komisi referral (demo) + konteks performa akun MT5.</p></div></div>' +
-      '<div class="stats-grid">' +
-        '<div class="stat-card"><div class="label">Komisi bulan ini</div><div class="value up">$1,240</div><div class="hint">Demo referral</div></div>' +
-        '<div class="stat-card"><div class="label">Total dibayar</div><div class="value">$8,920</div><div class="hint">Demo</div></div>' +
-        '<div class="stat-card"><div class="label">Daily profit MT5</div><div class="value '+(totalDaily>=0?'up':'')+'">' + SmartAIMT5.formatUSD(totalDaily) + '</div><div class="hint">'+(live?'Live':'Demo')+'</div></div>' +
-        '<div class="stat-card"><div class="label">Total profit MT5</div><div class="value up">' + SmartAIMT5.formatUSD(totalProfit) + '</div><div class="hint">Semua akun</div></div>' +
-      '</div>' +
-      '<div class="panel">' +
-        '<div class="panel-head"><h2>Riwayat komisi</h2><span class="sub">Data demo referral · bukan dari broker</span></div>' +
-        '<div class="table-wrap"><table>' +
-          '<thead><tr><th>Tanggal</th><th>Sumber</th><th>Jumlah</th><th>Status</th></tr></thead>' +
-          '<tbody>' +
-            '<tr><td>15 Nov 2026</td><td>Referral L1</td><td style="color:var(--green)">+$120</td><td><span class="badge ok">Paid</span></td></tr>' +
-            '<tr><td>10 Nov 2026</td><td>Client fee</td><td style="color:var(--green)">+$350</td><td><span class="badge ok">Paid</span></td></tr>' +
-            '<tr><td>05 Nov 2026</td><td>Referral L2</td><td style="color:var(--green)">+$45</td><td><span class="badge warn">Pending</span></td></tr>' +
-            '<tr><td>01 Nov 2026</td><td>Client fee</td><td style="color:var(--green)">+$280</td><td><span class="badge ok">Paid</span></td></tr>' +
-          '</tbody></table></div>' +
-      '</div>' +
-      '<div class="panel" style="margin-top:1.25rem">' +
-        '<div class="panel-head"><h2>Konteks akun MT5</h2><span class="sub">'+(live?'LIVE':'DEMO')+'</span></div>' +
-        '<div class="table-wrap"><table>' +
-          '<thead><tr><th>Akun</th><th>Daily</th><th>Total profit</th><th>Status</th></tr></thead>' +
-          '<tbody>' + accounts.map(function(a){
+      '<div class="page-header"><div><h1>Commission</h1>'+
+      '<p>Komisi referral multilevel (per lot) + konteks performa akun MT5.</p></div></div>'+
+      '<div class="stats-grid">'+
+        '<div class="stat-card"><div class="label">Komisi jaringan (demo)</div><div class="value up">'+fmt(total)+'</div><div class="hint">L1–L5 · volume simulasi</div></div>'+
+        '<div class="stat-card"><div class="label">Direct L1 ($15/lot)</div><div class="value up">'+fmt(byLevel[1])+'</div><div class="hint">'+demoLots[1]+' lot downline</div></div>'+
+        '<div class="stat-card"><div class="label">Daily profit MT5</div><div class="value '+(totalDaily>=0?'up':'')+'">'+SmartAIMT5.formatUSD(totalDaily)+'</div><div class="hint">'+(live?'Live':'Demo')+'</div></div>'+
+        '<div class="stat-card"><div class="label">Total profit MT5</div><div class="value up">'+SmartAIMT5.formatUSD(totalProfit)+'</div><div class="hint">Semua akun</div></div>'+
+      '</div>'+
+      '<div class="panel">'+
+        '<div class="panel-head"><h2>Rincian skema</h2><span class="sub">$15 → $2 → $1 → $1 → $1</span></div>'+
+        '<div class="table-wrap"><table>'+
+          '<thead><tr><th>Level</th><th>Rate</th><th>Volume demo</th><th>Komisi</th></tr></thead>'+
+          '<tbody>'+levelRows+'</tbody>'+
+        '</table></div>'+
+        '<p style="font-size:.8rem;color:var(--text-muted);margin-top:1rem;line-height:1.5">Detail network &amp; kalkulator ada di halaman <a href="referral.html" style="color:var(--cyan)">Referral Network</a>.</p>'+
+      '</div>'+
+      '<div class="panel" style="margin-top:1.25rem">'+
+        '<div class="panel-head"><h2>Akun MT5</h2><span class="sub">'+(live?'LIVE':'DEMO')+'</span></div>'+
+        '<div class="table-wrap"><table>'+
+          '<thead><tr><th>Akun</th><th>Daily</th><th>Total profit</th><th>Status</th></tr></thead>'+
+          '<tbody>'+accounts.map(function(a){
             return '<tr><td>'+SmartAIMT5.escape(a.account_id)+'</td><td>'+SmartAIMT5.formatUSD(a.daily_profit)+'</td><td>'+SmartAIMT5.formatUSD(a.total_profit)+'</td><td>'+SmartAIMT5.escape(a.status||'')+'</td></tr>';
-          }).join('') + '</tbody></table></div>' +
+          }).join('')+'</tbody></table></div>'+
       '</div>';
   }
   loadComm();
