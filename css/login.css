@@ -1,0 +1,22 @@
+/* Login page — reuse daftar form styles */
+.page-main { min-height: calc(100vh - 68px); display: flex; align-items: center; padding: 6rem 1.5rem 3rem; }
+.form-wrap { max-width: 420px; margin: 0 auto; width: 100%; }
+.form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; }
+.form-header { margin-bottom: 1.5rem; }
+.form-header h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: .35rem; }
+.form-header p { color: var(--text-muted); font-size: .9rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: .78rem; font-weight: 600; color: var(--text-muted); margin-bottom: .35rem; }
+.form-group input {
+  width: 100%; background: var(--input-bg); border: 1px solid var(--input-border);
+  border-radius: 11px; padding: .72rem .95rem; color: var(--text); font-size: 15px;
+  font-family: inherit; outline: none; min-height: 46px;
+  transition: border-color .18s, box-shadow .18s;
+}
+.form-group input:focus {
+  border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(45,212,191,.15);
+}
+.form-note { font-size: .75rem; color: var(--text-dim); margin-top: 1rem; text-align: center; }
+.msg { padding: .75rem 1rem; border-radius: 10px; font-size: .875rem; margin-top: 1rem; }
+.msg.success { background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.25); color: var(--green); }
+.msg.error { background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.25); color: #f87171; }

@@ -1,91 +1,37 @@
+/* Login form handler (demo localStorage) */
 (function () {
-  if (typeof redirectIfLoggedIn === 'function') redirectIfLoggedIn();
+  var form = document.getElementById('login-form');
+  var msg = document.getElementById('login-msg');
+  if (!form) return;
 
-  var togglePass = document.getElementById('toggle-pass');
-  var passwordInput = document.getElementById('password');
-  if (togglePass && passwordInput) {
-    var eyeOpen = togglePass.querySelector('.eye-open');
-    var eyeClosed = togglePass.querySelector('.eye-closed');
-    togglePass.addEventListener('click', function () {
-      var isHidden = passwordInput.type === 'password';
-      passwordInput.type = isHidden ? 'text' : 'password';
-      if (eyeOpen) eyeOpen.style.display = isHidden ? 'none' : 'block';
-      if (eyeClosed) eyeClosed.style.display = isHidden ? 'block' : 'none';
-    });
-  }
+  // Demo credentials
+  var DEMO_USER = 'demo@smartai.id';
+  var DEMO_PASS = 'demo123';
 
-  var loginForm = document.getElementById('login-form');
-  var errorMsg = document.getElementById('error-msg');
-  var submitBtn = document.getElementById('submit-btn');
-  if (!loginForm) return;
-
-  function showError(msg) {
-    if (!errorMsg) return;
-    errorMsg.style.background = '';
-    errorMsg.style.borderColor = '';
-    errorMsg.style.color = '';
-    errorMsg.textContent = msg;
-    errorMsg.classList.add('show');
-  }
-
-  function showOk(msg) {
-    if (!errorMsg) return;
-    errorMsg.style.background = 'rgba(52,211,153,.1)';
-    errorMsg.style.borderColor = 'rgba(52,211,153,.3)';
-    errorMsg.style.color = 'var(--green)';
-    errorMsg.textContent = msg;
-    errorMsg.classList.add('show');
-  }
-
-  loginForm.addEventListener('submit', function (e) {
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var email = (document.getElementById('email') || {}).value || '';
-    var password = (document.getElementById('password') || {}).value || '';
-    email = email.trim();
+    var user = (form.user.value || '').trim().toLowerCase();
+    var pass = form.pass.value || '';
 
-    if (errorMsg) {
-      errorMsg.classList.remove('show');
-      errorMsg.textContent = '';
-    }
-
-    if (!email || !password) {
-      showError('Email dan password wajib diisi.');
-      return;
-    }
-    if (password.length < 6) {
-      showError('Password minimal 6 karakter.');
-      return;
-    }
-
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Memproses...';
-    }
-
-    setTimeout(function () {
-      var found = findAccount(email, password);
-      if (!found) {
-        showError('Email atau password salah. Coba lagi atau daftar akun baru.');
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Masuk →';
-        }
-        return;
+    if (user === DEMO_USER && pass === DEMO_PASS) {
+      try {
+        localStorage.setItem('smartai_logged_in', '1');
+        localStorage.setItem('smartai_user', user);
+      } catch (err) {}
+      if (msg) {
+        msg.className = 'msg success';
+        msg.style.display = 'block';
+        msg.textContent = 'Login berhasil. Mengalihkan ke dashboard...';
       }
-      setUser(sessionFromAccount(found));
-      showOk('Berhasil masuk. Mengalihkan ke dashboard…');
       setTimeout(function () {
-        location.href = 'dashboard.html';
-      }, 500);
-    }, 400);
+        window.location.href = 'dashboard.html';
+      }, 800);
+    } else {
+      if (msg) {
+        msg.className = 'msg error';
+        msg.style.display = 'block';
+        msg.textContent = 'Email atau password salah. Coba demo@smartai.id / demo123';
+      }
+    }
   });
-
-  var forgot = document.getElementById('forgot-link');
-  if (forgot) {
-    forgot.addEventListener('click', function (e) {
-      e.preventDefault();
-      var text = encodeURIComponent('Halo Admin Smart AI, saya lupa password akun member. Mohon bantu reset.');
-      window.open('https://wa.me/6282137585596?text=' + text, '_blank');
-    });
-  }
 })();
