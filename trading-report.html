@@ -19,14 +19,23 @@
 .pnl-down{color:var(--red);font-weight:700}
 .summary-row{display:flex;flex-wrap:wrap;gap:1rem;font-size:.8rem;color:var(--text-muted);margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}
 .summary-row strong{color:var(--text)}
+.acc-live-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:1.25rem}
+@media(max-width:800px){.acc-live-bar{grid-template-columns:1fr}}
+.acc-live{background:var(--bg-card-solid);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem}
+.acc-live .t{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-dim)}
+.acc-live .v{font-size:1.1rem;font-weight:800;margin-top:.2rem}
 </style>
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
 <script src="js/auth.js?v=20261116d"></script>
 <script src="js/app.js?v=20261116d"></script>
+<script src="js/mt5-api.js?v=20261117live2"></script>
 <script>
 if (renderShell('trading')) {
+  var root = document.getElementById('page-content');
+  root.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted)">Memuat trading report…</div>';
+
   var trades = [
     { date:'16 Nov 2026', time:'14:22', acc:'ACC01', pair:'XAUUSD', type:'Buy', lot:0.10, entry:2648.20, exit:2652.45, pnl:42.50, status:'Closed' },
     { date:'16 Nov 2026', time:'11:05', acc:'ACC03', pair:'XAUUSD', type:'Sell', lot:0.20, entry:2655.10, exit:2651.80, pnl:66.00, status:'Closed' },
@@ -39,10 +48,7 @@ if (renderShell('trading')) {
     { date:'13 Nov 2026', time:'11:12', acc:'ACC02', pair:'GBPUSD', type:'Sell', lot:0.10, entry:1.2710, exit:1.2718, pnl:-8.40, status:'Closed' },
     { date:'12 Nov 2026', time:'14:08', acc:'ACC01', pair:'XAUUSD', type:'Buy', lot:0.10, entry:2615.00, exit:2621.30, pnl:63.00, status:'Closed' }
   ];
-  var totalPnl = trades.reduce(function(s,t){ return s + t.pnl; }, 0);
-  var wins = trades.filter(function(t){ return t.pnl > 0; }).length;
-  var winRate = ((wins / trades.length) * 100).toFixed(1);
-  var lots = trades.reduce(function(s,t){ return s + t.lot; }, 0);
+
   function rows(list) {
     return list.map(function(t) {
       var pnlCls = t.pnl >= 0 ? 'pnl-up' : 'pnl-down';
@@ -60,43 +66,67 @@ if (renderShell('trading')) {
       '</tr>';
     }).join('');
   }
-  document.getElementById('page-content').innerHTML =
-    '<div class="stats-grid">' +
-      '<div class="stat-card"><div class="label">Total P/L (10 trades)</div><div class="value '+(totalPnl>=0?'up':'down')+'">'+(totalPnl>=0?'+$':'-$')+Math.abs(totalPnl).toFixed(2)+'</div></div>' +
-      '<div class="stat-card"><div class="label">Win rate</div><div class="value">'+winRate+'%</div></div>' +
-      '<div class="stat-card"><div class="label">Winning trades</div><div class="value up">'+wins+' / '+trades.length+'</div></div>' +
-      '<div class="stat-card"><div class="label">Total volume</div><div class="value">'+lots.toFixed(2)+' lot</div></div>' +
-    '</div>' +
-    '<div class="panel">' +
-      '<div class="panel-head"><h2>Trade log</h2><span class="sub">Data transaksi ilustratif · bukan riwayat broker</span></div>' +
-      '<div class="tr-filters">' +
-        '<button type="button" class="acc-pill active" data-filter="all">Semua akun</button>' +
-        '<button type="button" class="acc-pill" data-filter="ACC01">ACC01 Basic</button>' +
-        '<button type="button" class="acc-pill" data-filter="ACC02">ACC02 Gold</button>' +
-        '<button type="button" class="acc-pill" data-filter="ACC03">ACC03 Pro</button>' +
+
+  async function loadReport() {
+    var accounts = [];
+    try { accounts = await SmartAIMT5.getAccounts(true); } catch (e) {}
+    accounts.sort(function(a,b){ return String(a.account_id).localeCompare(String(b.account_id)); });
+    var live = SmartAIMT5.isLive && SmartAIMT5.isLive();
+    var totalDaily = 0, totalProfit = 0;
+    accounts.forEach(function(a) {
+      if (Number.isFinite(Number(a.daily_profit))) totalDaily += Number(a.daily_profit);
+      if (Number.isFinite(Number(a.total_profit))) totalProfit += Number(a.total_profit);
+    });
+    var totalPnl = trades.reduce(function(s,t){ return s + t.pnl; }, 0);
+    var wins = trades.filter(function(t){ return t.pnl > 0; }).length;
+    var winRate = ((wins / trades.length) * 100).toFixed(1);
+    var lots = trades.reduce(function(s,t){ return s + t.lot; }, 0);
+
+    var liveBar = accounts.map(function(a) {
+      return '<div class="acc-live"><div class="t">' + SmartAIMT5.escape(a.account_id) + ' · ' + SmartAIMT5.escape(a.status||'') +
+        '</div><div class="v">' + SmartAIMT5.formatUSD(a.daily_profit) + '</div>' +
+        '<div style="font-size:.72rem;color:var(--text-muted)">Daily · Equity ' + SmartAIMT5.formatUSD(a.equity) + '</div></div>';
+    }).join('');
+
+    root.innerHTML =
+      '<div class="page-header"><div><h1>Trading Report</h1><p>' +
+        (live ? 'Ringkasan live dari API MT5 + log trade ilustratif.' : 'Mode demo · data ilustratif.') +
+      '</p></div></div>' +
+      '<div class="stats-grid">' +
+        '<div class="stat-card"><div class="label">Daily profit (live)</div><div class="value '+(totalDaily>=0?'up':'')+'">' + SmartAIMT5.formatUSD(totalDaily) + '</div></div>' +
+        '<div class="stat-card"><div class="label">Total profit (live)</div><div class="value up">' + SmartAIMT5.formatUSD(totalProfit) + '</div></div>' +
+        '<div class="stat-card"><div class="label">Sample win rate</div><div class="value">'+winRate+'%</div></div>' +
+        '<div class="stat-card"><div class="label">Sample volume</div><div class="value">'+lots.toFixed(2)+' lot</div></div>' +
       '</div>' +
-      '<div class="table-wrap">' +
-        '<table id="trade-table">' +
+      '<div class="acc-live-bar">' + liveBar + '</div>' +
+      '<div class="panel">' +
+        '<div class="panel-head"><h2>Trade log</h2><span class="sub">Ilustratif · bukan ticket broker real-time</span></div>' +
+        '<div class="tr-filters">' +
+          '<button type="button" class="acc-pill active" data-filter="all">Semua akun</button>' +
+          accounts.map(function(a){ return '<button type="button" class="acc-pill" data-filter="'+a.account_id+'">'+a.account_id+'</button>'; }).join('') +
+        '</div>' +
+        '<div class="table-wrap"><table id="trade-table">' +
           '<thead><tr><th>Waktu</th><th>Akun</th><th>Pair</th><th>Type</th><th>Lot</th><th>Entry → Exit</th><th>P/L</th><th>Status</th></tr></thead>' +
-          '<tbody>'+rows(trades)+'</tbody>' +
-        '</table>' +
-      '</div>' +
-      '<div class="summary-row">' +
-        '<span>Best trade: <strong style="color:var(--green)">+$212.50</strong> (ACC03 · 13 Nov)</span>' +
-        '<span>Worst trade: <strong style="color:var(--red)">−$12.10</strong> (ACC02 · 16 Nov)</span>' +
-        '<span>Pair dominan: <strong>XAUUSD</strong></span>' +
-      '</div>' +
-    '</div>';
-  document.querySelectorAll('.acc-pill').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.acc-pill').forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-      var f = btn.getAttribute('data-filter');
-      document.querySelectorAll('#trade-table tbody tr').forEach(function(tr) {
-        tr.style.display = (f === 'all' || tr.getAttribute('data-acc') === f) ? '' : 'none';
+          '<tbody>'+rows(trades)+'</tbody></table></div>' +
+        '<div class="summary-row">' +
+          '<span>Sample P/L: <strong>'+(totalPnl>=0?'+$':'-$')+Math.abs(totalPnl).toFixed(2)+'</strong></span>' +
+          '<span>Live daily (all): <strong>' + SmartAIMT5.formatUSD(totalDaily) + '</strong></span>' +
+        '</div>' +
+      '</div>';
+
+    document.querySelectorAll('.acc-pill').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.acc-pill').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        var f = btn.getAttribute('data-filter');
+        document.querySelectorAll('#trade-table tbody tr').forEach(function(tr) {
+          tr.style.display = (f === 'all' || tr.getAttribute('data-acc') === f) ? '' : 'none';
+        });
       });
     });
-  });
+  }
+  loadReport();
+  setInterval(loadReport, 45000);
 }
 </script>
 </body>
