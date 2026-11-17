@@ -22,7 +22,6 @@ function ensureDemoAccount() {
   const idx = accounts.findIndex(function (a) {
     return a && a.email && a.email.toLowerCase() === DEMO_ACCOUNT.email.toLowerCase();
   });
-  // also migrate old demo@smartai.com if present
   const oldIdx = accounts.findIndex(function (a) {
     return a && a.email && a.email.toLowerCase() === 'demo@smartai.com';
   });
@@ -60,6 +59,16 @@ function findAccount(email, password) {
         a.email.toLowerCase() === String(email).toLowerCase() &&
         a.password === password
       );
+    }) || null
+  );
+}
+
+function findAccountByEmail(email) {
+  const accounts = getAccounts();
+  const em = String(email || '').toLowerCase();
+  return (
+    accounts.find(function (a) {
+      return a && a.email && a.email.toLowerCase() === em;
     }) || null
   );
 }
@@ -135,7 +144,7 @@ function setupPasswordToggle(btnId, inputId) {
   });
 }
 
-/** Login helper dipakai halaman sign-in */
+/** Login helper */
 function loginWithCredentials(email, password) {
   ensureDemoAccount();
   const found = findAccount(email, password);
@@ -143,6 +152,45 @@ function loginWithCredentials(email, password) {
   const session = sessionFromAccount(found);
   setUser(session);
   return session;
+}
+
+/**
+ * Register new account into localStorage.
+ * @returns {{ ok: true, user } | { ok: false, error: string }}
+ */
+function registerAccount(data) {
+  ensureDemoAccount();
+  const nama = String(data.nama || '').trim();
+  const email = String(data.email || '').trim().toLowerCase();
+  const hp = String(data.hp || '').trim();
+  const password = String(data.password || '');
+  const referral = String(data.referral || '').trim();
+
+  if (!nama) return { ok: false, error: 'Nama wajib diisi.' };
+  if (!email || email.indexOf('@') < 1) return { ok: false, error: 'Email tidak valid.' };
+  if (!hp || hp.length < 8) return { ok: false, error: 'Nomor HP tidak valid.' };
+  if (!password || password.length < 6) return { ok: false, error: 'Password minimal 6 karakter.' };
+
+  if (findAccountByEmail(email)) {
+    return { ok: false, error: 'Email sudah terdaftar. Silakan login.' };
+  }
+
+  const accounts = getAccounts();
+  const account = {
+    nama: nama,
+    email: email,
+    hp: hp,
+    password: password,
+    referral: referral || '',
+    avatar: null,
+    createdAt: new Date().toISOString()
+  };
+  accounts.push(account);
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+
+  const session = sessionFromAccount(account);
+  setUser(session);
+  return { ok: true, user: session };
 }
 
 ensureDemoAccount();

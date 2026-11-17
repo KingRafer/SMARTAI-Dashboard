@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Sign In — Smart AI</title>
+  <title>Login — Smart AI</title>
   <meta name="theme-color" content="#050a12"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -180,7 +180,6 @@
       color: var(--text-muted);
       margin-bottom: 0.38rem;
     }
-    .input-wrap { position: relative; }
     .form-group input {
       width: 100%;
       background: rgba(255, 255, 255, 0.035);
@@ -286,7 +285,7 @@
     <a href="index.html" class="logo">SMART<span>AI</span></a>
 
     <div class="card">
-      <h1>Sign In</h1>
+      <h1>Login</h1>
       <p class="sub">Masuk ke dashboard member</p>
 
       <div class="demo-box">
@@ -301,15 +300,11 @@
       <form id="login-form" novalidate>
         <div class="form-group">
           <label for="email">Email / Username</label>
-          <div class="input-wrap">
-            <input type="text" id="email" name="email" placeholder="demo@smartai.id" autocomplete="username" required/>
-          </div>
+          <input type="text" id="email" name="email" placeholder="demo@smartai.id" autocomplete="username" required/>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <div class="input-wrap">
-            <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required/>
-          </div>
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required/>
         </div>
         <button type="submit" class="btn-primary" id="btn-submit">Masuk ke Dashboard</button>
       </form>
@@ -317,7 +312,7 @@
       <div id="msg" class="msg"></div>
 
       <p class="foot">
-        Butuh akun baru? <a href="daftar.html">Registrasi</a>
+        Belum punya akun? <a href="daftar.html">Sign Up</a>
       </p>
     </div>
   </div>
@@ -374,12 +369,6 @@
       var session = null;
       if (typeof loginWithCredentials === 'function') {
         session = loginWithCredentials(email, pass);
-      } else if (typeof findAccount === 'function' && typeof setUser === 'function') {
-        var found = findAccount(email, pass);
-        if (found) {
-          session = sessionFromAccount(found);
-          setUser(session);
-        }
       }
 
       if (!session) {
