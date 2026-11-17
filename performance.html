@@ -102,7 +102,7 @@ if (renderShell('performance')) {
   function renderAccount(a, index) {
     var cls = ['basic','gold','pro'][index] || 'basic';
     var online = a.status === 'ONLINE';
-    var statusLabel = online ? 'ONLINE' : (a.status === 'OFFLINE' ? 'OFFLINE' : 'WAITING');
+    var statusLabel = a.status === 'DEMO' ? 'DEMO' : (online ? 'ONLINE' : (a.status === 'OFFLINE' ? 'OFFLINE' : 'WAITING'));
     var equity = Number(a.equity);
     var daily = Number(a.daily_profit);
     var dailyReturn = a.equity !== null && a.equity !== undefined && a.daily_profit !== null && a.daily_profit !== undefined && Number.isFinite(equity) && equity > 0 && Number.isFinite(daily) ? (daily / equity * 100) : null;
@@ -120,7 +120,7 @@ if (renderShell('performance')) {
       '<div class="daily-box"><div class="db-label">Daily Profit</div><div class="db-val">' + SmartAIMT5.formatUSD(a.daily_profit) + '</div><div class="db-sub">Daily Return: ' + returnText + '</div></div>' +
       '<div class="acc-foot"><div class="ring-wrap"><svg viewBox="0 0 72 72"><circle class="track" cx="36" cy="36" r="30"/><circle class="bar" cx="36" cy="36" r="30" stroke-dasharray="188.5" stroke-dashoffset="' + (dailyReturn === null ? '188.5' : (188.5 * (1 - Math.min(Math.abs(dailyReturn),5)/5)).toFixed(1)) + '"/></svg><div class="ring-pct">' + returnText + '</div></div>' +
       '<div class="ring-detail">Total Penarikan: <strong>' + SmartAIMT5.formatUSD(a.total_penarikan) + '</strong><br/>Daily Drawdown (nilai EA): <strong>' + SmartAIMT5.formatNumber(a.daily_dd, 2) + '</strong><br/>Data diperbarui: <strong>' + stamp + '</strong></div></div>' +
-      '<div class="acc-update">Sumber: MT5 Live API<div class="progress-line"><i style="width:' + (online ? '100%' : '8%') + '"></i></div></div>' +
+      '<div class="acc-update">Sumber: data simulasi · bukan akun live<div class="progress-line"><i style="width:100%"></i></div></div>' +
     '</article>';
   }
   async function loadPerformance() {
@@ -129,9 +129,9 @@ if (renderShell('performance')) {
       var accounts = await SmartAIMT5.getAccounts();
       accounts.sort(function(a,b){ return String(a.account_id).localeCompare(String(b.account_id)); });
       root.innerHTML =
-        '<div class="live-head"><h2>Live Performance</h2><p>Data akun MetaTrader 5 dari server SmartInvestama. Pembaruan otomatis setiap 30 detik.</p></div>' +
+        '<div class="live-head"><h2>Account Performance</h2><p>Mode demo · Data simulasi untuk pratinjau tampilan akun MT5. Bukan data trading aktual.</p></div>' +
         '<div class="acc-grid">' + accounts.map(renderAccount).join('') + '</div>' +
-        '<div class="master-perf"><div class="master-perf-head"><div><h3>MT5 Data Connection</h3><div class="base">Endpoint: smartinvestama.com · Read-only account feed</div></div><span class="mt5-badge">CONNECTED</span></div>' +
+        '<div class="master-perf"><div class="master-perf-head"><div><h3>Demo Account Preview</h3><div class="base">Contoh struktur data akun MT5 · belum terhubung ke server live</div></div><span class="mt5-badge">DEMO MODE</span></div>' +
         '<div class="cal-foot">Status ONLINE mengikuti pembaruan EA. Akun tanpa data akan tampil WAITING; data yang melewati batas waktu server akan tampil OFFLINE. Nilai performa berasal dari payload EA, bukan angka contoh.</div></div>';
     } catch (error) {
       root.innerHTML =
