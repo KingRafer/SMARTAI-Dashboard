@@ -23,6 +23,22 @@ function themeIcon(theme) {
 
 initTheme();
 
+/* Load official logo assets */
+(function () {
+  function load(src) {
+    return new Promise(function (res, rej) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = res;
+      s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  window.__smartaiLogoReady = load('js/logo-a.js').then(function () {
+    return load('js/logo-b.js');
+  }).catch(function () {});
+})();
+
 function escapeHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
     return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
@@ -41,10 +57,7 @@ function avatarHtml(user, sizeClass) {
 function formatToday() {
   try {
     return new Date().toLocaleDateString('id-ID', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     });
   } catch (e) {
     return new Date().toDateString();
@@ -52,7 +65,10 @@ function formatToday() {
 }
 
 function brandMark() {
-  return '<span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></span>';
+  if (window.SMARTAI_LOGO_SRC && window.SMARTAI_LOGO_SRC.length > 80) {
+    return '<img class="logo-img" src="' + window.SMARTAI_LOGO_SRC + '" alt="Smart AI" height="34" style="display:block;height:34px;width:auto;object-fit:contain"/>';
+  }
+  return '<span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></span>SMART<span>AI</span>';
 }
 
 function renderShell(active) {
@@ -102,54 +118,62 @@ function renderShell(active) {
     });
   });
 
-  document.body.innerHTML =
-    '<div class="overlay" id="overlay"></div>' +
-    '<aside class="sidebar" id="sidebar">' +
-      '<div class="sidebar-brand">' + brandMark() + 'SMART<span>AI</span></div>' +
-      '<nav class="sidebar-nav">' + navHtml + '</nav>' +
-      '<div class="sidebar-foot">' +
-        '<div class="user-mini">' +
-          avatarHtml(user) +
-          '<div style="min-width:0">' +
-            '<div class="name">' + escapeHtml(user.nama || 'Member') + '</div>' +
-            '<div class="role">Member · Active</div>' +
+  function paintShell() {
+    document.body.innerHTML =
+      '<div class="overlay" id="overlay"></div>' +
+      '<aside class="sidebar" id="sidebar">' +
+        '<div class="sidebar-brand" data-brand-logo="1">' + brandMark() + '</div>' +
+        '<nav class="sidebar-nav">' + navHtml + '</nav>' +
+        '<div class="sidebar-foot">' +
+          '<div class="user-mini">' +
+            avatarHtml(user) +
+            '<div style="min-width:0">' +
+              '<div class="name">' + escapeHtml(user.nama || 'Member') + '</div>' +
+              '<div class="role">Member · Active</div>' +
+            '</div>' +
           '</div>' +
-        '</div>' +
-        '<button type="button" class="btn-logout-side" onclick="logout()">' +
-          '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>' +
-          'Sign out' +
-        '</button>' +
-      '</div>' +
-    '</aside>' +
-    '<div class="main">' +
-      '<header class="topbar">' +
-        '<div class="topbar-left">' +
-          '<button class="menu-toggle" id="menu-toggle" aria-label="Menu">' +
-            '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>' +
+          '<button type="button" class="btn-logout-side" onclick="logout()">' +
+            '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>' +
+            'Sign out' +
           '</button>' +
-          '<div class="page-title">' + escapeHtml(title) + '</div>' +
         '</div>' +
-        '<div class="topbar-right">' +
-          '<button type="button" class="theme-btn" id="theme-btn" aria-label="Toggle theme" title="Dark / Light">' + themeIcon(theme) + '</button>' +
-        '</div>' +
-      '</header>' +
-      '<main class="content" id="page-content"></main>' +
-    '</div>';
+      '</aside>' +
+      '<div class="main">' +
+        '<header class="topbar">' +
+          '<div class="topbar-left">' +
+            '<button class="menu-toggle" id="menu-toggle" aria-label="Menu">' +
+              '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>' +
+            '</button>' +
+            '<div class="page-title">' + escapeHtml(title) + '</div>' +
+          '</div>' +
+          '<div class="topbar-right">' +
+            '<button type="button" class="theme-btn" id="theme-btn" aria-label="Toggle theme" title="Dark / Light">' + themeIcon(theme) + '</button>' +
+          '</div>' +
+        '</header>' +
+        '<main class="content" id="page-content"></main>' +
+      '</div>';
 
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-  const toggle = document.getElementById('menu-toggle');
-  toggle.addEventListener('click', function () {
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('show');
-  });
-  overlay.addEventListener('click', function () {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('show');
-  });
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const toggle = document.getElementById('menu-toggle');
+    toggle.addEventListener('click', function () {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+    });
+    overlay.addEventListener('click', function () {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+    });
 
-  const themeBtn = document.getElementById('theme-btn');
-  if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+    const themeBtn = document.getElementById('theme-btn');
+    if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+  }
+
+  if (window.__smartaiLogoReady && window.__smartaiLogoReady.then) {
+    window.__smartaiLogoReady.then(paintShell).catch(paintShell);
+  } else {
+    paintShell();
+  }
 
   return user;
 }
