@@ -8,63 +8,70 @@
 <meta name="theme-color" content="#060b14"/>
 <title>Acc Performance — Smart AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=20261118r">
+<link rel="stylesheet" href="css/app.css?v=20261118s">
 <style>
-.live-head{margin-bottom:1.25rem}
-.live-head h2{font-size:1.35rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(90deg,var(--cyan),#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
-.live-head p{color:var(--text-muted);font-size:.85rem;margin-top:.35rem}
+.live-head{margin-bottom:1.25rem;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:.75rem}
+.live-head h2{font-size:1.2rem;font-weight:800;letter-spacing:.03em;margin:0;background:linear-gradient(90deg,var(--cyan),#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.live-head p{color:var(--text-muted);font-size:.82rem;margin:.25rem 0 0}
+.live-pill{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:999px;font-size:.7rem;font-weight:700;border:1px solid rgba(34,197,94,.3);background:rgba(34,197,94,.1);color:var(--green)}
+.live-pill i{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulseDot 1.6s infinite}
 .acc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.15rem}
 @media(max-width:1100px){.acc-grid{grid-template-columns:1fr}}
-.acc-card{background:var(--bg-card-solid);border-radius:18px;padding:1.3rem 1.25rem 1.15rem;border:1px solid var(--border);position:relative;overflow:hidden;animation:fadeUp .55s cubic-bezier(.22,1,.36,1) both;transition:transform .25s,box-shadow .25s}
+.acc-card{background:var(--bg-card-solid);border-radius:18px;padding:1.25rem 1.2rem 1.1rem;border:1px solid var(--border);position:relative;overflow:hidden;animation:fadeUp .5s cubic-bezier(.22,1,.36,1) both;transition:transform .2s,box-shadow .2s}
 .acc-card:hover{transform:translateY(-3px)}
-.acc-card.basic{border-color:rgba(45,212,191,.4);box-shadow:0 0 0 1px rgba(45,212,191,.1),0 16px 40px rgba(0,0,0,.2)}
-.acc-card.gold{border-color:rgba(251,191,36,.45);box-shadow:0 0 0 1px rgba(251,191,36,.1),0 16px 40px rgba(0,0,0,.2)}
-.acc-card.pro{border-color:rgba(167,139,250,.45);box-shadow:0 0 0 1px rgba(167,139,250,.1),0 16px 40px rgba(0,0,0,.2)}
-[data-theme=light] .acc-card.basic{box-shadow:0 0 0 1px rgba(13,148,136,.12),0 12px 28px rgba(15,23,42,.06)}
-[data-theme=light] .acc-card.gold{box-shadow:0 0 0 1px rgba(217,119,6,.12),0 12px 28px rgba(15,23,42,.06)}
-[data-theme=light] .acc-card.pro{box-shadow:0 0 0 1px rgba(124,58,237,.12),0 12px 28px rgba(15,23,42,.06)}
-.acc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
-.acc-pkg{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-.acc-pkg.basic{color:var(--cyan)}.acc-pkg.gold{color:var(--gold)}.acc-pkg.pro{color:var(--purple)}
-.mt5-badge{font-size:.6rem;font-weight:700;letter-spacing:.04em;padding:.26rem .55rem;border-radius:999px;background:rgba(45,212,191,.12);color:var(--cyan);border:1px solid rgba(45,212,191,.28)}
-.acc-id{font-size:1.2rem;font-weight:800;letter-spacing:.02em;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.acc-card.basic{border-color:rgba(45,212,191,.4);box-shadow:0 0 0 1px rgba(45,212,191,.08),0 14px 36px rgba(0,0,0,.18)}
+.acc-card.gold{border-color:rgba(251,191,36,.45);box-shadow:0 0 0 1px rgba(251,191,36,.08),0 14px 36px rgba(0,0,0,.18)}
+.acc-card.pro{border-color:rgba(167,139,250,.45);box-shadow:0 0 0 1px rgba(167,139,250,.08),0 14px 36px rgba(0,0,0,.18)}
+.acc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.55rem;gap:.5rem}
+.acc-pkg{font-size:.68rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:.22rem .55rem;border-radius:7px}
+.acc-pkg.basic{color:var(--cyan);background:rgba(45,212,191,.12)}
+.acc-pkg.gold{color:var(--gold);background:rgba(245,158,11,.12)}
+.acc-pkg.pro{color:#a78bfa;background:rgba(167,139,250,.12)}
+.st-badge{font-size:.62rem;font-weight:800;letter-spacing:.04em;padding:.22rem .55rem;border-radius:999px;text-transform:uppercase}
+.st-badge.on{background:rgba(34,197,94,.15);color:var(--green)}
+.st-badge.off{background:rgba(148,163,184,.1);color:var(--text-muted)}
+.acc-id{font-size:1.25rem;font-weight:800;letter-spacing:.02em;margin-bottom:.2rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 .acc-id .online{font-size:.72rem;font-weight:700;color:var(--green);display:inline-flex;align-items:center;gap:.3rem}
 .acc-id .online i{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block;animation:pulseDot 1.8s infinite}
-.acc-id .muted{font-size:.72rem;font-weight:600;color:var(--text-dim)}
+.acc-sub{font-size:.72rem;color:var(--text-muted);margin-bottom:.85rem}
 @keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(52,211,153,.5)}70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
-.acc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.9rem}
-.acc-metric{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:.65rem .8rem}
+.acc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.85rem}
+.acc-metric{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:.6rem .75rem}
 [data-theme=light] .acc-metric{background:rgba(15,23,42,.03)}
-.acc-metric .ml{font-size:.62rem;color:var(--text-dim);font-weight:600;letter-spacing:.03em;text-transform:uppercase;margin-bottom:.15rem}
-.acc-metric .mv{font-size:1.02rem;font-weight:800}
+.acc-metric .ml{font-size:.6rem;color:var(--text-dim);font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.12rem}
+.acc-metric .mv{font-size:1rem;font-weight:800}
 .acc-metric .mv.up{color:var(--green)}.acc-metric .mv.down{color:var(--red)}
-.daily-return-box{background:linear-gradient(135deg,rgba(45,212,191,.1),rgba(16,185,129,.04));border:1px solid rgba(45,212,191,.2);border-radius:14px;padding:1rem;display:flex;align-items:center;gap:1rem;margin-bottom:.75rem}
+.daily-return-box{background:linear-gradient(135deg,rgba(45,212,191,.1),rgba(16,185,129,.04));border:1px solid rgba(45,212,191,.2);border-radius:14px;padding:.9rem 1rem;display:flex;align-items:center;gap:1rem}
+.acc-card.gold .daily-return-box{background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(245,158,11,.04));border-color:rgba(251,191,36,.22)}
+.acc-card.pro .daily-return-box{background:linear-gradient(135deg,rgba(167,139,250,.1),rgba(129,140,248,.04));border-color:rgba(167,139,250,.22)}
 .ring-wrap{position:relative;width:72px;height:72px;flex-shrink:0}
 .ring-wrap svg{transform:rotate(-90deg)}
-.ring-wrap .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800}
-.daily-info .label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-dim)}
-.daily-info .val{font-size:1.15rem;font-weight:800;margin-top:.15rem}
-.spark{height:28px;margin-top:.4rem}
-.progress-row{margin-top:.5rem}
-.progress-row .pr-label{display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-muted);margin-bottom:.25rem}
-.progress-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
-.progress-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--teal));transition:width .6s ease}
+.ring-wrap .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800}
+.daily-info .label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-dim)}
+.daily-info .val{font-size:1.15rem;font-weight:800;margin-top:.12rem}
 .cal-section{margin-top:1.75rem}
 .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem}
 .cal-head h3{font-size:1.05rem;font-weight:800;margin:0}
 .cal-nav{display:flex;gap:.4rem;align-items:center}
-.cal-nav button{border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);padding:.4rem .7rem;border-radius:10px;cursor:pointer;font-weight:700;font-size:.8rem}
+.cal-nav button{border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);padding:.4rem .7rem;border-radius:10px;cursor:pointer;font-weight:700;font-size:.8rem;font-family:inherit}
 .cal-nav button:hover{border-color:var(--cyan);color:var(--cyan)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.35rem}
-.cal-cell{aspect-ratio:1;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.02);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.72rem;padding:.2rem}
-.cal-cell .d{font-weight:700;color:var(--text-muted)}
-.cal-cell .p{font-weight:800;font-size:.65rem;margin-top:.1rem}
-.cal-cell.pos{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.25)}
-.cal-cell.pos .p{color:var(--green)}
-.cal-cell.neg{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.22)}
-.cal-cell.neg .p{color:var(--red)}
-.cal-cell.empty{opacity:.35}
+.cal-month{font-weight:700;min-width:140px;text-align:center;font-size:.9rem}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.4rem}
 .cal-dow{text-align:center;font-size:.65rem;font-weight:700;color:var(--text-dim);padding:.3rem 0}
+.cal-cell{aspect-ratio:1;min-height:52px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.02);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.72rem;padding:.25rem}
+.cal-cell .d{font-weight:700;color:var(--text-muted)}
+.cal-cell .p{font-weight:800;font-size:.62rem;margin-top:.12rem;line-height:1.1;text-align:center}
+.cal-cell.pos{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.28)}
+.cal-cell.pos .p{color:var(--green)}
+.cal-cell.neg{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.25)}
+.cal-cell.neg .p{color:var(--red)}
+.cal-cell.empty{opacity:.3}
+.cal-cell.today{outline:2px solid rgba(45,212,191,.45);outline-offset:1px}
+.cal-legend{display:flex;gap:1rem;margin-top:.85rem;font-size:.72rem;color:var(--text-muted);flex-wrap:wrap}
+.cal-legend span{display:inline-flex;align-items:center;gap:.35rem}
+.cal-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.cal-legend .pos i{background:rgba(52,211,153,.5)}
+.cal-legend .neg i{background:rgba(248,113,113,.5)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .page-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:280px;gap:.9rem;color:var(--text-muted)}
 .page-loading .spin{width:40px;height:40px;border-radius:50%;border:3px solid rgba(45,212,191,.12);border-top-color:var(--cyan);animation:spin .65s linear infinite}
@@ -73,9 +80,9 @@
 <script>try{var t=localStorage.getItem('smartai_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
-<script src="js/auth.js?v=20261118r"></script>
-<script src="js/app.js?v=20261118r"></script>
-<script src="js/mt5-api.js?v=20261118r"></script>
+<script src="js/auth.js?v=20261118s"></script>
+<script src="js/app.js?v=20261118s"></script>
+<script src="js/mt5-api.js?v=20261118s"></script>
 <script>
 const user = renderShell('performance');
 if (user) {
@@ -83,9 +90,11 @@ if (user) {
   root.innerHTML = '<div class="page-loading"><div class="spin"></div><p>Memuat performa live…</p></div>';
   var calMonth = new Date().getMonth();
   var calYear = new Date().getFullYear();
+  var cachedHistory = [];
+
   function fmt(n) {
     if (typeof SmartAIMT5 !== 'undefined' && SmartAIMT5.formatUSD) return SmartAIMT5.formatUSD(n);
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n || 0);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(Number(n) || 0);
   }
   function esc(s) {
     return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -97,72 +106,132 @@ if (user) {
     var color = p >= 0 ? 'var(--green)' : 'var(--red)';
     return '<div class="ring-wrap"><svg width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="'+r+'" fill="none" stroke="rgba(148,163,184,.15)" stroke-width="6"/><circle cx="36" cy="36" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+offset+'"/></svg><div class="pct" style="color:'+color+'">'+(p>=0?'+':'')+p.toFixed(1)+'%</div></div>';
   }
+
+  /** Aggregate history array into { 'YYYY-MM-DD': totalProfit } across all accounts */
+  function buildDayMap(rows) {
+    var map = {};
+    (rows || []).forEach(function (r) {
+      if (!r || !r.date) return;
+      var p = Number(r.profit) || 0;
+      map[r.date] = (map[r.date] || 0) + p;
+    });
+    return map;
+  }
+
   async function loadPerformance() {
     var accounts = [];
-    var history = {};
+    var historyRows = [];
     try {
       if (typeof SmartAIMT5 !== 'undefined') {
         var res = await Promise.all([
           SmartAIMT5.getAccounts(true),
-          SmartAIMT5.getDailyHistory ? SmartAIMT5.getDailyHistory() : Promise.resolve({})
+          SmartAIMT5.getDailyHistory(calYear, calMonth + 1, null)
         ]);
         accounts = res[0] || [];
-        history = res[1] || {};
+        historyRows = res[1] || [];
+        cachedHistory = historyRows;
       }
-    } catch (e) { accounts = []; }
-    accounts = (accounts || []).sort(function(a,b){ return String(a.account_id||'').localeCompare(String(b.account_id||'')); });
+    } catch (e) {
+      accounts = [];
+      historyRows = cachedHistory || [];
+    }
+    accounts = (accounts || []).sort(function (a, b) {
+      return String(a.account_id || '').localeCompare(String(b.account_id || ''));
+    });
+
     var pkgClass = { ACC01: 'basic', ACC02: 'gold', ACC03: 'pro' };
     var pkgName = { ACC01: 'Smart Basic', ACC02: 'Smart Gold', ACC03: 'Smart Pro' };
-    var cards = accounts.map(function(a, i) {
+    var live = typeof SmartAIMT5 !== 'undefined' && SmartAIMT5.isLive && SmartAIMT5.isLive();
+    var dayMap = buildDayMap(historyRows);
+
+    var cards = accounts.map(function (a, i) {
       var cls = pkgClass[a.account_id] || 'basic';
-      var on = String(a.status||'').toUpperCase() === 'ONLINE';
+      var st = String(a.status || '').toUpperCase();
+      var on = st === 'ONLINE';
       var daily = Number(a.daily_profit) || 0;
       var equity = Number(a.equity) || 0;
       var pct = equity > 0 ? (daily / equity * 100) : 0;
-      var html = '<div class="acc-card '+cls+'" style="animation-delay:'+(i*0.06)+'s">';
-      html += '<div class="acc-top"><span class="acc-pkg '+cls+'">'+esc(pkgName[a.account_id]||a.name||'MT5')+'</span><span class="mt5-badge">MT5</span></div>';
-      html += '<div class="acc-id">'+esc(a.account_id||'—');
-      if (on) html += ' <span class="online"><i></i>Online</span>';
-      else html += ' <span class="muted">'+esc(a.status||'—')+'</span>';
+      var sub = [];
+      if (a.login) sub.push('Login ' + a.login);
+      if (a.owner) sub.push(a.owner);
+      if (a.broker_label || a.broker) sub.push(a.broker_label || a.broker);
+
+      var html = '<div class="acc-card ' + cls + '" style="animation-delay:' + (i * 0.06) + 's">';
+      html += '<div class="acc-top"><span class="acc-pkg ' + cls + '">' + esc(pkgName[a.account_id] || a.name || 'MT5') + '</span>';
+      html += '<span class="st-badge ' + (on ? 'on' : 'off') + '">' + esc(st || '—') + '</span></div>';
+      html += '<div class="acc-id">' + esc(a.account_id || '—');
+      if (on) html += ' <span class="online"><i></i>Live</span>';
       html += '</div>';
+      html += '<div class="acc-sub">' + esc(sub.join(' · ') || 'Akun trading') + '</div>';
       html += '<div class="acc-metrics">';
-      html += '<div class="acc-metric"><div class="ml">Balance</div><div class="mv">'+fmt(a.balance)+'</div></div>';
-      html += '<div class="acc-metric"><div class="ml">Equity</div><div class="mv">'+fmt(a.equity)+'</div></div>';
-      html += '<div class="acc-metric"><div class="ml">Profit</div><div class="mv '+(Number(a.total_profit)>=0?'up':'down')+'">'+fmt(a.total_profit)+'</div></div>';
-      html += '<div class="acc-metric"><div class="ml">Penarikan</div><div class="mv">'+fmt(a.total_penarikan)+'</div></div>';
+      html += '<div class="acc-metric"><div class="ml">Balance</div><div class="mv">' + fmt(a.balance) + '</div></div>';
+      html += '<div class="acc-metric"><div class="ml">Equity</div><div class="mv">' + fmt(a.equity) + '</div></div>';
+      html += '<div class="acc-metric"><div class="ml">Profit</div><div class="mv ' + (Number(a.total_profit) >= 0 ? 'up' : 'down') + '">' + fmt(a.total_profit) + '</div></div>';
+      html += '<div class="acc-metric"><div class="ml">Penarikan</div><div class="mv">' + fmt(a.total_penarikan) + '</div></div>';
       html += '</div>';
-      html += '<div class="daily-return-box">'+ring(pct)+'<div class="daily-info"><div class="label">Daily Return</div><div class="val '+(daily>=0?'up':'down')+'">'+fmt(daily)+'</div></div></div>';
+      html += '<div class="daily-return-box">' + ring(pct) + '<div class="daily-info"><div class="label">Daily Return</div><div class="val" style="color:' + (daily >= 0 ? 'var(--green)' : 'var(--red)') + '">' + fmt(daily) + '</div></div></div>';
       html += '</div>';
       return html;
     }).join('');
-    if (!cards) cards = '<div class="panel" style="grid-column:1/-1;padding:1.5rem;text-align:center;color:var(--text-muted)">Belum ada data akun MT5.</div>';
+
+    if (!cards) {
+      cards = '<div class="panel" style="grid-column:1/-1;padding:1.5rem;text-align:center;color:var(--text-muted)">Belum ada data akun MT5.</div>';
+    }
+
     // Calendar
-    var daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+    var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
     var firstDow = new Date(calYear, calMonth, 1).getDay();
     var monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
     var dows = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
-    var calHtml = '<div class="cal-section"><div class="cal-head"><h3>Master Calendar</h3><div class="cal-nav"><button type="button" id="cal-prev">‹</button><span style="font-weight:700;min-width:140px;text-align:center">'+monthNames[calMonth]+' '+calYear+'</span><button type="button" id="cal-next">›</button></div></div>';
+    var today = new Date();
+    var todayKey = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+    var calHtml = '<div class="cal-section"><div class="cal-head"><h3>Master Calendar</h3><div class="cal-nav">';
+    calHtml += '<button type="button" id="cal-prev" aria-label="Bulan sebelumnya">‹</button>';
+    calHtml += '<span class="cal-month">' + monthNames[calMonth] + ' ' + calYear + '</span>';
+    calHtml += '<button type="button" id="cal-next" aria-label="Bulan berikutnya">›</button></div></div>';
     calHtml += '<div class="cal-grid">';
-    for (var d=0;d<7;d++) calHtml += '<div class="cal-dow">'+dows[d]+'</div>';
-    for (var e=0;e<firstDow;e++) calHtml += '<div class="cal-cell empty"></div>';
-    for (var day=1; day<=daysInMonth; day++) {
-      var key = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
-      var profit = 0;
-      if (history && history[key]) profit = Number(history[key]) || 0;
-      // also try aggregate from accounts history if present
-      var cls = profit > 0 ? 'pos' : (profit < 0 ? 'neg' : '');
-      var pTxt = profit !== 0 ? (profit>0?'+':'')+profit.toFixed(0) : '—';
-      calHtml += '<div class="cal-cell '+cls+'"><div class="d">'+day+'</div><div class="p">'+pTxt+'</div></div>';
+    for (var d = 0; d < 7; d++) calHtml += '<div class="cal-dow">' + dows[d] + '</div>';
+    for (var e = 0; e < firstDow; e++) calHtml += '<div class="cal-cell empty"></div>';
+
+    for (var day = 1; day <= daysInMonth; day++) {
+      var key = calYear + '-' + String(calMonth + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+      var profit = dayMap[key] != null ? Number(dayMap[key]) : null;
+      var cls = '';
+      var pTxt = '—';
+      if (profit != null && profit !== 0) {
+        cls = profit > 0 ? 'pos' : 'neg';
+        pTxt = (profit > 0 ? '+' : '') + (Math.abs(profit) >= 1000 ? (profit / 1000).toFixed(1) + 'k' : profit.toFixed(0));
+      } else if (profit === 0) {
+        pTxt = '0';
+      }
+      if (key === todayKey) cls += ' today';
+      calHtml += '<div class="cal-cell ' + cls + '" title="' + key + (profit != null ? ': $' + profit.toFixed(2) : '') + '"><div class="d">' + day + '</div><div class="p">' + pTxt + '</div></div>';
     }
-    calHtml += '</div></div>';
-    root.innerHTML = '<div class="live-head"><h2>Live Acc Performance</h2><p>Data real-time dari akun MT5 · auto-refresh 45 detik</p></div><div class="acc-grid">'+cards+'</div>'+calHtml;
+    calHtml += '</div>';
+    calHtml += '<div class="cal-legend"><span class="pos"><i></i> Profit positif</span><span class="neg"><i></i> Profit negatif</span><span>Agg. semua akun · data live history</span></div></div>';
+
+    root.innerHTML =
+      '<div class="live-head"><div><h2>Live Acc Performance</h2><p>Data real-time dari akun MT5 · auto-refresh 45 detik</p></div>' +
+      (live ? '<span class="live-pill"><i></i> Live data</span>' : '<span class="live-pill" style="border-color:var(--border);background:rgba(148,163,184,.08);color:var(--text-muted)">Cached / demo</span>') +
+      '</div><div class="acc-grid">' + cards + '</div>' + calHtml;
+
     var prev = document.getElementById('cal-prev');
     var next = document.getElementById('cal-next');
-    if (prev) prev.onclick = function(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} loadPerformance(); };
-    if (next) next.onclick = function(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} loadPerformance(); };
+    if (prev) prev.onclick = function () {
+      calMonth--;
+      if (calMonth < 0) { calMonth = 11; calYear--; }
+      loadPerformance();
+    };
+    if (next) next.onclick = function () {
+      calMonth++;
+      if (calMonth > 11) { calMonth = 0; calYear++; }
+      loadPerformance();
+    };
   }
+
   loadPerformance();
-  setInterval(function(){ loadPerformance(); }, 45000);
+  setInterval(function () { loadPerformance(); }, 45000);
 }
 </script>
 </body>
