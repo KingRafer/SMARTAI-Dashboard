@@ -156,23 +156,32 @@ function renderShell(active) {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
     const toggle = document.getElementById('menu-toggle');
-    toggle.addEventListener('click', function () {
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('show');
-    });
-    overlay.addEventListener('click', function () {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('show');
-    });
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('show');
+      });
+    }
+    if (overlay) {
+      overlay.addEventListener('click', function () {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      });
+    }
 
     const themeBtn = document.getElementById('theme-btn');
     if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
   }
 
+  // Always paint shell immediately so page scripts can fill #page-content
+  paintShell();
+
+  // When logo loads later, only update brand mark — do NOT wipe body/content
   if (window.__smartaiLogoReady && window.__smartaiLogoReady.then) {
-    window.__smartaiLogoReady.then(paintShell).catch(paintShell);
-  } else {
-    paintShell();
+    window.__smartaiLogoReady.then(function () {
+      var el = document.querySelector('[data-brand-logo]');
+      if (el) el.innerHTML = brandMark();
+    }).catch(function () {});
   }
 
   return user;
