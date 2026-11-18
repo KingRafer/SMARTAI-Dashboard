@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Allow: /daftar.html
+Allow: /login.html
+Allow: /index.html
+Disallow: /dashboard.html
+Disallow: /performance.html
+Disallow: /referral.html
+Disallow: /commission.html
+Disallow: /transactions.html
+Disallow: /profile.html
+Disallow: /clients.html
+Disallow: /trading-report.html
+Disallow: /support.html
+
+Sitemap: https://smart-ai-black.vercel.app/sitemap.xml
